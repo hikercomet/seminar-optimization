@@ -123,6 +123,16 @@ git pull origin main
 | 見るだけ？              | 編集もできます（ホストの設定次第）|
 | Web版VS Codeでもできる？ | 基本はPC版VS Code推奨           |
 
+## 7. まとめ（作業の流れ、これテストに出ます）
+
+1. 最初だけ git clone URL でリポジトリをコピー
+2. 作業を始める前に git pull origin main
+3. ファイルを編集
+4. git add . で変更を登録
+5. git commit -m "説明" で変更を保存
+6. git push origin main で共有
+7. また2に戻って繰り返し！
+
 ---
 
 ## 📺 **参考リンク**
