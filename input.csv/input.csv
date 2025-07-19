@@ -1,0 +1,6 @@
+student_id,first_choice,second_choice,third_choice
+S1,A,B,C
+S2,B,A,C
+S3,C,A,B
+S4,A,C,B
+S5,B,C,A

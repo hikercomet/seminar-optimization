@@ -1,0 +1,365 @@
+本ツールは、学生の希望とセミナーの定員を考慮し、最適な割当を見つけるためのPythonスクリプト群です。OR-Toolsに依存しない貪欲法と局所探索法（焼きなまし法）の組み合わせで動作します。
+
+以下に、ツールのセットアップから実行、結果の確認までのシステムの内容を含めた詳細な手順を説明します。
+
+1. 前提条件と必要なライブラリのインストール
+このツールを実行するには、Python 3.7以降が必要です。以下のライブラリをインストールしてください。
+
+pip install pandas numpy reportlab
+
+pandas: データ処理とCSV出力に使用します。
+
+numpy: 数値計算（特に焼きなまし法の確率計算）に使用します。
+
+reportlab: PDFレポートの生成に使用します。
+
+2. ファイル構造の準備
+提供されたコードは、以下のディレクトリ構造で配置する必要があります。seminar_optimizationという名前の新しいフォルダを作成し、その中に各Pythonファイルを保存してください。
+
+your_project_directory/
+└── seminar_optimization/
+    ├── main.py           # メインの実行スクリプト
+    ├── optimizer.py      # 最適化アルゴリズム（貪欲法、局所探索法、焼きなまし法）
+    ├── output.py         # PDFおよびCSVレポートの生成
+    ├── evaluation.py     # 割当の検証と満足度計算
+    ├── models.py         # データクラス（Config, Student）の定義
+    └── utils.py          # 補助関数（希望生成、目標定員最適化）
+
+3. 日本語フォントのセットアップ (重要)
+PDFレポートで日本語が正しく表示されるようにするため、IPAexGothicフォントが必要です。
+
+フォントのダウンロード: 以下のIPAexフォントの公式ウェブサイトからipaexg.ttfファイルをダウンロードしてください。
+https://moji.or.jp/ipafont/ipaexfont/
+
+フォントの配置: ダウンロードしたipaexg.ttfファイルを、seminar_optimizationディレクトリと同じ場所に配置してください。つまり、main.pyと同じ階層に置きます。
+
+your_project_directory/
+└── seminar_optimization/
+    ├── main.py
+    ├── ipaexg.ttf  <-- ここに配置
+    ├── optimizer.py
+    ├── ...
+
+もしフォントの読み込みに失敗した場合、プログラムは警告を表示し、日本語が正しく表示されない可能性があります。
+
+4. 設定のカスタマイズ
+seminar_optimization/models.pyファイル内のConfigクラスで、最適化のパラメータをカスタマイズできます。
+
+# seminar_optimization/models.py
+
+@dataclass
+class Config:
+    seminars: List[str] = None           # セミナーのリスト (例: ['a', 'b', 'c', ...])
+    magnification: Dict[str, float] = None # 各セミナーのスコア倍率 (例: {'a': 2.0, 'd': 3.0})
+    min_size: int = 5                    # 各セミナーの最小定員
+    max_size: int = 10                   # 各セミナーの最大定員
+    num_students: int = 112              # 学生の総数
+    num_patterns: int = 200000           # 試行する割当パターンの数 (多いほど良い解が見つかる可能性が高まるが、時間もかかる)
+    early_stop_threshold: float = 0.001  # 早期終了の閾値 (現状未使用)
+    no_improvement_limit: int = 1000     # 改善が見られない場合の停止条件 (現状未使用)
+    output_dir: str = "results"          # 結果ファイルが出力されるディレクトリ名
+    pdf_file: str = None                 # PDFレポートのファイル名 (output_dir内に自動生成)
+    q_boost_probability: float = 0.2     # 'q'セミナーが1位希望になる確率をブースト
+    max_workers: int = 8                 # 並列処理に使用するCPUコア数 (PCのコア数に合わせて調整)
+    
+    def __post_init__(self):
+        # デフォルト値の設定
+        if self.seminars is None:
+            self.seminars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q']
+        if self.magnification is None:
+            self.magnification = {'a': 2.0, 'd': 3.0, 'm': 0.5, 'o': 0.25}
+        if self.pdf_file is None:
+            import os
+            self.pdf_file = os.path.join(self.output_dir, "seminar_results_advanced.pdf")
+        # os.makedirs(self.output_dir, exist_ok=True) は main.py で処理されます
+
+seminars: セミナーの名前をリストで定義します。
+
+magnification: 特定のセミナーに割り当てられた学生のスコアに適用される倍率です。例えば、'a': 2.0は、セミナー'a'に割り当てられた学生のスコアが2倍になることを意味します。これにより、特定のセミナーへの割当を優先させることができます。
+
+num_students: 最適化を行う学生の総数です。
+
+num_patterns: 試行する異なる割当パターンの数です。この値を大きくすると、より良い解が見つかる可能性が高まりますが、計算時間も長くなります。
+
+max_workers: 並列処理に使用するCPUコアの最大数です。お使いのPCのCPUコア数に合わせて調整すると、最も効率的に実行できます。
+
+5. ツールの実行
+seminar_optimizationディレクトリの一つ上の階層に移動し、main.pyスクリプトを実行します。
+
+# 例: C:\Users\hiker\ にいる場合
+cd C:\Users\hiker\seminar_optimization
+
+# main.py を実行
+python main.py
+
+プログラムの実行中、コンソールには最適化の進行状況、新しい最適解が見つかった場合の通知、中間レポートなどが表示されます。
+
+6. 結果の確認
+プログラムが正常に完了すると、seminar_optimizationディレクトリ内にresultsという新しいフォルダが作成されます（output_dirの設定によります）。このフォルダの中に以下のファイルが出力されます。
+
+results/score_progress.csv:
+
+最適化の過程で、より良いスコアが見つかった時点での情報が記録されたCSVファイルです。
+
+Completed: 処理されたパターンの総数。
+
+PatternID: そのスコアを達成したパターンのID。
+
+Score: その時点での最高の総満足度スコア。
+
+ElapsedTime: プログラム開始からの経過時間（秒）。
+
+このファイルを見ることで、最適化がどのように進んだか、どの程度でスコアが収束したかなどを確認できます。
+
+results/seminar_results_advanced.pdf:
+
+最終的な最適割当の詳細なレポートが記載されたPDFファイルです。
+
+総スコア、学生の総数、評価されたパターンの数、並列プロセス数などの概要。
+
+学生満足度統計: 1位、2位、3位希望に割り当てられた学生の割合が表示されます。
+
+セミナー別詳細テーブル: 各セミナーについて、目標定員、実際の割当人数、総スコア、平均満足度、1位希望者の数、そして割り当てられた学生IDの一部とそれぞれのスコアが一覧で表示されます。
+
+使用されたアルゴリズム（貪欲法による初期割当、局所探索法など）も記載されます。
+
+results/best_assignment_advanced.csv:
+
+最終的な最適割当の詳細が記録されたCSVファイルです。
+
+Seminar: 割り当てられたセミナー名。
+
+Student_ID: 学生のID。
+
+Score: その学生がそのセミナーに割り当てられた場合のスコア。
+
+Rank: その学生にとって、割り当てられたセミナーが何位の希望だったか（1st, 2nd, 3rd, None）。
+
+このファイルは、個々の学生の割当と満足度を詳細に確認するのに役立ちます。
+
+7. トラブルシューティング
+ModuleNotFoundError:
+
+pip install pandas numpy reportlab が全て完了しているか確認してください。
+
+Pythonの仮想環境を使用している場合は、その環境にライブラリがインストールされていることを確認してください。
+
+seminar_optimizationディレクトリの一つ上の階層からpython seminar_optimization/main.pyとして実行しているか確認してください。
+
+PDFの日本語表示がおかしい:
+
+ipaexg.ttfファイルがmain.pyと同じディレクトリに正しく配置されているか確認してください。
+
+ダウンロードしたフォントファイルが破損していないか確認してください。
+
+パフォーマンスが悪い/遅い:
+
+Configクラスのmax_workersをPCのCPUコア数に合わせて調整してください。
+
+num_patternsの値を小さくすることで、試行回数を減らし、計算時間を短縮できます（ただし、解の品質が低下する可能性があります）。
+
+resultsフォルダが作成されない/ファイルが出力されない:
+
+スクリプトを実行しているユーザーに、実行ディレクトリへの書き込み権限があるか確認してください。
+
+プログラム実行中にエラーが発生していないか、コンソールログを注意深く確認してください。
+
+
+
+---
+
+# **🔧 完全実行マニュアル**
+
+## **1️⃣ ファイル構成**
+
+まず、作業用フォルダを作って、以下のファイルを置きます：
+
+| ファイル名                              | 役割                        |
+| ---------------------------------- | ------------------------- |
+| `seminar_optimization_advanced.py` | メインプログラム（今回渡したコード）        |
+| `input.csv`                        | 生徒の希望データ（自分で用意 or ランダム生成） |
+
+---
+
+## **2️⃣ 必要なソフトの準備**
+
+### **Pythonのインストール**
+
+まだPythonが入ってない場合：
+
+* Windowsなら [公式サイト](https://www.python.org/downloads/) から**Python 3.11など最新をインストール**
+* Macなら `brew install python`
+* Linuxなら `sudo apt install python3`
+
+インストール時、**「Add Python to PATH」にチェックを入れる**のを忘れずに！
+
+---
+
+## **3️⃣ ライブラリインストール**
+
+コマンドプロンプトやターミナルで以下を実行：
+
+```bash
+pip install pandas numpy reportlab
+```
+
+この3つでOK！
+
+---
+
+## **4️⃣ 入力データ（input.csv）の作成方法**
+
+自分で用意する場合は、以下のようなCSVファイルを作ります。
+
+### **`input.csv` の例**
+
+```csv
+student_id,first_choice,second_choice,third_choice
+S1,A,B,C
+S2,B,A,C
+S3,C,A,B
+S4,A,C,B
+S5,B,C,A
+```
+
+#### **各列の意味**
+
+| 列名              | 意味     |
+| --------------- | ------ |
+| `student_id`    | 生徒のID  |
+| `first_choice`  | 第一希望ゼミ |
+| `second_choice` | 第二希望ゼミ |
+| `third_choice`  | 第三希望ゼミ |
+
+---
+
+## **5️⃣ 実行方法**
+
+### **Windowsの場合**
+
+1. フォルダ内で `Shift + 右クリック`
+2. 「**PowerShellをここで開く**」を選択
+3. 以下を実行：
+
+```bash
+python seminar_optimization_advanced.py
+```
+
+### **Mac / Linuxの場合**
+
+ターミナルで対象フォルダに移動してから：
+
+```bash
+python3 seminar_optimization_advanced.py
+```
+
+---
+
+## **6️⃣ 出力ファイル**
+
+実行すると、次のファイルが自動生成されます。
+
+| 出力ファイル                | 内容                     |
+| --------------------- | ---------------------- |
+| `best_assignment.csv` | 最適化後の割り振り結果（CSV形式）     |
+| `report.pdf`          | 割り振り結果を見やすく整形したPDFレポート |
+| `log.txt`（オプション）      | 詳細な実行ログ                |
+
+---
+
+## **7️⃣ 結果の見方**
+
+### **CSVの例**
+
+| student\_id | assigned\_seminar |
+| ----------- | ----------------- |
+| S1          | A                 |
+| S2          | B                 |
+| S3          | C                 |
+| S4          | A                 |
+| S5          | B                 |
+
+→ 生徒がどのゼミに割り振られたかがわかる！
+
+---
+
+### **PDFの例**
+
+`report.pdf`には、
+
+* ゼミごとの人数
+* 割り振りの状況
+  が表や色付き表で可視化されます。
+
+---
+
+## **8️⃣ パラメータ調整（オプション）**
+
+### `seminar_target_sizes`
+
+```python
+seminar_target_sizes = {
+    'A': 10,
+    'B': 10,
+    'C': 10,
+    # 必要に応じて修正
+}
+```
+
+→ 各ゼミの定員を設定
+
+---
+
+### `preference_weights`
+
+```python
+preference_weights = {1: 3, 2: 2, 3: 1}
+```
+
+→ 希望の重み付け（第一希望をより重視する）
+
+---
+
+### 焼きなましの設定
+
+```python
+num_iterations = 5000  # 試行回数
+initial_temperature = 100.0  # 初期温度
+cooling_rate = 0.95  # 冷却率
+```
+
+---
+
+## **9️⃣ データを自動生成したい場合**
+
+ランダムな生徒データを自動生成する関数も含まれています！
+
+プログラム内で：
+
+```python
+preferences = random_student_preferences(num_students=50, seminar_ids=list(seminar_target_sizes.keys()))
+```
+
+この関数を呼び出せば、`input.csv`無しでもテスト実行できます。
+
+---
+
+## **🔍 よくある質問（FAQ）**
+
+| 質問       | 答え                                           |
+| -------- | -------------------------------------------- |
+| エラーが出た！  | `input.csv`の形式を確認。セミナー名や生徒IDが間違っているとエラーになります |
+| 出力が遅い    | `num_iterations`を減らすと速くなるが、解の質が落ちる           |
+| PDFが見れない | `reportlab`のインストールを確認                        |
+
+---
+
+## **10️⃣ まとめ**
+
+| ステップ | 内容                                    |
+| ---- | ------------------------------------- |
+| ①    | Pythonインストール                          |
+| ②    | 必要ライブラリを`pip install`                 |
+| ③    | `input.csv`を用意                        |
+| ④    | コマンドで実行                               |
+| ⑤    | `best_assignment.csv`と`report.pdf`を確認 |
