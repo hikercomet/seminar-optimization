@@ -1,170 +1,177 @@
 import os
-import csv
+from datetime import datetime
+from typing import List, Dict, Any, Tuple, Optional
 import logging
-from typing import Dict, List, Tuple, Optional
-from dataclasses import asdict # 追加: asdictをインポート
+import pandas as pd
 
+from reportlab.lib.pagesizes import A4
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.units import cm
 
-# 外部モジュールからのインポート
-from models import Config, Student
-from utils import PreferenceGenerator 
+from models import Config, Student # ConfigとStudentモデルをインポート
+from evaluation import calculate_satisfaction_stats # 満足度統計計算関数をインポート
 
 logger = logging.getLogger(__name__)
 
-def generate_pdf_report(config: Config, best_pattern: dict[str, int], best_score: float, 
-                        best_assignments: dict[str, list[tuple[int, float]]], pattern_id: int,
-                        is_intermediate: bool = False, iteration_count: Optional[int] = None) -> bool:
+def generate_pdf_report(
+    config: Config,
+    target_sizes: Dict[str, int],
+    final_score: float, 
+    final_assignments: Dict[str, List[Tuple[int, float]]], 
+    pattern_id: int,
+    students_for_stats: List[Student], # 学生リストを明示的に受け取る
+    is_intermediate: bool = False,
+    iteration_count: Optional[int] = None
+):
     """
-    詳細なPDFレポートを生成します (英語)。
-    is_intermediate=Trueの場合、途中経過レポートとしてファイル名に試行回数が含まれます。
+    最適化されたセミナー割り当て結果をPDFレポートとして生成します。
     """
+    output_filename = config.pdf_file
+    if is_intermediate:
+        # 中間レポートのファイル名を生成
+        output_filename = os.path.join(config.output_dir, f"intermediate_report_pattern_{pattern_id}_iter_{iteration_count}.pdf")
+    
+    doc = SimpleDocTemplate(output_filename, pagesize=A4)
+    styles = getSampleStyleSheet()
+    
+    # 日本語フォントスタイルを定義します
+    # main.pyで'IPAexGothic'が登録されていることを前提とします
+    styles.add(ParagraphStyle(name='JapaneseNormal',
+                              fontName='IPAexGothic',
+                              fontSize=10,
+                              leading=12))
+    styles.add(ParagraphStyle(name='JapaneseHeading1',
+                              fontName='IPAexGothic',
+                              fontSize=14,
+                              leading=16,
+                              spaceAfter=12,
+                              alignment=1)) # 中央揃え
+    styles.add(ParagraphStyle(name='JapaneseHeading2',
+                              fontName='IPAexGothic',
+                              fontSize=12,
+                              leading=14,
+                              spaceAfter=8))
+
+    story = []
+
+    # タイトル
+    report_title = "セミナー割り当て最適化レポート"
+    if is_intermediate:
+        report_title = f"中間レポート (パターンID: {pattern_id}, 試行回数: {iteration_count})"
+    story.append(Paragraph(report_title, styles['JapaneseHeading1']))
+    story.append(Spacer(1, 0.5*cm))
+
+    # 基本情報
+    story.append(Paragraph(f"生成日時: {datetime.now().strftime('%Y年%m月%d日 %H時%M分%S秒')}", styles['JapaneseNormal']))
+    story.append(Paragraph(f"総学生数: {config.num_students}人", styles['JapaneseNormal']))
+    story.append(Paragraph(f"総セミナー数: {len(config.seminars)}", styles['JapaneseNormal']))
+    story.append(Paragraph(f"最適化戦略: {config.optimization_strategy}", styles['JapaneseNormal']))
+    story.append(Spacer(1, 0.5*cm))
+
+    # 最終スコア
+    story.append(Paragraph(f"最終最適化スコア: <font color='red'><b>{final_score:.2f}</b></font>", styles['JapaneseHeading2']))
+    story.append(Spacer(1, 0.5*cm))
+
+    # 各セミナーの割り当て詳細
+    story.append(Paragraph("各セミナーの割り当て詳細", styles['JapaneseHeading2']))
+    
+    seminar_assignment_data = [['セミナー名', '目標定員', '割り当て学生数', '学生ID']]
+    for sem_name in config.seminars:
+        assigned_students_list = sorted([s_id for s_id, _ in final_assignments.get(sem_name, [])])
+        assigned_count = len(assigned_students_list)
+        target_size = target_sizes.get(sem_name, 0)
+        seminar_assignment_data.append([
+            sem_name,
+            str(target_size),
+            str(assigned_count),
+            ", ".join(map(str, assigned_students_list))
+        ])
+
+    table_style = TableStyle([
+        ('BACKGROUND', (0,0), (-1,0), colors.grey),
+        ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
+        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+        ('FONTNAME', (0,0), (-1,0), 'IPAexGothic'),
+        ('FONTNAME', (0,1), (-1,-1), 'IPAexGothic'),
+        ('BOTTOMPADDING', (0,0), (-1,0), 12),
+        ('BACKGROUND', (0,1), (-1,-1), colors.beige),
+        ('GRID', (0,0), (-1,-1), 1, colors.black),
+        ('BOX', (0,0), (-1,-1), 1, colors.black),
+    ])
+    
+    # テーブルの幅をページ幅に合わせます
+    table_width = doc.width
+    col_widths = [table_width * 0.15, table_width * 0.15, table_width * 0.15, table_width * 0.55]
+    
+    seminar_table = Table(seminar_assignment_data, colWidths=col_widths)
+    seminar_table.setStyle(table_style)
+    story.append(seminar_table)
+    story.append(Spacer(1, 1*cm))
+
+    # 学生の満足度統計
+    story.append(Paragraph("学生の満足度統計", styles['JapaneseHeading2']))
+    
+    # calculate_satisfaction_stats 関数に実際の学生リストを渡す
+    satisfaction_stats = calculate_satisfaction_stats(config, students_for_stats, final_assignments)
+
+    satisfaction_data = [
+        ['項目', '学生数', '割合 (%)'],
+        ['第1希望に割り当て', satisfaction_stats['1st_choice'], f"{satisfaction_stats['1st_choice']/config.num_students*100:.2f}" if config.num_students > 0 else "0.00"],
+        ['第2希望に割り当て', satisfaction_stats['2nd_choice'], f"{satisfaction_stats['2nd_choice']/config.num_students*100:.2f}" if config.num_students > 0 else "0.00"],
+        ['第3希望に割り当て', satisfaction_stats['3rd_choice'], f"{satisfaction_stats['3rd_choice']/config.num_students*100:.2f}" if config.num_students > 0 else "0.00"],
+        ['3位以降の希望に割り当て', satisfaction_stats['other_preference'], f"{satisfaction_stats['other_preference']/config.num_students*100:.2f}" if config.num_students > 0 else "0.00"],
+        ['希望外に割り当て', satisfaction_stats['no_preference_met'], f"{satisfaction_stats['no_preference_met']/config.num_students*100:.2f}" if config.num_students > 0 else "0.00"],
+        ['未割り当て', satisfaction_stats['unassigned'], f"{satisfaction_stats['unassigned']/config.num_students*100:.2f}" if config.num_students > 0 else "0.00"],
+        ['合計', config.num_students, '100.00' if config.num_students > 0 else "0.00"]
+    ]
+
+    satisfaction_table_style = TableStyle([
+        ('BACKGROUND', (0,0), (-1,0), colors.grey),
+        ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
+        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+        ('FONTNAME', (0,0), (-1,0), 'IPAexGothic'),
+        ('FONTNAME', (0,1), (-1,-1), 'IPAexGothic'),
+        ('BOTTOMPADDING', (0,0), (-1,0), 12),
+        ('BACKGROUND', (0,1), (-1,-1), colors.lightgrey),
+        ('GRID', (0,0), (-1,-1), 1, colors.black),
+        ('BOX', (0,0), (-1,-1), 1, colors.black),
+    ])
+    
+    satisfaction_table_col_widths = [table_width * 0.3, table_width * 0.2, table_width * 0.2]
+    satisfaction_table = Table(satisfaction_data, colWidths=satisfaction_table_col_widths)
+    satisfaction_table.setStyle(satisfaction_table_style)
+    story.append(satisfaction_table)
+    story.append(Spacer(1, 1*cm))
+
     try:
-        if is_intermediate and iteration_count is not None:
-            pdf_file_name = f"seminar_results_intermediate_{iteration_count}.pdf"
-        else:
-            pdf_file_name = "seminar_results_advanced.pdf"
-        
-        pdf_file_path = os.path.join(config.output_dir, pdf_file_name)
-        doc = SimpleDocTemplate(pdf_file_path, pagesize=letter)
-        styles = getSampleStyleSheet()
-        
-        styles['Normal'].fontName = 'IPAexGothic' 
-        styles['Title'].fontName = 'IPAexGothic' 
-        styles['Heading1'].fontName = 'IPAexGothic' 
-        styles['Heading2'].fontName = 'IPAexGothic' 
-        styles['Heading3'].fontName = 'IPAexGothic' 
-
-        elements = []
-        
-        report_title = "High-Precision Seminar Assignment Optimization Results"
-        if is_intermediate:
-            report_title += f" (Intermediate Report - Iteration {iteration_count})"
-        elements.append(Paragraph(report_title, styles['Title']))
-        elements.append(Paragraph(f"Pattern ID: {pattern_id} | Total Score: {best_score:.2f}", styles['Heading2']))
-        elements.append(Spacer(1, 12))
-        
-        elements.append(Paragraph(f"Total Students: {config.num_students}", styles['Normal']))
-        elements.append(Paragraph(f"Number of Patterns Evaluated: {config.num_patterns}", styles['Normal']))
-        elements.append(Paragraph(f"Number of Parallel Processes: {config.max_workers}", styles['Normal']))
-        elements.append(Spacer(1, 12))
-        
-        from evaluation import calculate_satisfaction_stats 
-        satisfaction_stats = calculate_satisfaction_stats(config, best_assignments, pattern_id) 
-        elements.append(Paragraph("Student Satisfaction Statistics:", styles['Heading2']))
-        elements.append(Paragraph(f"1st Preference Achieved: {satisfaction_stats['first']:.1f}%", styles['Normal']))
-        elements.append(Paragraph(f"2nd Preference Achieved: {satisfaction_stats['second']:.1f}%", styles['Normal']))
-        elements.append(Paragraph(f"3rd Preference Achieved: {satisfaction_stats['third']:.1f}%", styles['Normal']))
-        elements.append(Paragraph(f"Not Preferred: {satisfaction_stats['none']:.1f}%", styles['Normal']))
-        elements.append(Spacer(1, 12))
-        
-        table_data = [["Seminar", "Target", "Actual", "Total Score", "Avg. Satisfaction", "1st Pref. Count", "Details"]]
-        
-        temp_pref_gen = PreferenceGenerator(asdict(config)) # asdictが使用されている
-        students_for_stats = temp_pref_gen.generate_realistic_preferences(42 + pattern_id)
-        students_dict_for_stats = {s.id: s for s in students_for_stats}
-
-        for sem in config.seminars:
-            students_scores = best_assignments[sem]
-            target_size = best_pattern[sem]
-            actual_size = len(students_scores)
-            total_score = sum(score for _, score in students_scores)
-            avg_satisfaction = total_score / actual_size if actual_size > 0 else 0
-            
-            first_choice_count = 0
-            for student_id, _ in students_scores:
-                student_obj = students_dict_for_stats.get(student_id)
-                if student_obj and student_obj.get_preference_rank(sem) == 0:
-                    first_choice_count += 1
-            
-            detail = ", ".join([f"S{s}({sc:.1f})" for s, sc in students_scores[:min(len(students_scores), 5)]]) 
-            if len(students_scores) > 5:
-                detail += f"... ({len(students_scores)-5} others)"
-            
-            mag_indicator = f" ({config.magnification[sem]}x)" if sem in config.magnification else ""
-            
-            table_data.append([
-                sem.upper() + mag_indicator,
-                str(target_size),
-                str(actual_size),
-                f"{total_score:.1f}",
-                f"{avg_satisfaction:.2f}",
-                str(first_choice_count),
-                detail
-            ])
-        
-        table = Table(table_data)
-        table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
-            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('FONTNAME', (0, 0), (-1, 0), 'IPAexGothic'), 
-            ('FONTSIZE', (0, 0), (-1, 0), 9),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-            ('BACKGROUND', (0, 1), (-1, -1), colors.white),
-            ('TEXTCOLOR', (0, 1), (-1, -1), colors.black),
-            ('GRID', (0, 0), (-1, -1), 1, colors.black),
-            ('FONTNAME', (0, 1), (-1, -1), 'IPAexGothic'), 
-            ('FONTSIZE', (0, 1), (-1, -1), 8),
-        ]))
-        
-        elements.append(table)
-        elements.append(Spacer(1, 12))
-        
-        elements.append(Paragraph("Algorithms Used:", styles['Heading2']))
-        elements.append(Paragraph("1. Realistic Preference Distribution Generation", styles['Normal']))
-        elements.append(Paragraph("2. **Greedy Initial Assignment**", styles['Normal'])) 
-        elements.append(Paragraph("3. Local Search Improvement (2-opt & Single Move + Simplified Simulated Annealing)", styles['Normal']))
-        elements.append(Paragraph("4. Speedup through Parallel Processing", styles['Normal']))
-        
-        doc.build(elements)
-        logger.info(f"PDF report generated: {pdf_file_path}")
-        return True
-        
+        doc.build(story)
+        logger.info(f"PDFレポート '{output_filename}' を正常に生成しました。")
     except Exception as e:
-        logger.error(f"PDF generation error: {e}")
-        return False
+        logger.error(f"PDFレポートのビルド中にエラーが発生しました: {e}")
+        raise
 
-def save_csv_results(config: Config, assignments: dict[str, list[tuple[int, float]]], pattern_id: int, 
-                     is_intermediate: bool = False, iteration_count: Optional[int] = None) -> bool:
+def save_csv_results(
+    config: Config,
+    final_assignments: Dict[str, List[Tuple[int, float]]],
+    pattern_id: int,
+    is_intermediate: bool = False,
+    iteration_count: Optional[int] = None
+):
     """
-    割当結果をCSVファイルに保存します。
-    is_intermediate=Trueの場合、途中経過レポートとしてファイル名に試行回数が含まれます。
+    最終割り当て結果をCSVファイルとして保存します。
     """
-    if is_intermediate and iteration_count is not None:
-        csv_file_name = f"best_assignment_intermediate_{iteration_count}.csv"
-    else:
-        csv_file_name = "best_assignment_advanced.csv"
+    output_filename = os.path.join(config.output_dir, f"seminar_assignments_pattern_{pattern_id}.csv")
+    if is_intermediate:
+        output_filename = os.path.join(config.output_dir, f"intermediate_assignments_pattern_{pattern_id}_iter_{iteration_count}.csv")
 
-    csv_file_path = os.path.join(config.output_dir, csv_file_name)
-    try:
-        with open(csv_file_path, "w", newline="", encoding='utf-8') as f:
-            writer = csv.writer(f)
-            writer.writerow(["Seminar", "Student_ID", "Score", "Rank"])
-            
-            temp_pref_gen = PreferenceGenerator(asdict(config)) # asdictが使用されている
-            students_for_csv = temp_pref_gen.generate_realistic_preferences(42 + pattern_id)
-            students_dict_for_csv = {s.id: s for s in students_for_csv}
-
-            for sem in config.seminars:
-                for student_id, score in assignments[sem]:
-                    rank_str = "None"
-                    student_obj = students_dict_for_csv.get(student_id)
-                    if student_obj:
-                        rank = student_obj.get_preference_rank(sem)
-                        if rank == 0:
-                            rank_str = "1st"
-                        elif rank == 1:
-                            rank_str = "2nd"
-                        elif rank == 2:
-                            rank_str = "3rd"
-                    writer.writerow([sem, student_id, f"{score:.2f}", rank_str])
-        logger.info(f"CSV results saved to: {csv_file_path}")
-        return True
-    except Exception as e:
-        logger.error(f"CSV saving error: {e}")
-        return False
+    data = []
+    for sem_name, assigned_list in final_assignments.items():
+        for student_id, score in assigned_list:
+            data.append({'student_id': student_id, 'assigned_seminar': sem_name, 'assignment_score': score})
+    
+    df = pd.DataFrame(data)
+    df.to_csv(output_filename, index=False, encoding='utf-8')
+    logger.info(f"CSV結果を '{output_filename}' に保存しました。")
 

@@ -8,7 +8,7 @@ class Config:
     min_size: int = 5
     max_size: int = 10
     num_students: Optional[int] = None 
-    num_patterns: int = 200000
+    num_patterns: int = 200000 # Greedy+LSの場合は試行回数、GAの場合は世代数
     early_stop_threshold: float = 0.001
     no_improvement_limit: int = 1000
     output_dir: str = "results"
@@ -19,8 +19,28 @@ class Config:
     local_search_iterations: int = 500
     initial_temperature: float = 1.0
     cooling_rate: float = 0.995
-    preference_weights: Optional[dict[str, float]] = None 
-    num_preferences_to_consider: int = 3 # 第何希望まで考慮するか
+    preference_weights: Optional[dict[str, float]] = None
+
+    # 新しい設定項目: 最適化戦略の選択
+    # "Greedy_LS": 貪欲法 + 局所探索
+    # "GA_LS": 遺伝的アルゴリズム + 局所探索 (Lamarckian GA)
+    # "ILP": 整数線形計画法
+    # "CP": 制約プログラミング (CP-SAT)
+    # "Multilevel": 多段階最適化
+    optimization_strategy: str = "Greedy_LS" 
+
+    # 遺伝的アルゴリズム (GA) 用の追加パラメータ
+    ga_population_size: int = 100 # GAの個体数
+    ga_crossover_rate: float = 0.8 # 交叉率 (0.0 - 1.0)
+    ga_mutation_rate: float = 0.05 # 突然変異率 (0.0 - 1.0)
+
+    # ILP / CP 用の追加パラメータ
+    solver_time_limit_seconds: int = 300 # ソルバーの最大実行時間 (秒)
+    ilp_solver_threads: int = 1 # ILPソルバーが使用するスレッド数
+
+    # Multilevel 用の追加パラメータ
+    multilevel_initial_greedy_runs: int = 5 # 初期貪欲法の試行回数 (Multilevelの第一段階)
+    multilevel_refinement_iterations: int = 1000 # 最終局所探索の反復回数 (Multilevelの第二段階)
 
     def __post_init__(self):
         if self.pdf_file is None:
@@ -49,7 +69,6 @@ class Student:
         """特定のセミナーに割り当てられた場合のスコアを計算します"""
         rank = self.get_preference_rank(seminar)
         
-        # preference_weights を参照するように変更
         if rank == 0:  # 1位希望
             base_score = preference_weights.get("1st", 5.0)
         elif rank == 1:  # 2位希望
