@@ -2,6 +2,7 @@ import os
 import csv
 import logging
 from typing import Dict, List, Tuple, Optional
+from dataclasses import asdict # 追加: asdictをインポート
 
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
@@ -14,8 +15,8 @@ from utils import PreferenceGenerator
 
 logger = logging.getLogger(__name__)
 
-def generate_pdf_report(config: Config, best_pattern: dict[str, int], best_score: float, # 修正: dictを使用
-                        best_assignments: dict[str, list[tuple[int, float]]], pattern_id: int, # 修正: dict, list, tupleを使用
+def generate_pdf_report(config: Config, best_pattern: dict[str, int], best_score: float, 
+                        best_assignments: dict[str, list[tuple[int, float]]], pattern_id: int,
                         is_intermediate: bool = False, iteration_count: Optional[int] = None) -> bool:
     """
     詳細なPDFレポートを生成します (英語)。
@@ -62,7 +63,7 @@ def generate_pdf_report(config: Config, best_pattern: dict[str, int], best_score
         
         table_data = [["Seminar", "Target", "Actual", "Total Score", "Avg. Satisfaction", "1st Pref. Count", "Details"]]
         
-        temp_pref_gen = PreferenceGenerator(asdict(config))
+        temp_pref_gen = PreferenceGenerator(asdict(config)) # asdictが使用されている
         students_for_stats = temp_pref_gen.generate_realistic_preferences(42 + pattern_id)
         students_dict_for_stats = {s.id: s for s in students_for_stats}
 
@@ -127,7 +128,7 @@ def generate_pdf_report(config: Config, best_pattern: dict[str, int], best_score
         logger.error(f"PDF generation error: {e}")
         return False
 
-def save_csv_results(config: Config, assignments: dict[str, list[tuple[int, float]]], pattern_id: int, # 修正: dict, list, tupleを使用
+def save_csv_results(config: Config, assignments: dict[str, list[tuple[int, float]]], pattern_id: int, 
                      is_intermediate: bool = False, iteration_count: Optional[int] = None) -> bool:
     """
     割当結果をCSVファイルに保存します。
@@ -144,7 +145,7 @@ def save_csv_results(config: Config, assignments: dict[str, list[tuple[int, floa
             writer = csv.writer(f)
             writer.writerow(["Seminar", "Student_ID", "Score", "Rank"])
             
-            temp_pref_gen = PreferenceGenerator(asdict(config))
+            temp_pref_gen = PreferenceGenerator(asdict(config)) # asdictが使用されている
             students_for_csv = temp_pref_gen.generate_realistic_preferences(42 + pattern_id)
             students_dict_for_csv = {s.id: s for s in students_for_csv}
 
