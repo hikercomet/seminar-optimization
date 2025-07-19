@@ -1,37 +1,34 @@
+# seminar_optimization.py
 import random
-import math
+import csv
+import os
 
-# セミナー情報
-seminars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q']
-magnification = {'a': 2.0, 'd': 3.0, 'm': 0.5, 'o': 0.25}
-min_size, max_size = 5, 10
-num_students = 112
-num_patterns = 100000
-early_stop_threshold = 0.001  # 0.1%改善なしで終了
-no_improvement_limit = 1000
+# 定数と設定
+SEMINARS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q']
+MAGNIFICATION = {'a': 2.0, 'd': 3.0, 'm': 0.5, 'o': 0.25}
+MIN_SIZE, MAX_SIZE = 5, 10
+NUM_STUDENTS = 112
+NUM_PATTERNS = 100000
+EARLY_STOP_THRESHOLD = 0.000001  # 0.1%改善なしで終了
+NO_IMPROVEMENT_LIMIT = 1000
+OUTPUT_DIR = "results"
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# 希望データ生成（シード42）
-random.seed(42)
-preferences = {}
-for i in range(1, num_students + 1):
-    prefs = random.sample(seminars, 3)
-    preferences[i] = {'first': prefs[0], 'second': prefs[1], 'third': prefs[2]}
+# 希望データを生成する関数
+def generate_preferences(seed):
+    random.seed(seed)
+    preferences = {}
+    for student_id in range(1, NUM_STUDENTS + 1):
+        prefs = random.sample(SEMINARS, 3)
+        preferences[student_id] = {'first': prefs[0], 'second': prefs[1], 'third': prefs[2]}
+    return preferences
 
-applicants = {sem: {'first': 0, 'second': 0, 'third': 0, 'total': 0} for sem in seminars}
-for student, prefs in preferences.items():
-    applicants[prefs['first']]['first'] += 1
-    applicants[prefs['first']]['total'] += 1
-    applicants[prefs['second']]['second'] += 1
-    applicants[prefs['second']]['total'] += 1
-    applicants[prefs['third']]['third'] += 1
-    applicants[prefs['third']]['total'] += 1
-
-# 人数配分をランダムに生成
+# 人数配分を生成する関数
 def generate_pattern(remaining_seminars, remaining_students):
     sizes = []
-    for i in range(remaining_seminars - 1):
-        max_possible = min(max_size, remaining_students - (remaining_seminars - i - 1) * min_size)
-        min_possible = max(min_size, remaining_students - (remaining_seminars - i - 1) * max_size)
+    for _ in range(remaining_seminars - 1):
+        max_possible = min(MAX_SIZE, remaining_students - (remaining_seminars - 1) * MIN_SIZE)
+        min_possible = max(MIN_SIZE, remaining_students - (remaining_seminars - 1) * MAX_SIZE)
         size = random.randint(min_possible, max_possible)
         sizes.append(size)
         remaining_students -= size
@@ -39,25 +36,12 @@ def generate_pattern(remaining_seminars, remaining_students):
     random.shuffle(sizes)
     return sizes
 
-# 100,000パターンの割り当てと得点計算
-best_score = 0
-best_pattern = None
-best_assignments = None
-no_improvement_count = 0
-patterns = []
-
-for pattern_id in range(num_patterns):
-    random.seed(42 + pattern_id)
-    target_sizes = {'a': 10, 'd': 7, 'm': 10, 'o': 10}
-    sizes = generate_pattern(13, 75)
-    for sem, size in zip([s for s in seminars if s not in ['a', 'd', 'm', 'o']], sizes):
-        target_sizes[sem] = size
-    
-    # 割り当て
-    assignments = {sem: [] for sem in seminars}
+# 割り当てを実行する関数
+def assign_students(preferences, target_sizes):
+    assignments = {sem: [] for sem in SEMINARS}
     assigned_students = set()
     
-    for sem in seminars:
+    for sem in SEMINARS:
         target_size = target_sizes[sem]
         available = []
         for student, prefs in preferences.items():
@@ -77,31 +61,69 @@ for pattern_id in range(num_patterns):
         
         remaining = target_size - len(assignments[sem])
         if remaining > 0:
-            unassigned = [s for s in range(1, num_students + 1) if s not in assigned_students]
+            unassigned = [s for s in range(1, NUM_STUDENTS + 1) if s not in assigned_students]
             for student in unassigned[:remaining]:
                 assignments[sem].append((student, 0))
                 assigned_students.add(student)
     
     total_score = sum(score for sem in assignments for _, score in assignments[sem])
-    patterns.append((pattern_id, target_sizes, total_score, assignments))
-    
-    if total_score > best_score:
-        best_score = total_score
-        best_pattern = target_sizes
-        best_assignments = assignments
-        no_improvement_count = 0
-    else:
-        no_improvement_count += 1
-    
-    # 早期終了チェック
-    if no_improvement_count >= no_improvement_limit and best_score > 0:
-        print(f"Early stopping at pattern {pattern_id + 1}: No improvement for {no_improvement_limit} patterns")
-        break
+    return total_score, assignments
 
-# 最高得点のパターンの出力
-print(f"Best Pattern (ID {patterns[-1][0]}):")
-print(f"Target Sizes: {best_pattern}")
-print(f"Total Score: {best_score}")
-for sem in seminars:
-    print(f"{sem}: {len(best_assignments[sem])} students, Scores={[(s, sc) for s, sc in best_assignments[sem]]}")
+# メイン処理
+def optimize_assignments():
+    best_score = 0
+    best_pattern = None
+    best_assignments = None
+    no_improvement_count = 0
+    
+    for pattern_id in range(NUM_PATTERNS):
+        # 各パターンで希望データと人数配分を生成
+        preferences = generate_preferences(42 + pattern_id)
+        target_sizes = {'a': 10, 'd': 7, 'm': 10, 'o': 10}
+        sizes = generate_pattern(13, 75)
+        for sem, size in zip([s for s in SEMINARS if s not in ['a', 'd', 'm', 'o']], sizes):
+            target_sizes[sem] = size
+        
+        # 割り当てと得点計算
+        total_score, assignments = assign_students(preferences, target_sizes)
+        
+        # 最高得点の更新
+        if total_score > best_score:
+            best_score = total_score
+            best_pattern = target_sizes.copy()
+            best_assignments = assignments.copy()
+            no_improvement_count = 0
+        else:
+            no_improvement_count += 1
+        
+        # 早期終了チェック
+        if no_improvement_count >= NO_IMPROVEMENT_LIMIT and best_score > 0:
+            print(f"Early stopping at pattern {pattern_id + 1}: No improvement for {NO_IMPROVEMENT_LIMIT} patterns")
+            break
+    
+    # 結果をCSVに保存
+    with open(os.path.join(OUTPUT_DIR, "best_assignment.csv"), "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["Seminar", "Students", "Scores"])
+        for sem in SEMINARS:
+            students = [s for s, _ in best_assignments[sem]]
+            scores = [sc for _, sc in best_assignments[sem]]
+            writer.writerow([sem, students, scores])
+    
+    print(f"Best Pattern (ID {pattern_id}):")
+    print(f"Target Sizes: {best_pattern}")
+    print(f"Total Score: {best_score}")
+    for sem in SEMINARS:
+        print(f"{sem}: {len(best_assignments[sem])} students, Scores={[(s, sc) for s, sc in best_assignments[sem]]}")
+    
+    return best_pattern, best_score, best_assignments
 
+if __name__ == "__main__":
+    try:
+        best_pattern, best_score, best_assignments = optimize_assignments()
+    except Exception as e:
+        print(f"Error occurred: {e}")
+
+# requirements.txt
+# pandas
+# matplotlib
