@@ -28,13 +28,13 @@ class Config:
     min_size: int = 5
     max_size: int = 10
     num_students: int = 112
-    num_patterns: int = 50000  # より効率的なアルゴリズムなので削減
-    early_stop_threshold: float = 0.001
+    num_patterns: int = 70000  # ✨ 増量: より多くのパターンを探索
+    early_stop_threshold: float = 0.0001
     no_improvement_limit: int = 1000
     output_dir: str = "results"
     pdf_file: str = None
     q_boost_probability: float = 0.2
-    max_workers: int = 4  # 並列処理用
+    max_workers: int = 8  # ✨ 調整: 一般的なPCのコア数に合わせる (適宜変更してください)
     
     def __post_init__(self):
         if self.seminars is None:
@@ -67,9 +67,9 @@ class Student:
         """特定のセミナーに対するスコアを計算"""
         rank = self.get_preference_rank(seminar)
         if rank == 0:  # 第1希望
-            base_score = 3.0
+            base_score = 5.0  # ✨ 強化: 第1希望のスコアを大幅にアップ
         elif rank == 1:  # 第2希望
-            base_score = 2.0
+            base_score = 3.0
         elif rank == 2:  # 第3希望
             base_score = 1.0
         else:  # 希望外
@@ -160,7 +160,7 @@ class TargetSizeOptimizer:
         self.config = config
     
     def generate_balanced_sizes(self, students: List[Student], attempt: int = 0) -> Dict[str, int]:
-        """学生の希望を考慮したバランスの取れた目標人数を生成"""
+        """✨学生の希望を考慮したバランスの取れた目標人数を生成（多様な戦略）"""
         # 各セミナーへの第1希望数をカウント
         first_choice_count = defaultdict(int)
         for student in students:
@@ -170,26 +170,30 @@ class TargetSizeOptimizer:
         target_sizes = {sem: self.config.min_size for sem in self.config.seminars}
         remaining = self.config.num_students - sum(target_sizes.values())
         
-        # 第1希望の分布に基づいて残りを配分
-        if attempt % 3 == 0:  # 希望重視
-            allocation_strategy = "demand_based"
-        elif attempt % 3 == 1:  # バランス重視
-            allocation_strategy = "balanced"
-        else:  # ランダム要素追加
-            allocation_strategy = "mixed"
+        strategy_index = attempt % 5 # ✨ 5種類の戦略を導入
         
-        if allocation_strategy == "demand_based":
-            # 第1希望が多いセミナーに優先配分
+        if strategy_index == 0:  # 希望重視
             sorted_seminars = sorted(self.config.seminars, 
                                      key=lambda x: first_choice_count[x], reverse=True)
-        elif allocation_strategy == "balanced":
-            #均等に配分を試みる
+            allocation_strategy_name = "demand_based"
+        elif strategy_index == 1:  # バランス重視
             sorted_seminars = self.config.seminars.copy()
             random.shuffle(sorted_seminars)
-        else:  # mixed
-            # ランダム要素を加えた配分
+            allocation_strategy_name = "balanced"
+        elif strategy_index == 2:  # ランダム要素追加
             sorted_seminars = self.config.seminars.copy()
             random.shuffle(sorted_seminars)
+            allocation_strategy_name = "mixed"
+        elif strategy_index == 3: # ✨ 新規: 第1希望数が平均より高いゼミにブースト
+            avg_first_choice = sum(first_choice_count.values()) / len(self.config.seminars)
+            sorted_seminars = sorted(self.config.seminars,
+                                     key=lambda x: first_choice_count[x] if first_choice_count[x] > avg_first_choice else 0,
+                                     reverse=True)
+            allocation_strategy_name = "first_choice_boost"
+        else: # strategy_index == 4 # ✨ 新規: より均等な配分を試みる
+            sorted_seminars = self.config.seminars.copy()
+            sorted_seminars.sort(key=lambda x: target_sizes[x]) # 現在の人数が少ない順
+            allocation_strategy_name = "even_spread"
         
         # 残り人数を配分
         for _ in range(remaining):
@@ -309,7 +313,7 @@ class HungarianMatcher:
         return total_score, assignments
 
 class LocalSearchOptimizer:
-    """局所探索による改善"""
+    """✨局所探索による改善 (焼きなまし法要素の簡易導入)"""
     
     def __init__(self, config: Config):
         self.config = config
@@ -322,37 +326,80 @@ class LocalSearchOptimizer:
         current_score = sum(score for sem in current_assignments for _, score in current_assignments[sem])
         
         students_dict = {s.id: s for s in students}
-        improved = True
-        iteration = 0
         
-        while improved and iteration < max_iterations:
-            improved = False
-            iteration += 1
+        # 焼きなまし法の温度パラメータ (簡易版)
+        initial_temperature = 1.0
+        cooling_rate = 0.99
+        temperature = initial_temperature
+        
+        for iteration in range(max_iterations):
+            improved_in_this_iter = False
             
-            # 2-opt風の改善: 2つの学生の割り当てを交換
-            for sem1 in self.config.seminars:
-                for sem2 in self.config.seminars:
-                    if sem1 >= sem2 or not current_assignments[sem1] or not current_assignments[sem2]:
-                        continue
-                    
-                    for i, (student1_id, _) in enumerate(current_assignments[sem1]):
-                        for j, (student2_id, _) in enumerate(current_assignments[sem2]):
-                            student1 = students_dict[student1_id]
-                            student2 = students_dict[student2_id]
-                            
-                            # 交換後のスコアを計算
-                            old_score1 = student1.calculate_score(sem1, self.config.magnification)
-                            old_score2 = student2.calculate_score(sem2, self.config.magnification)
-                            new_score1 = student1.calculate_score(sem2, self.config.magnification)
-                            new_score2 = student2.calculate_score(sem1, self.config.magnification)
-                            
-                            score_diff = (new_score1 + new_score2) - (old_score1 + old_score2)
-                            
-                            if score_diff > 0.01:  # 改善があれば交換
-                                current_assignments[sem1][i] = (student2_id, new_score2)
-                                current_assignments[sem2][j] = (student1_id, new_score1)
-                                current_score += score_diff
-                                improved = True
+            # 2-opt風の交換
+            for _ in range(self.config.num_students // 2): # 学生数の半分程度ランダムに試行
+                sem1 = random.choice(self.config.seminars)
+                sem2 = random.choice(self.config.seminars)
+
+                if sem1 == sem2 or not current_assignments[sem1] or not current_assignments[sem2]:
+                    continue
+                
+                # ランダムに学生を2人選ぶ
+                student1_idx_in_sem1 = random.randrange(len(current_assignments[sem1]))
+                student2_idx_in_sem2 = random.randrange(len(current_assignments[sem2]))
+
+                student1_id, _ = current_assignments[sem1][student1_idx_in_sem1]
+                student2_id, _ = current_assignments[sem2][student2_idx_in_sem2]
+                
+                student1 = students_dict[student1_id]
+                student2 = students_dict[student2_id]
+                
+                old_score1 = student1.calculate_score(sem1, self.config.magnification)
+                old_score2 = student2.calculate_score(sem2, self.config.magnification)
+                new_score1 = student1.calculate_score(sem2, self.config.magnification)
+                new_score2 = student2.calculate_score(sem1, self.config.magnification)
+                
+                score_diff = (new_score1 + new_score2) - (old_score1 + old_score2)
+                
+                # 改善があれば採用、または焼きなまし法の確率で悪化も許容
+                if score_diff > 0.01 or (score_diff <= 0 and random.random() < np.exp(score_diff / temperature)):
+                    current_assignments[sem1][student1_idx_in_sem1] = (student2_id, new_score2)
+                    current_assignments[sem2][student2_idx_in_sem2] = (student1_id, new_score1)
+                    current_score += score_diff
+                    improved_in_this_iter = True
+            
+            # ✨ 新規: 特定の学生を別のゼミに移動させる操作 (隣接探索)
+            for _ in range(self.config.num_students // 5): # 学生数の2割程度ランダムに試行
+                seminar_from_name = random.choice(self.config.seminars)
+                if not current_assignments[seminar_from_name]:
+                    continue
+                
+                student_idx_in_from_sem = random.randrange(len(current_assignments[seminar_from_name]))
+                student_id_to_move, old_score = current_assignments[seminar_from_name][student_idx_in_from_sem]
+                student_to_move = students_dict[student_id_to_move]
+                
+                # 移動先ゼミをランダムに選ぶ
+                seminar_to_name = random.choice([s for s in self.config.seminars if s != seminar_from_name])
+                
+                # 移動先のゼミが目標サイズを超えないかチェック（多少の超過は許容）
+                if len(current_assignments[seminar_to_name]) >= target_sizes[seminar_to_name] * 1.1: # 10%超過は許容
+                    continue
+
+                new_score = student_to_move.calculate_score(seminar_to_name, self.config.magnification)
+                score_diff_move = new_score - old_score
+                
+                if score_diff_move > 0.01 or (score_diff_move <= 0 and random.random() < np.exp(score_diff_move / temperature)):
+                    # 移動を実行
+                    current_assignments[seminar_from_name].pop(student_idx_in_from_sem)
+                    current_assignments[seminar_to_name].append((student_id_to_move, new_score))
+                    current_score += score_diff_move
+                    improved_in_this_iter = True
+            
+            # 温度の冷却
+            temperature *= cooling_rate
+            
+            # 温度が非常に低くなり、改善もなければ終了
+            if not improved_in_this_iter and temperature < 0.001:
+                break
         
         return current_score, current_assignments
 
@@ -423,10 +470,20 @@ class SeminarOptimizer:
                         logger.info(f"[新記録] パターン{pattern_id}: スコア {score:.2f} （経過時間: {elapsed:.1f}s）")
                         score_history.append((completed, pattern_id, score, elapsed))
                     
-                    if completed % 1000 == 0: # ログ出力頻度を調整
+                    # 2000パターンごとに詳細情報をログ出力
+                    if completed % 2000 == 0:
                         elapsed = time.time() - start_time
-                        logger.info(f"[途中経過] {completed}/{self.config.num_patterns} 完了 | "
-                                     f"最高得点: {best_score:.2f} | 経過時間: {elapsed:.1f}s")
+                        logger.info(f"--- [中間レポート] {completed}/{self.config.num_patterns} 完了 ---")
+                        logger.info(f"現在の最高得点: {best_score:.2f} (パターンID: {best_pattern_id}) | 経過時間: {elapsed:.1f}s")
+                        
+                        if best_pattern and best_assignments:
+                            logger.info("  <現在の最良割り当ての詳細>")
+                            for sem_name in self.config.seminars:
+                                current_assigned = len(best_assignments[sem_name])
+                                current_total_score = sum(s for _, s in best_assignments[sem_name])
+                                target_s = best_pattern.get(sem_name, 0)
+                                logger.info(f"    ゼミ {sem_name.upper()}: 目標人数={target_s}, 実際の人数={current_assigned}, 総得点={current_total_score:.2f}")
+                        logger.info("---------------------------------------")
                         
                 except Exception as e:
                     logger.error(f"Pattern {pattern_id} failed: {e}")
@@ -507,7 +564,7 @@ class SeminarOptimizer:
                 avg_satisfaction = total_score / actual_size if actual_size > 0 else 0
                 
                 # 第1希望達成数をカウント（実装は簡略化）
-                first_choice_count = sum(1 for _, score in students_scores if score >= 3.0)  # 簡易判定
+                first_choice_count = sum(1 for _, score in students_scores if score >= 5.0)  # 簡易判定（スコア強化に合わせて変更）
                 
                 detail = ", ".join([f"S{s}({sc:.1f})" for s, sc in students_scores[:3]])
                 if len(students_scores) > 3:
@@ -546,7 +603,7 @@ class SeminarOptimizer:
             elements.append(Paragraph("使用アルゴリズム:", styles['Heading2']))
             elements.append(Paragraph("1. リアルな希望分布生成", styles['Normal']))
             elements.append(Paragraph("2. 容量制約付きハンガリアン法風マッチング", styles['Normal']))
-            elements.append(Paragraph("3. 局所探索による改善", styles['Normal']))
+            elements.append(Paragraph("3. 局所探索（2-opt & 移動 + 簡易焼きなまし法）による改善", styles['Normal']))
             elements.append(Paragraph("4. 並列処理による高速化", styles['Normal']))
             
             doc.build(elements)
@@ -559,12 +616,11 @@ class SeminarOptimizer:
     
     def _calculate_satisfaction_stats(self, assignments: Dict[str, List[Tuple[int, float]]]) -> Dict[str, float]:
         """満足度統計を計算"""
-        # 簡略化された実装 - 実際にはより詳細な分析が必要
         total_students = sum(len(assignments[sem]) for sem in assignments)
         
-        # スコアベースでの大まかな分類
-        first_choice = sum(1 for sem in assignments for _, score in assignments[sem] if score >= 3.0)
-        second_choice = sum(1 for sem in assignments for _, score in assignments[sem] if 2.0 <= score < 3.0)
+        # スコアベースでの大まかな分類 (第1希望のスコア強化に合わせて判定値を変更)
+        first_choice = sum(1 for sem in assignments for _, score in assignments[sem] if score >= 5.0)
+        second_choice = sum(1 for sem in assignments for _, score in assignments[sem] if 2.0 <= score < 5.0)
         third_choice = sum(1 for sem in assignments for _, score in assignments[sem] if 1.0 <= score < 2.0)
         none_choice = total_students - first_choice - second_choice - third_choice
         
@@ -585,8 +641,8 @@ class SeminarOptimizer:
                 
                 for sem in self.config.seminars:
                     for student_id, score in assignments[sem]:
-                        # スコアから希望順位を推定
-                        if score >= 3.0:
+                        # スコアから希望順位を推定 (第1希望のスコア強化に合わせて判定値を変更)
+                        if score >= 5.0:
                             rank = "1st"
                         elif score >= 2.0:
                             rank = "2nd"  
@@ -596,7 +652,7 @@ class SeminarOptimizer:
                             rank = "None"
                         writer.writerow([sem, student_id, f"{score:.2f}", rank])
             
-            logger.info(f"CSV結果を保存: {csv_file}")
+            logger.info(f"CSV結果を保存しました: {csv_file}")
             return True
         except Exception as e:
             logger.error(f"CSV保存エラー: {e}")
@@ -635,9 +691,10 @@ if __name__ == "__main__":
     pattern, score, assignments = optimizer.run_optimization()
     
     if pattern:
-        logger.info("最適化結果を表示します。")
+        logger.info("\n最終最適化結果:")
         for sem in config.seminars:
             assigned_students = assignments[sem]
             logger.info(f"セミナー {sem.upper()}: 目標 {pattern[sem]}人 / 実際 {len(assigned_students)}人")
+        logger.info(f"最高総得点: {score:.2f}")
     else:
         logger.error("最適化に失敗しました。")
