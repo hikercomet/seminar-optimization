@@ -2,8 +2,8 @@ import random
 import numpy as np
 import logging
 from collections import defaultdict
-# 修正: Dict, List, Tuple は Python 3.9+ で不要なため削除 (または小文字に修正)
-# from typing import Dict, List, Tuple
+from dataclasses import asdict # asdictをインポート
+from typing import Dict, List, Tuple, Any # Anyをインポート
 
 # 外部モジュールからのインポート
 from models import Config, Student
@@ -13,10 +13,10 @@ logger = logging.getLogger(__name__)
 
 class GreedyAssigner:
     """貪欲法による初期割当を行うクラス"""
-    def __init__(self, config_dict: dict): # 修正: dictを使用
+    def __init__(self, config_dict: dict):
         self.config = Config(**config_dict)
 
-    def assign_students_greedily(self, students: list[Student], target_sizes: dict[str, int]) -> tuple[float, dict[str, list[tuple[int, float]]]]: # 修正: list, dict, tupleを使用
+    def assign_students_greedily(self, students: list[Student], target_sizes: dict[str, int]) -> tuple[float, dict[str, list[tuple[int, float]]]]:
         """
         学生を貪欲法でセミナーに初期割当します。
         各学生について、最もスコアが高く、かつ現在のセミナー定員が目標定員を超えないセミナーに割り当てます。
@@ -38,7 +38,9 @@ class GreedyAssigner:
             best_score_for_student = -1.0 
             
             # 学生の希望順位に基づいてセミナーを評価
-            for preferred_seminar in student.preferences:
+            # student.preferences[:self.config.num_preferences_to_consider] で考慮する希望数を制限
+            for preferred_seminar in student.preferences[:self.config.num_preferences_to_consider]:
+                # Student.calculate_score に preference_weights を渡す
                 score = student.calculate_score(preferred_seminar, self.config.magnification, self.config.preference_weights)
                 
                 # 目標定員内であれば優先
@@ -63,6 +65,7 @@ class GreedyAssigner:
                 available_seminars = [sem for sem in self.config.seminars if seminar_current_counts[sem] < self.config.max_size]
                 if available_seminars:
                     chosen_seminar = random.choice(available_seminars)
+                    # Student.calculate_score に preference_weights を渡す
                     score = student.calculate_score(chosen_seminar, self.config.magnification, self.config.preference_weights)
                     current_assignments[chosen_seminar].append((student.id, score))
                     seminar_current_counts[chosen_seminar] += 1
@@ -77,6 +80,7 @@ class GreedyAssigner:
             found_slot = False
             for sem in self.config.seminars:
                 if seminar_current_counts[sem] < self.config.max_size:
+                    # Student.calculate_score に preference_weights を渡す
                     score = student.calculate_score(sem, self.config.magnification, self.config.preference_weights)
                     current_assignments[sem].append((student.id, score))
                     seminar_current_counts[sem] += 1
@@ -91,14 +95,14 @@ class GreedyAssigner:
 class LocalSearchOptimizer:
     """局所探索法 (簡易焼きなまし法を含む) による改善"""
     
-    def __init__(self, config_dict: dict, num_iterations: int, initial_temperature: float, cooling_rate: float): # 修正: dictを使用
+    def __init__(self, config_dict: dict, num_iterations: int, initial_temperature: float, cooling_rate: float):
         self.config = Config(**config_dict) 
         self.num_iterations = num_iterations
         self.initial_temperature = initial_temperature
         self.cooling_rate = cooling_rate
     
     def improve_assignment(self, students: list[Student], assignments: dict[str, list[tuple[int, float]]], 
-                             target_sizes: dict[str, int]) -> tuple[float, dict[str, list[tuple[int, float]]]]: # 修正: list, dict, tupleを使用
+                             target_sizes: dict[str, int]) -> tuple[float, dict[str, list[tuple[int, float]]]]:
         """局所探索法を用いて割当を改善します"""
         
         current_assignments = {sem: list(assignments[sem]) for sem in assignments}
@@ -178,7 +182,6 @@ class LocalSearchOptimizer:
         return current_score, current_assignments
 
 # トップレベル関数として定義
-# 修正: Dict, List, Tuple を dict, list, tuple に変更
 def _optimize_single_pattern_task(config_dict: dict, pattern_id: int, all_students: list[Student]) -> tuple[float, dict[str, list[tuple[int, float]]], dict[str, int]]:
     """
     並列処理のための単一パターン最適化タスク。

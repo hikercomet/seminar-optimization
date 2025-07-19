@@ -3,8 +3,8 @@ from typing import Dict, List, Optional
 
 @dataclass
 class Config:
-    seminars: Optional[list[str]] = None # 修正: listを使用
-    magnification: Optional[dict[str, float]] = None # 修正: dictを使用
+    seminars: Optional[list[str]] = None
+    magnification: Optional[dict[str, float]] = None
     min_size: int = 5
     max_size: int = 10
     num_students: Optional[int] = None 
@@ -19,7 +19,8 @@ class Config:
     local_search_iterations: int = 500
     initial_temperature: float = 1.0
     cooling_rate: float = 0.995
-    preference_weights: Optional[dict[str, float]] = None # 修正: dictを使用
+    preference_weights: Optional[dict[str, float]] = None 
+    num_preferences_to_consider: int = 3 # 第何希望まで考慮するか
 
     def __post_init__(self):
         if self.pdf_file is None:
@@ -31,7 +32,7 @@ class Config:
 
 
 class Student:
-    def __init__(self, student_id: int, preferences: list[str]): # 修正: listを使用
+    def __init__(self, student_id: int, preferences: list[str]):
         self.id = student_id
         self.preferences = preferences
         self.assigned_seminar = None
@@ -44,10 +45,11 @@ class Student:
         except ValueError:
             return -1
     
-    def calculate_score(self, seminar: str, magnification: dict[str, float], preference_weights: dict[str, float]) -> float: # 修正: dictを使用
+    def calculate_score(self, seminar: str, magnification: dict[str, float], preference_weights: dict[str, float]) -> float:
         """特定のセミナーに割り当てられた場合のスコアを計算します"""
         rank = self.get_preference_rank(seminar)
         
+        # preference_weights を参照するように変更
         if rank == 0:  # 1位希望
             base_score = preference_weights.get("1st", 5.0)
         elif rank == 1:  # 2位希望
