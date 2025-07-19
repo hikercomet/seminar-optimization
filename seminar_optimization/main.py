@@ -485,6 +485,9 @@ class SeminarOptimizer:
         """
         start_time = time.time()
         
+        # どの最適化戦略が実行されるかを進捗報告に表示
+        self._report_progress(f"最適化戦略 '{self.config.optimization_strategy}' を開始します。")
+
         best_pattern_sizes: Dict[str, int] = {}
         overall_best_score: float = -1.0
         final_assignments: Dict[str, List[Tuple[int, float]]] = {}
