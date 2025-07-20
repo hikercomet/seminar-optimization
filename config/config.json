@@ -1,0 +1,19 @@
+{
+    "data_directory": "data",
+    "seminars_file": "seminars.json",
+    "students_file": "students.json",
+    "results_file": "optimization_results.json",
+    "num_seminars": 5,
+    "min_capacity": 3,
+    "max_capacity": 6,
+    "seminar_specific_capacities": [],
+    "num_students": 20,
+    "min_preferences": 3,
+    "max_preferences": 5,
+    "ga_population_size": 100,
+    "ga_generations": 200,
+    "ga_mutation_rate": 0.1,
+    "ga_crossover_rate": 0.8,
+    "k_means_clusters": 5,
+    "debug_mode": true
+}

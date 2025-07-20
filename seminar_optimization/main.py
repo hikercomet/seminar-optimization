@@ -44,14 +44,10 @@ class ConfigLoader:
             "min_capacity": 3, # グローバルな最小定員（seminar_specific_capacitiesがない場合のフォールバック）
             "max_capacity": 6, # グローバルな最大定員（seminar_specific_capacitiesがない場合のフォールバック）
             "seminar_specific_capacities": [
-                # ゼミごとの定員を詳細に設定する場合、ここにリストとして追加します。
-                # 例:
-                # {"id": "Seminar A", "min_capacity": 4, "max_capacity": 7},
-                # {"id": "Seminar B", "min_capacity": 3, "max_capacity": 5}
-                #
-                # このリストが空または存在しない場合、上記のグローバルなmin_capacity/max_capacityが使用されます。
-                # num_seminarsで指定されたゼミ数とリストの数が異なる場合、不足分はグローバル設定で補われ、
-                # 超過分は無視されます。
+                # ゼミごとの定員を詳細に設定する場合、ここにリストとして追加
+                # 例: {"id": "Seminar A", "min_capacity": 4, "max_capacity": 7},
+                #     {"id": "Seminar B", "min_capacity": 3, "max_capacity": 5}
+                # このリストが空または存在しない場合、上記のmin_capacity/max_capacityが使用されます
             ],
             "num_students": 20,
             "min_preferences": 3,
@@ -66,7 +62,7 @@ class ConfigLoader:
         os.makedirs(os.path.dirname(self.config_path), exist_ok=True)
         try:
             with open(self.config_path, 'w', encoding='utf-8') as f:
-                json.dump(default_config, f, indent=4, ensure_ascii=False) # ensure_ascii=Falseを追加
+                json.dump(default_config, f, indent=4)
             logger.info(f"デフォルト設定ファイルを生成しました: {self.config_path}")
         except Exception as e:
             logger.error(f"デフォルト設定ファイルの書き込み中にエラーが発生しました: {e}")
@@ -81,11 +77,20 @@ class DataLoader:
         self.seminars_file = os.path.join(self.data_dir, self.config.get('seminars_file', 'seminars.json'))
         self.students_file = os.path.join(self.data_dir, self.config.get('students_file', 'students.json'))
 
+        # self.seminars と self.students を初期化
+        self.seminars = []
+        self.students = []
+
+        # データファイルが存在しない場合、ダミーデータを生成
         if not os.path.exists(self.seminars_file) or not os.path.exists(self.students_file):
             logger.info("データファイルが見つかりません。ダミーデータを生成します。")
-            self._generate_dummy_data()
+            self._generate_dummy_data() # これが self.seminars と self.students を設定する
         else:
             logger.info("既存のデータファイルを読み込みます。")
+            # ファイルが存在する場合は、ここでデータを読み込んで属性に設定する
+            loaded_seminars, loaded_students = self.load_data()
+            self.seminars = loaded_seminars
+            self.students = loaded_students
 
     def _generate_dummy_data(self):
         """ダミーのセミナーと学生データを生成する"""
@@ -155,6 +160,10 @@ class DataLoader:
         with open(self.students_file, 'w', encoding='utf-8') as f:
             json.dump(students, f, indent=4, ensure_ascii=False)
         logger.info(f"ダミーデータを生成しました: {len(seminars)}セミナー, {len(students)}学生")
+        
+        # ダミーデータを生成した場合も、DataLoaderの属性に設定する
+        self.seminars = seminars
+        self.students = students
 
     def load_data(self):
         """セミナーと学生のデータを読み込む"""
@@ -287,7 +296,8 @@ class SeminarOptimizer:
     def __init__(self, config_path='config/config.json'):
         self.config_loader = ConfigLoader(config_path)
         self.config = self.config_loader.config
-        self.data_loader = DataLoader(self.config)
+        # DataLoaderのインスタンス化時に、データが読み込まれるか生成される
+        self.data_loader = DataLoader(self.config) 
         self.debug_mode = self.config.get('debug_mode', False)
         if self.debug_mode:
             logger.debug("デバッグモードが有効です。")
@@ -295,7 +305,8 @@ class SeminarOptimizer:
     def run_clustering(self, students):
         """学生の希望に基づいてK-Meansクラスタリングを実行する"""
         logger.info("K-Meansクラスタリングを開始します...")
-        seminar_ids_from_data = [s['id'] for s in self.data_loader.seminars] # DataLoaderから読み込んだセミナーIDを使用
+        # DataLoaderのインスタンスが初期化時にseminars属性を持つようになったため、直接アクセス可能
+        seminar_ids_from_data = [s['id'] for s in self.data_loader.seminars] 
         
         student_vectors = []
         for i, student in enumerate(students):
@@ -346,7 +357,10 @@ class SeminarOptimizer:
 
     def run_optimization(self):
         """最適化プロセスを実行する"""
-        seminars, students = self.data_loader.load_data()
+        # DataLoaderの__init__で既にデータが読み込まれているため、ここでは直接self.data_loader.seminars/studentsを使用
+        seminars = self.data_loader.seminars
+        students = self.data_loader.students
+
         if not seminars or not students:
             logger.error("セミナーまたは学生データが読み込まれていません。最適化を中止します。")
             return
@@ -437,6 +451,7 @@ class SeminarOptimizer:
 
 if __name__ == "__main__":
     config_loader = ConfigLoader()
+    # DataLoaderのインスタンス化時に、データが読み込まれるか生成されるようになった
     data_loader = DataLoader(config_loader.config) 
     optimizer = SeminarOptimizer(config_path='config/config.json')
     optimizer.run_optimization()

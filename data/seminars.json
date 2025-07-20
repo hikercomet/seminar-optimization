@@ -1,0 +1,22 @@
+[
+    {
+        "id": "Seminar A",
+        "capacity": 5
+    },
+    {
+        "id": "Seminar B",
+        "capacity": 6
+    },
+    {
+        "id": "Seminar C",
+        "capacity": 4
+    },
+    {
+        "id": "Seminar D",
+        "capacity": 3
+    },
+    {
+        "id": "Seminar E",
+        "capacity": 4
+    }
+]

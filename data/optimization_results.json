@@ -1,0 +1,47 @@
+{
+    "total_score": 1850,
+    "student_assignments": {
+        "Student 7": "Seminar B",
+        "Student 12": "Seminar E",
+        "Student 19": "Seminar E",
+        "Student 1": "Seminar E",
+        "Student 2": "Seminar D",
+        "Student 4": "Seminar D",
+        "Student 5": "Seminar C",
+        "Student 13": "Seminar C",
+        "Student 14": "Seminar C",
+        "Student 18": "Seminar D",
+        "Student 20": "Seminar C",
+        "Student 6": "Seminar B",
+        "Student 16": "Seminar B",
+        "Student 3": "Seminar A",
+        "Student 8": "Seminar A",
+        "Student 9": "Seminar C",
+        "Student 15": "Seminar A",
+        "Student 10": "Seminar C",
+        "Student 11": "Seminar B",
+        "Student 17": "Seminar C"
+    },
+    "seminar_summary": {
+        "Seminar A": {
+            "capacity": 5,
+            "assigned_students": 3
+        },
+        "Seminar B": {
+            "capacity": 6,
+            "assigned_students": 4
+        },
+        "Seminar C": {
+            "capacity": 4,
+            "assigned_students": 7
+        },
+        "Seminar D": {
+            "capacity": 3,
+            "assigned_students": 3
+        },
+        "Seminar E": {
+            "capacity": 4,
+            "assigned_students": 3
+        }
+    }
+}
