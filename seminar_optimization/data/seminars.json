@@ -1,0 +1,27 @@
+[
+    {
+        "id": "SemA",
+        "capacity": 10,
+        "magnification": 1.2
+    },
+    {
+        "id": "SemB",
+        "capacity": 8,
+        "magnification": 1.0
+    },
+    {
+        "id": "SemC",
+        "capacity": 12,
+        "magnification": 1.1
+    },
+    {
+        "id": "SemD",
+        "capacity": 7,
+        "magnification": 0.9
+    },
+    {
+        "id": "SemE",
+        "capacity": 15,
+        "magnification": 1.0
+    }
+]

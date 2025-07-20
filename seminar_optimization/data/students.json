@@ -1,0 +1,42 @@
+[
+    {
+        "id": "S001",
+        "preferences": ["SemA", "SemC", "SemB"]
+    },
+    {
+        "id": "S002",
+        "preferences": ["SemB", "SemA", "SemD"]
+    },
+    {
+        "id": "S003",
+        "preferences": ["SemC", "SemE", "SemA"]
+    },
+    {
+        "id": "S004",
+        "preferences": ["SemA", "SemD", "SemB"]
+    },
+    {
+        "id": "S005",
+        "preferences": ["SemE", "SemC", "SemB"]
+    },
+    {
+        "id": "S006",
+        "preferences": ["SemA", "SemB"]
+    },
+    {
+        "id": "S007",
+        "preferences": ["SemD", "SemA"]
+    },
+    {
+        "id": "S008",
+        "preferences": ["SemB", "SemC"]
+    },
+    {
+        "id": "S009",
+        "preferences": ["SemC", "SemA"]
+    },
+    {
+        "id": "S010",
+        "preferences": ["SemE", "SemD"]
+    }
+]

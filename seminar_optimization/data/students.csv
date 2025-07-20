@@ -1,0 +1,11 @@
+student_id,preferred_seminar_1,preferred_seminar_2,preferred_seminar_3
+S001,SemA,SemC,SemB
+S002,SemB,SemA,SemD
+S003,SemC,SemE,SemA
+S004,SemA,SemD,SemB
+S005,SemE,SemC,SemB
+S006,SemA,SemB,
+S007,SemD,SemA,
+S008,SemB,SemC,
+S009,SemC,SemA,
+S010,SemE,SemD,

@@ -1,5 +1,5 @@
 import logging
-from ortools.sat.python import cp_model # ILPソルバーの代わりにCP-SATを使用
+from ortools.sat.python import cp_model
 import time
 import threading
 from typing import Dict, List, Any, Callable, Optional, Tuple
@@ -9,10 +9,10 @@ from utils import BaseOptimizer, OptimizationResult
 
 logger = logging.getLogger(__name__)
 
-class ILPOptimizer(BaseOptimizer): # BaseOptimizerを継承
+class CPSATOptimizer(BaseOptimizer): # BaseOptimizerを継承
     """
-    整数線形計画法 (ILP) を用いたセミナー割り当て最適化アルゴリズム。
-    Google OR-Tools の CP-SAT ソルバーをILPモードで使用する。
+    制約プログラミング (CP-SAT) を用いたセミナー割り当て最適化アルゴリズム。
+    Google OR-Tools の CP-SAT ソルバーを使用する。
     """
     def __init__(self,
                  seminars: List[Dict[str, Any]],
@@ -23,27 +23,23 @@ class ILPOptimizer(BaseOptimizer): # BaseOptimizerを継承
         super().__init__(seminars, students, config, progress_callback)
 
         # 固有のパラメータはconfigから取得
-        self.time_limit = config.get("ilp_time_limit", 300) # 秒
+        self.time_limit = config.get("cp_time_limit", 300) # 秒
         self.solver = cp_model.CpSolver()
         self.solver.parameters.max_time_in_seconds = self.time_limit
         self.solver.parameters.num_workers = config.get("max_workers", 8) # 並列ワーカー数
-        
-        # ILPモードを明示的に設定 (CP-SATはデフォルトで混合整数計画問題を解く)
-        # self.solver.parameters.log_search_progress = True # デバッグ用
 
     # _calculate_score はBaseOptimizerから継承されるため削除
 
     def optimize(self) -> OptimizationResult: # 返り値をOptimizationResultに
         """
-        ILPモデルを構築し、最適化を実行する。
+        CP-SATモデルを構築し、最適化を実行する。
         """
-        self._log("ILP 最適化を開始します。")
+        self._log("CP-SAT 最適化を開始します。")
         start_time = time.time()
 
         model = cp_model.CpModel()
 
         # 変数: x[(学生ID, セミナーID)] = 1 なら割り当て、0 なら割り当てなし
-        # ILPではNewBoolVarが整数変数を意味する
         x = {}
         for student in self.students:
             for seminar in self.seminars:
@@ -76,23 +72,23 @@ class ILPOptimizer(BaseOptimizer): # BaseOptimizerを継承
         
         model.Maximize(sum(objective_terms))
 
-        self._log("ILP ソルバーを実行中...")
+        self._log("CP-SAT ソルバーを実行中...")
         status = self.solver.Solve(model)
 
         final_assignment: Dict[str, str] = {}
         final_score = -float('inf')
         status_str = "NO_SOLUTION_FOUND"
-        message = "ILPソルバーで解が見つかりませんでした。"
+        message = "CP-SATソルバーで解が見つかりませんでした。"
         unassigned_students: List[str] = []
 
         if status == cp_model.OPTIMAL or status == cp_model.FEASIBLE:
             if status == cp_model.OPTIMAL:
                 status_str = "OPTIMAL"
-                message = f"ILP最適解が見つかりました。スコア: {self.solver.ObjectiveValue():.2f}"
+                message = f"CP-SAT最適解が見つかりました。スコア: {self.solver.ObjectiveValue():.2f}"
                 self._log(message)
             else: # FEASIBLE
                 status_str = "FEASIBLE"
-                message = f"ILP実行可能解が見つかりました (時間切れなど)。スコア: {self.solver.ObjectiveValue():.2f}"
+                message = f"CP-SAT実行可能解が見つかりました (時間切れなど)。スコア: {self.solver.ObjectiveValue():.2f}"
                 self._log(message, level=logging.WARNING)
 
             for student in self.students:
@@ -105,24 +101,24 @@ class ILPOptimizer(BaseOptimizer): # BaseOptimizerを継承
 
         elif status == cp_model.INFEASIBLE:
             status_str = "INFEASIBLE"
-            message = "ILPモデルは実行不可能です。制約を見直してください。"
+            message = "CP-SATモデルは実行不可能です。制約を見直してください。"
             self._log(message, level=logging.ERROR)
         elif status == cp_model.MODEL_INVALID:
             status_str = "MODEL_INVALID"
-            message = "ILPモデルが無効です。"
+            message = "CP-SATモデルが無効です。"
             self._log(message, level=logging.ERROR)
         elif status == cp_model.CANCELLED:
             status_str = "CANCELLED"
-            message = "ILPソルバーがキャンセルされました。"
+            message = "CP-SATソルバーがキャンセルされました。"
             self._log(message)
         else:
             status_str = "NO_SOLUTION_FOUND"
-            message = f"ILPソルバーで解が見つかりませんでした。ステータス: {self.solver.StatusName(status)}"
+            message = f"CP-SATソルバーで解が見つかりませんでした。ステータス: {self.solver.StatusName(status)}"
             self._log(message, level=logging.WARNING)
 
         end_time = time.time()
         duration = end_time - start_time
-        self._log(f"ILP 最適化完了。実行時間: {duration:.2f}秒")
+        self._log(f"CP-SAT 最適化完了。実行時間: {duration:.2f}秒")
 
         return OptimizationResult(
             status=status_str,
@@ -131,6 +127,6 @@ class ILPOptimizer(BaseOptimizer): # BaseOptimizerを継承
             best_assignment=final_assignment,
             seminar_capacities=self.seminar_capacities,
             unassigned_students=unassigned_students,
-            optimization_strategy="ILP"
+            optimization_strategy="CP"
         )
 
