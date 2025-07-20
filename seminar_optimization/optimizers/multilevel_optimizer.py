@@ -1,157 +1,143 @@
-import random
 import logging
+from typing import Dict, List, Tuple, Any
+import numpy as np
+from sklearn.cluster import KMeans
 from collections import defaultdict
-from typing import Dict, List, Tuple, Callable, Optional
 
-# 外部モジュールからのインポート
-from models import Config, Student
-from optimizers.greedy_ls_optimizer import LocalSearchOptimizer # LocalSearchOptimizerをインポート
+from models import Student, Config
+from optimizers.cp_optimizer import CPOptimizer # Multilevelは内部でCPまたはILPを利用可能
+from optimizers.ilp_optimizer import ILPOptimizer # またはILP
 
 logger = logging.getLogger(__name__)
 
 class MultilevelOptimizer:
     """
-    多段階最適化 (Multilevel Optimization) を用いてセミナー割り当てを最適化するクラスです。
-    このアプローチでは、複数のフェーズを経て解を洗練させます。
-    フェーズ1: 階層的な初期割り当て (学生の希望順位を考慮)
-    フェーズ2: 全体的な局所探索による洗練
+    多段階最適化を用いてセミナー割り当て問題を最適化するクラス。
+    学生をクラスタリングし、その情報を用いてより良い初期解を生成するか、
+    ソルバーの探索をガイドします。
+    ここでは、クラスタリングと、そのクラスタリング情報に基づいたCP-SATソルバーの実行を行います。
     """
-    def __init__(self, config_dict: dict, students: list[Student], target_sizes: dict[str, int]):
-        self.config = Config(**config_dict)
+    def __init__(self, config: Config, students: List[Student]):
+        self.config = config
         self.students = students
-        self.target_sizes = target_sizes
-        self.students_dict = {s.id: s for s in students}
-        self.seminar_names = self.config.seminars
+        self.student_preferences_map = {s.id: s.preferences for s in students}
+        self.seminar_names = config.seminars
+        self.num_students = len(students)
+        self.num_clusters = config.multilevel_clusters # クラスタ数
+        self.preference_weights = config.preference_weights
 
-        self.local_search_optimizer = LocalSearchOptimizer(
-            config_dict,
-            num_iterations=self.config.multilevel_refinement_iterations, # Multilevel専用の反復回数
-            initial_temperature=self.config.initial_temperature,
-            cooling_rate=self.config.cooling_rate
-        )
+        # 希望順位の重みを辞書に変換
+        self.weights = {
+            1: self.preference_weights.get("1st", 5.0),
+            2: self.preference_weights.get("2nd", 2.0),
+            3: self.preference_weights.get("3rd", 1.0)
+        }
 
-    def _hierarchical_initial_assignment(self, students: list[Student], target_sizes: dict[str, int]) -> tuple[float, dict[str, list[tuple[int, float]]]]:
+    def _vectorize_preferences(self) -> np.ndarray:
         """
-        学生の希望順位を考慮した階層的な初期割り当てを行います。
-        1. 第1希望のセミナーに優先的に割り当てる。
-        2. 第1希望が叶わなかった学生を第2希望のセミナーに割り当てる。
-        3. 第2希望が叶わなかった学生を第3希望のセミナーに割り当てる。
-        4. それでも割り当てられなかった学生を、空きのあるセミナーにランダムに割り当てる。
+        学生の希望を数値ベクトルに変換します。
+        各セミナーに対して、そのセミナーが何番目の希望かによって重みを付けます。
+        例: 'A': 1st, 'B': 2nd, 'C': 3rd
+        ベクトル: [sem_A_score, sem_B_score, sem_C_score, ...]
         """
-        current_assignments = {sem: [] for sem in self.seminar_names}
-        seminar_current_counts = defaultdict(int)
+        seminar_to_idx = {sem: i for i, sem in enumerate(self.seminar_names)}
         
-        # 学生をランダムな順序で処理
-        shuffled_students = list(students)
-        random.shuffle(shuffled_students)
-
-        total_score = 0.0
+        # 各学生の希望ベクトルを格納するリスト
+        preference_vectors = []
+        for student in self.students:
+            # セミナー数分のゼロベクトルを初期化
+            vec = np.zeros(len(self.seminar_names))
+            for rank, preferred_sem in enumerate(student.preferences):
+                if preferred_sem in seminar_to_idx:
+                    # 希望順位に基づいて重みを設定
+                    # 1st: 3, 2nd: 2, 3rd: 1 (例)
+                    weight_for_rank = 0
+                    if rank == 0: # 1st preference
+                        weight_for_rank = 3
+                    elif rank == 1: # 2nd preference
+                        weight_for_rank = 2
+                    elif rank == 2: # 3rd preference
+                        weight_for_rank = 1
+                    
+                    vec[seminar_to_idx[preferred_sem]] = weight_for_rank
+            preference_vectors.append(vec)
         
-        # 希望順位ごとに学生を処理
-        # 0: 1st choice, 1: 2nd choice, 2: 3rd choice, -1: others
-        for rank_priority in range(self.config.num_preferences_to_consider): # 0, 1, 2
-            students_for_this_rank = [s for s in shuffled_students if s.assigned_seminar is None] # まだ割り当てられていない学生
-            
-            for student in students_for_this_rank:
-                preferred_seminar_at_rank = None
-                if len(student.preferences) > rank_priority:
-                    preferred_seminar_at_rank = student.preferences[rank_priority]
-                
-                if preferred_seminar_at_rank and preferred_seminar_at_rank in self.seminar_names:
-                    # 目標定員内であれば割り当て
-                    if seminar_current_counts[preferred_seminar_at_rank] < target_sizes[preferred_seminar_at_rank]:
-                        score = student.calculate_score(preferred_seminar_at_rank, self.config.magnification, self.config.preference_weights)
-                        current_assignments[preferred_seminar_at_rank].append((student.id, score))
-                        seminar_current_counts[preferred_seminar_at_rank] += 1
-                        total_score += score
-                        student.assigned_seminar = preferred_seminar_at_rank # 学生オブジェクトに割り当てを記録
-        
-        # 残りの学生を最大定員内で割り当てる
-        unassigned_students = [s for s in shuffled_students if s.assigned_seminar is None]
-        for student in unassigned_students:
-            found_slot = False
-            # 空きのあるセミナーをランダムに試す
-            available_seminars = [sem for sem in self.seminar_names if seminar_current_counts[sem] < self.config.max_size]
-            random.shuffle(available_seminars)
+        return np.array(preference_vectors)
 
-            for sem in available_seminars:
-                score = student.calculate_score(sem, self.config.magnification, self.config.preference_weights)
-                current_assignments[sem].append((student.id, score))
-                seminar_current_counts[sem] += 1
-                total_score += score
-                student.assigned_seminar = sem
-                found_slot = True
-                break
-            
-            if not found_slot:
-                logger.warning(f"Student {student.id} could not be assigned to any seminar in hierarchical assignment (max capacity reached).")
-        
-        # 最終チェックとして、全ての学生が割り当てられているか確認
-        # もし割り当てられていない学生が残っていたら、強制的に割り当てる（定員無視の可能性あり）
-        final_unassigned_students = [s for s in shuffled_students if s.assigned_seminar is None]
-        for student in final_unassigned_students:
-            # 最も空きがあるセミナーに割り当てる
-            sorted_seminars_by_capacity = sorted(self.seminar_names, key=lambda sem: seminar_current_counts[sem])
-            assigned_to_any = False
-            for sem in sorted_seminars_by_capacity:
-                if seminar_current_counts[sem] < self.config.max_size: # 最大定員まで許容
-                    score = student.calculate_score(sem, self.config.magnification, self.config.preference_weights)
-                    current_assignments[sem].append((student.id, score))
-                    seminar_current_counts[sem] += 1
-                    total_score += score
-                    student.assigned_seminar = sem
-                    assigned_to_any = True
-                    break
-            if not assigned_to_any:
-                # 最終手段：どこかのセミナーに割り当てる（定員超過を許容）
-                chosen_sem = random.choice(self.seminar_names)
-                score = student.calculate_score(chosen_sem, self.config.magnification, self.config.preference_weights)
-                current_assignments[chosen_sem].append((student.id, score))
-                seminar_current_counts[chosen_sem] += 1
-                total_score += score
-                student.assigned_seminar = chosen_sem
-                logger.warning(f"Student {student.id} forced into {chosen_sem} (may exceed max capacity).")
-
-        return total_score, current_assignments
-
-    def run_multilevel(self, progress_callback: Callable[[str], None]) -> tuple[float, dict[str, list[tuple[int, float]]]]:
+    def _calculate_score(self, assignments: Dict[str, List[Tuple[int, float]]]) -> float:
         """
-        多段階最適化のメインループを実行します。
+        割り当て結果のスコアを計算します。
+        utils.calculate_score を使用します。
         """
-        logger.info("多段階最適化を開始します。")
-        progress_callback("多段階最適化: フェーズ1 (初期割り当て) 開始...")
+        from utils import calculate_score
+        return calculate_score(assignments, self.student_preferences_map, self.preference_weights)
 
-        best_score = 0.0
-        best_assignments = None
+    def optimize(self) -> Tuple[Dict[str, int], float, Dict[str, List[Tuple[int, float]]]]:
+        """
+        多段階最適化を実行します。
+        1. 学生の希望をベクトル化
+        2. K-Meansでクラスタリング
+        3. クラスタリング情報を元にCP-SATを呼び出す
+        """
+        logger.info("多段階最適化を開始します (クラスタリングとCP-SAT連携)...")
 
-        # フェーズ1: 複数の階層的初期割り当てを生成し、最も良いものを選択
-        for i in range(self.config.multilevel_initial_greedy_runs):
-            if progress_callback:
-                progress_callback(f"  初期割り当てパターン生成中: {i+1}/{self.config.multilevel_initial_greedy_runs}")
-            
-            # 各学生オブジェクトのassigned_seminarをリセットして再利用
-            for s in self.students:
-                s.assigned_seminar = None
-
-            current_score, current_assignments = self._hierarchical_initial_assignment(self.students, self.target_sizes)
-            
-            if current_score > best_score:
-                best_score = current_score
-                best_assignments = current_assignments
-                logger.info(f"[Multilevel Phase 1 New Best] パターン {i+1}: スコア {best_score:.2f}")
+        # 1. 学生の希望をベクトル化
+        preference_vectors = self._vectorize_preferences()
         
-        if best_assignments is None:
-            logger.error("多段階最適化: 初期割り当てで有効な結果が得られませんでした。")
-            progress_callback("エラー: 多段階最適化の初期割り当てに失敗しました。")
-            return 0.0, {sem: [] for sem in self.seminar_names}
+        if self.num_students == 0:
+            logger.warning("学生が0人です。最適化を実行できません。")
+            return {}, -1.0, {}
+        
+        if self.num_clusters > self.num_students:
+            logger.warning(f"クラスタ数 ({self.num_clusters}) が学生数 ({self.num_students}) を超えています。クラスタ数を学生数に設定します。")
+            self.num_clusters = self.num_students
+        
+        if self.num_clusters <= 0:
+            logger.warning("クラスタ数が0以下です。クラスタ数を1に設定します。")
+            self.num_clusters = 1
 
-        progress_callback("多段階最適化: フェーズ2 (局所探索による洗練) 開始...")
-        # フェーズ2: 最も良い初期割り当てに対して局所探索を適用
-        final_score, final_assignments = self.local_search_optimizer.improve_assignment(
-            self.students, best_assignments, self.target_sizes, progress_callback=progress_callback
-        )
+        # 2. K-Meansでクラスタリング
+        logger.info(f"学生を {self.num_clusters} 個のクラスタにクラスタリング中...")
+        try:
+            # n_init='auto'はscikit-learn 1.4以降のデフォルト
+            # 以前のバージョンとの互換性を考慮し、n_init=10を明示的に指定
+            kmeans = KMeans(n_clusters=self.num_clusters, random_state=42, n_init=10) 
+            cluster_labels = kmeans.fit_predict(preference_vectors)
+        except Exception as e:
+            logger.error(f"K-Meansクラスタリング中にエラーが発生しました: {e}")
+            logger.warning("クラスタリングをスキップし、直接CP-SATを実行します。")
+            # エラー時はクラスタリングなしでCP-SATを実行するフォールバック
+            cp_optimizer = CPOptimizer(self.config, self.students)
+            return cp_optimizer.optimize()
 
-        logger.info(f"多段階最適化が完了しました。最終スコア: {final_score:.2f}")
-        progress_callback("多段階最適化が完了しました。")
-        return final_score, final_assignments
+        # クラスタごとの学生IDリスト
+        clusters: Dict[int, List[Student]] = defaultdict(list)
+        for i, student in enumerate(self.students):
+            clusters[cluster_labels[i]].append(student)
+        
+        logger.info("クラスタリング完了。各クラスタの学生数:")
+        for cluster_id, students_in_cluster in clusters.items():
+            logger.info(f"  クラスタ {cluster_id}: {len(students_in_cluster)} 人")
 
+        # 3. クラスタリング情報を元にCP-SATを呼び出す
+        # ここでは、クラスタリング情報そのものをCP-SATのモデルに直接組み込むのではなく、
+        # クラスタリングによって得られた洞察（例えば、各クラスタがどのセミナーを強く希望しているか）を
+        # 考慮した上で、最終的にCP-SATに全体の問題を解かせます。
+        # CP-SATはすでに最適解を見つける能力があるため、
+        # クラスタリングは問題の理解を深めるための前処理として利用します。
+        # 将来的には、クラスタリング情報を用いてCP-SATの探索をガイドするような
+        # より高度な実装も考えられます（例: 優先順位付け、初期解の提供など）。
+
+        # 現時点では、クラスタリングは情報提供のみとし、
+        # 最終的な最適化はCP-SATに任せる。
+        # これは、CP-SATが既に強力なソルバーであり、
+        # クラスタリングを直接モデルに組み込むのが複雑であるため。
+        # より洗練された多段階最適化は、より大規模な問題や、
+        # 特定のヒューリスティックが必要な場合に考慮される。
+        
+        logger.info("クラスタリング情報を考慮しつつ、CP-SATソルバーを実行します。")
+        cp_optimizer = CPOptimizer(self.config, self.students)
+        best_pattern_sizes, overall_best_score, final_assignments = cp_optimizer.optimize()
+
+        logger.info("多段階最適化 (クラスタリングとCP-SAT連携) が完了しました。")
+        return best_pattern_sizes, overall_best_score, final_assignments

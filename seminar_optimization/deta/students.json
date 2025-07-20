@@ -1,0 +1,62 @@
+[
+    {
+        "id": "student_1",
+        "preferences": ["seminar_A", "seminar_B", "seminar_C"]
+    },
+    {
+        "id": "student_2",
+        "preferences": ["seminar_A", "seminar_C", "seminar_B"]
+    },
+    {
+        "id": "student_3",
+        "preferences": ["seminar_B", "seminar_A", "seminar_C"]
+    },
+    {
+        "id": "student_4",
+        "preferences": ["seminar_B", "seminar_D", "seminar_A"]
+    },
+    {
+        "id": "student_5",
+        "preferences": ["seminar_C", "seminar_A", "seminar_B"]
+    },
+    {
+        "id": "student_6",
+        "preferences": ["seminar_D", "seminar_A", "seminar_B"]
+    },
+    {
+        "id": "student_7",
+        "preferences": ["seminar_A", "seminar_D", "seminar_C"]
+    },
+    {
+        "id": "student_8",
+        "preferences": ["seminar_E", "seminar_B", "seminar_D"]
+    },
+    {
+        "id": "student_9",
+        "preferences": ["seminar_C", "seminar_E", "seminar_A"]
+    },
+    {
+        "id": "student_10",
+        "preferences": ["seminar_B", "seminar_E", "seminar_D"]
+    },
+    {
+        "id": "student_11",
+        "preferences": ["seminar_A", "seminar_E", "seminar_C"]
+    },
+    {
+        "id": "student_12",
+        "preferences": ["seminar_D", "seminar_C", "seminar_B"]
+    },
+    {
+        "id": "student_13",
+        "preferences": ["seminar_E", "seminar_A", "seminar_B"]
+    },
+    {
+        "id": "student_14",
+        "preferences": ["seminar_C", "seminar_D", "seminar_A"]
+    },
+    {
+        "id": "student_15",
+        "preferences": ["seminar_B", "seminar_C", "seminar_E"]
+    }
+]

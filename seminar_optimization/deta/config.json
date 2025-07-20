@@ -1,0 +1,12 @@
+{
+    "data_paths": {
+        "seminars": "data/seminars.json",
+        "students": "data/students.json"
+    },
+    "ga_parameters": {
+        "population_size": 100,
+        "generations": 500,
+        "crossover_rate": 0.8,
+        "mutation_rate": 0.01
+    }
+}

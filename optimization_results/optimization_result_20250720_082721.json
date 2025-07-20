@@ -1,0 +1,233 @@
+{
+    "timestamp": "20250720_082721",
+    "config_parameters": {
+        "seminars": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f",
+            "g",
+            "h",
+            "i",
+            "j",
+            "k",
+            "l",
+            "m",
+            "n",
+            "o",
+            "p",
+            "q",
+            "r",
+            "s",
+            "t"
+        ],
+        "magnification": {
+            "a": 2.0,
+            "b": 1.5,
+            "q": 3.0
+        },
+        "min_size": 5,
+        "max_size": 10,
+        "num_students": 112,
+        "q_boost_probability": 0.2,
+        "num_patterns": 1000,
+        "max_workers": 4,
+        "local_search_iterations": 100,
+        "initial_temperature": 1.0,
+        "cooling_rate": 0.995,
+        "preference_weights": {
+            "1st": 5.0,
+            "2nd": 2.0,
+            "3rd": 1.0
+        },
+        "optimization_strategy": "Greedy_LS",
+        "ga_population_size": 50,
+        "ga_crossover_rate": 0.8,
+        "ga_mutation_rate": 0.05,
+        "ilp_time_limit": 300,
+        "cp_time_limit": 300,
+        "multilevel_clusters": 5,
+        "output_dir": "results",
+        "pdf_file": "seminar_assignment_report.pdf",
+        "csv_file": "seminar_assignment_results.csv"
+    },
+    "best_pattern_sizes": {
+        "a": 10,
+        "b": 7,
+        "c": 5,
+        "d": 5,
+        "e": 5,
+        "f": 5,
+        "g": 6,
+        "h": 5,
+        "i": 5,
+        "j": 5,
+        "k": 5,
+        "l": 5,
+        "m": 5,
+        "n": 5,
+        "o": 5,
+        "p": 5,
+        "q": 9,
+        "r": 5,
+        "s": 5,
+        "t": 5
+    },
+    "overall_best_score": 271.0,
+    "final_assignments": {
+        "a": [
+            78,
+            111,
+            18,
+            64,
+            98,
+            106,
+            60,
+            3,
+            38,
+            46
+        ],
+        "b": [
+            97,
+            7,
+            66,
+            22,
+            107,
+            75,
+            41
+        ],
+        "c": [
+            5,
+            105,
+            84,
+            49,
+            28
+        ],
+        "d": [
+            96,
+            29,
+            81,
+            1,
+            103
+        ],
+        "e": [
+            14,
+            33,
+            35,
+            88,
+            37
+        ],
+        "f": [
+            89,
+            51,
+            24,
+            42,
+            57
+        ],
+        "g": [
+            87,
+            13,
+            63,
+            40,
+            69,
+            102
+        ],
+        "h": [
+            58,
+            4,
+            95,
+            39,
+            34
+        ],
+        "i": [
+            112,
+            83,
+            23,
+            70,
+            109
+        ],
+        "j": [
+            74,
+            71,
+            8,
+            62,
+            52
+        ],
+        "k": [
+            80,
+            2,
+            86,
+            82,
+            16
+        ],
+        "l": [
+            110,
+            67,
+            101,
+            73,
+            36
+        ],
+        "m": [
+            55,
+            32,
+            59,
+            61,
+            43
+        ],
+        "n": [
+            27,
+            99,
+            104,
+            79,
+            48
+        ],
+        "o": [
+            54,
+            68,
+            90,
+            108,
+            11
+        ],
+        "p": [
+            56,
+            50,
+            19,
+            17,
+            91
+        ],
+        "q": [
+            6,
+            9,
+            44,
+            10,
+            85,
+            20,
+            21,
+            30,
+            92
+        ],
+        "r": [
+            77,
+            76,
+            93,
+            72,
+            94
+        ],
+        "s": [
+            53,
+            12,
+            25,
+            15,
+            65
+        ],
+        "t": [
+            47,
+            100,
+            31,
+            26,
+            45
+        ]
+    }
+}

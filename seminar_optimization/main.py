@@ -1,564 +1,442 @@
-import random
-import concurrent.futures
-import time
+import os
 import json
 import logging
-from typing import Dict, List, Tuple, Any, Callable, Optional
-from dataclasses import dataclass, asdict, field
-from datetime import datetime
-import os
-import math # mathモジュールを追加
+import random
+import numpy as np
+from sklearn.cluster import KMeans
+from ortools.sat.python import cp_model
 
-# ログ設定
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# ロギング設定
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s:%(lineno)d - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-@dataclass
-class Student:
-    """学生の情報を保持するデータクラス"""
-    id: int
-    preferences: List[str] # 希望セミナーのリスト (例: ['a', 'b', 'c'])
+class ConfigLoader:
+    """設定ファイルを読み込むクラス"""
+    def __init__(self, config_path='config/config.json'):
+        self.config_path = config_path
+        self.config = self._load_config()
 
-@dataclass
-class Config:
-    """最適化設定を保持するデータクラス"""
-    seminars: List[str] = field(default_factory=list)
-    magnification: Dict[str, float] = field(default_factory=dict)
-    min_size: int = 5
-    max_size: int = 10
-    num_students: int = 0 # 学生総数はPreferenceGeneratorで設定される
-    q_boost_probability: float = 0.2
-    num_patterns: int = 200000 # Greedy_LSの試行回数、GA_LSの世代数
-    max_workers: int = 8
-    local_search_iterations: int = 500
-    initial_temperature: float = 1.0
-    cooling_rate: float = 0.995
-    preference_weights: Dict[str, float] = field(default_factory=lambda: {"1st": 5.0, "2nd": 2.0, "3rd": 1.0})
-    optimization_strategy: str = "Greedy_LS" # "Greedy_LS", "GA_LS", "ILP", "CP", "Multilevel"
-    ga_population_size: int = 100
-    ga_crossover_rate: float = 0.8
-    ga_mutation_rate: float = 0.05
-    ilp_time_limit: int = 300 # seconds
-    cp_time_limit: int = 300 # seconds
-    multilevel_clusters: int = 5
+    def _load_config(self):
+        """設定ファイルを読み込む"""
+        if not os.path.exists(self.config_path):
+            logger.warning(f"設定ファイルが見つかりません: {self.config_path}。デフォルト設定を使用します。")
+            return self._create_default_config()
+        try:
+            with open(self.config_path, 'r', encoding='utf-8') as f:
+                config = json.load(f)
+            logger.info(f"設定ファイルを読み込みました: {self.config_path}")
+            return config
+        except json.JSONDecodeError as e:
+            logger.error(f"設定ファイルのJSONデコードエラー: {e}")
+            return self._create_default_config()
+        except Exception as e:
+            logger.error(f"設定ファイルの読み込み中にエラーが発生しました: {e}")
+            return self._create_default_config()
+
+    def _create_default_config(self):
+        """デフォルト設定を作成し、ファイルに保存する"""
+        default_config = {
+            "data_directory": "data",
+            "seminars_file": "seminars.json",
+            "students_file": "students.json",
+            "results_file": "optimization_results.json",
+            "num_seminars": 5,
+            "min_capacity": 3, # グローバルな最小定員（seminar_specific_capacitiesがない場合のフォールバック）
+            "max_capacity": 6, # グローバルな最大定員（seminar_specific_capacitiesがない場合のフォールバック）
+            "seminar_specific_capacities": [
+                # ゼミごとの定員を詳細に設定する場合、ここにリストとして追加します。
+                # 例:
+                # {"id": "Seminar A", "min_capacity": 4, "max_capacity": 7},
+                # {"id": "Seminar B", "min_capacity": 3, "max_capacity": 5}
+                #
+                # このリストが空または存在しない場合、上記のグローバルなmin_capacity/max_capacityが使用されます。
+                # num_seminarsで指定されたゼミ数とリストの数が異なる場合、不足分はグローバル設定で補われ、
+                # 超過分は無視されます。
+            ],
+            "num_students": 20,
+            "min_preferences": 3,
+            "max_preferences": 5,
+            "ga_population_size": 100,
+            "ga_generations": 200,
+            "ga_mutation_rate": 0.1,
+            "ga_crossover_rate": 0.8,
+            "k_means_clusters": 5,
+            "debug_mode": True
+        }
+        os.makedirs(os.path.dirname(self.config_path), exist_ok=True)
+        try:
+            with open(self.config_path, 'w', encoding='utf-8') as f:
+                json.dump(default_config, f, indent=4, ensure_ascii=False) # ensure_ascii=Falseを追加
+            logger.info(f"デフォルト設定ファイルを生成しました: {self.config_path}")
+        except Exception as e:
+            logger.error(f"デフォルト設定ファイルの書き込み中にエラーが発生しました: {e}")
+        return default_config
+
+class DataLoader:
+    """セミナーと学生のデータを読み込むクラス"""
+    def __init__(self, config):
+        self.config = config
+        self.data_dir = self.config.get('data_directory', 'data')
+        os.makedirs(self.data_dir, exist_ok=True)
+        self.seminars_file = os.path.join(self.data_dir, self.config.get('seminars_file', 'seminars.json'))
+        self.students_file = os.path.join(self.data_dir, self.config.get('students_file', 'students.json'))
+
+        if not os.path.exists(self.seminars_file) or not os.path.exists(self.students_file):
+            logger.info("データファイルが見つかりません。ダミーデータを生成します。")
+            self._generate_dummy_data()
+        else:
+            logger.info("既存のデータファイルを読み込みます。")
+
+    def _generate_dummy_data(self):
+        """ダミーのセミナーと学生データを生成する"""
+        num_seminars = self.config.get('num_seminars', 5)
+        global_min_capacity = self.config.get('min_capacity', 3)
+        global_max_capacity = self.config.get('max_capacity', 6)
+        num_students = self.config.get('num_students', 20)
+        min_preferences = self.config.get('min_preferences', 3)
+        max_preferences = self.config.get('max_preferences', 5)
+        
+        seminar_specific_capacities = self.config.get('seminar_specific_capacities', [])
+
+        seminars = []
+        if seminar_specific_capacities:
+            # seminar_specific_capacitiesが設定されている場合
+            for i, seminar_detail in enumerate(seminar_specific_capacities):
+                # num_seminarsで指定された数を超過しないように調整
+                if len(seminars) >= num_seminars:
+                    break
+                seminar_id = seminar_detail.get("id", f"Seminar {chr(65 + i)}")
+                min_cap = seminar_detail.get("min_capacity", global_min_capacity)
+                max_cap = seminar_detail.get("max_capacity", global_max_capacity)
+                capacity = random.randint(min_cap, max_cap)
+                seminars.append({
+                    "id": seminar_id,
+                    "capacity": capacity
+                })
+            # num_seminarsとseminar_specific_capacitiesの数が異なる場合を考慮
+            if len(seminars) < num_seminars:
+                logger.warning(f"seminar_specific_capacitiesの数がnum_seminars({num_seminars})より少ないです。不足分はデフォルト設定で生成します。")
+                for i in range(len(seminars), num_seminars):
+                    seminars.append({
+                        "id": f"Seminar {chr(65 + i)}",
+                        "capacity": random.randint(global_min_capacity, global_max_capacity)
+                    })
+            elif len(seminars) > num_seminars:
+                logger.warning(f"seminar_specific_capacitiesの数がnum_seminars({num_seminars})より多いです。最初の{num_seminars}個のセミナーを使用します。")
+                seminars = seminars[:num_seminars]
+        else:
+            # seminar_specific_capacitiesが設定されていない場合、従来のランダム生成
+            for i in range(num_seminars):
+                seminars.append({
+                    "id": f"Seminar {chr(65 + i)}",
+                    "capacity": random.randint(global_min_capacity, global_max_capacity)
+                })
+        
+        total_capacity = sum(s['capacity'] for s in seminars)
+        if num_students > total_capacity:
+            logger.warning(f"警告: 設定された学生数({num_students})がセミナーの総定員({total_capacity})を超過しています。学生数を総定員に合わせます。")
+            num_students = total_capacity
+        elif num_students < total_capacity:
+            logger.info(f"情報: 設定された学生数({num_students})がセミナーの総定員({total_capacity})より少ないです。")
+
+
+        students = []
+        seminar_ids = [s['id'] for s in seminars]
+        for i in range(num_students):
+            num_prefs = random.randint(min_preferences, max_preferences)
+            preferences = random.sample(seminar_ids, min(num_prefs, len(seminar_ids)))
+            students.append({
+                "id": f"Student {i + 1}",
+                "preferences": preferences
+            })
+
+        with open(self.seminars_file, 'w', encoding='utf-8') as f:
+            json.dump(seminars, f, indent=4, ensure_ascii=False)
+        with open(self.students_file, 'w', encoding='utf-8') as f:
+            json.dump(students, f, indent=4, ensure_ascii=False)
+        logger.info(f"ダミーデータを生成しました: {len(seminars)}セミナー, {len(students)}学生")
+
+    def load_data(self):
+        """セミナーと学生のデータを読み込む"""
+        try:
+            with open(self.seminars_file, 'r', encoding='utf-8') as f:
+                seminars = json.load(f)
+            with open(self.students_file, 'r', encoding='utf-8') as f:
+                students = json.load(f)
+            logger.info(f"セミナーデータ({len(seminars)}件)と学生データ({len(students)}件)を読み込みました。")
+            return seminars, students
+        except FileNotFoundError:
+            logger.error("データファイルが見つかりません。ダミーデータが生成されているか確認してください。")
+            return [], []
+        except json.JSONDecodeError as e:
+            logger.error(f"データファイルのJSONデコードエラー: {e}")
+            return [], []
+        except Exception as e:
+            logger.error(f"データファイルの読み込み中にエラーが発生しました: {e}")
+            return [], []
+
+class CPSATOptimizer:
+    """CP-SATソルバーを使用してセミナー割り当てを最適化するクラス"""
+    def __init__(self, seminars, students, debug_mode=False):
+        self.seminars = seminars
+        self.students = students
+        self.debug_mode = debug_mode
+        self.seminar_ids = [s['id'] for s in seminars]
+        self.seminar_capacities = {s['id']: s['capacity'] for s in seminars}
+        self.student_ids = [s['id'] for s in students]
+        self.student_preferences = {s['id']: s['preferences'] for s in students}
+
+        if self.debug_mode:
+            logger.debug("デバッグモードが有効です。")
+            total_student_count = len(self.students)
+            total_seminar_capacity = sum(self.seminar_capacities.values())
+            if total_student_count > total_seminar_capacity:
+                logger.warning(f"警告: 学生数({total_student_count})が全セミナーの総定員({total_seminar_capacity})を超過しています。解が見つからない可能性があります。")
+            elif total_student_count < total_seminar_capacity:
+                logger.info(f"情報: 学生数({total_student_count})が全セミナーの総定員({total_seminar_capacity})より少ないです。")
+            
+            for student in students:
+                if not student['preferences']:
+                    logger.warning(f"警告: 学生ID {student['id']} に希望データがありません。")
+                elif len(student['preferences']) < len(self.seminar_ids):
+                    logger.debug(f"デバッグ: 学生ID {student['id']} の希望が{len(student['preferences'])}個しかありません。")
+
+
+    def solve(self, time_limit=60):
+        """CP-SATモデルを構築し、解を求める"""
+        model = cp_model.CpModel()
+
+        x = {}
+        for student_id in self.student_ids:
+            for seminar_id in self.seminar_ids:
+                x[(student_id, seminar_id)] = model.NewBoolVar(f'x_{student_id}_{seminar_id}')
+
+        for student_id in self.student_ids:
+            model.Add(sum(x[(student_id, seminar_id)] for seminar_id in self.seminar_ids) == 1)
+
+        for seminar_id in self.seminar_ids:
+            model.Add(sum(x[(student_id, seminar_id)] for student_id in self.student_ids) <= self.seminar_capacities[seminar_id])
+
+        objective_terms = []
+        for student_id in self.student_ids:
+            for rank, preferred_seminar_id in enumerate(self.student_preferences[student_id]):
+                score = 0
+                if rank == 0:
+                    score = 100
+                elif rank == 1:
+                    score = 50
+                elif rank == 2:
+                    score = 25
+                
+                if preferred_seminar_id in self.seminar_ids:
+                    objective_terms.append(x[(student_id, preferred_seminar_id)] * score)
+                else:
+                    logger.warning(f"学生 {student_id} の希望 {preferred_seminar_id} は存在しないセミナーIDです。")
+                    pass
+
+        model.Maximize(sum(objective_terms))
+
+        solver = cp_model.CpSolver()
+        solver.parameters.max_time_in_seconds = time_limit
+        solver.parameters.num_search_workers = 16
+        solver.parameters.log_search_progress = True
+
+        logger.info("CP-SATモデルの構築を開始します...")
+        logger.info(f"ソルバーの実行を開始します (時間制限: {time_limit}秒, ワーカー数: {solver.parameters.num_search_workers})...")
+        status = solver.Solve(model)
+
+        assignment = {}
+        total_score = 0
+        
+        if status == cp_model.OPTIMAL or status == cp_model.FEASIBLE:
+            logger.info("解が見つかりました。")
+            for student_id in self.student_ids:
+                assigned_seminar = None
+                for seminar_id in self.seminar_ids:
+                    if solver.Value(x[(student_id, seminar_id)]) == 1:
+                        assigned_seminar = seminar_id
+                        assignment[student_id] = assigned_seminar
+                        
+                        if student_id in self.student_preferences and assigned_seminar in self.student_preferences[student_id]:
+                            rank = self.student_preferences[student_id].index(assigned_seminar)
+                            if rank == 0:
+                                total_score += 100
+                            elif rank == 1:
+                                total_score += 50
+                            elif rank == 2:
+                                total_score += 25
+                        break
+            
+            return assignment, total_score, status
+        else:
+            logger.error(f"解が見つかりませんでした。ソルバーステータス: {solver.StatusName(status)}")
+            if status == cp_model.INFEASIBLE:
+                logger.error("実行可能解が存在しません。制約が厳しすぎる可能性があります。")
+                total_student_count = len(self.students)
+                total_seminar_capacity = sum(self.seminar_capacities.values())
+                if total_student_count > total_seminar_capacity:
+                    logger.info(f"提案: 学生数({total_student_count})がセミナーの総定員({total_seminar_capacity})を超過しています。学生数を減らすか、セミナー定員を増やすことを検討してください。")
+                elif total_student_count < total_seminar_capacity:
+                    logger.info(f"提案: 学生数({total_student_count})がセミナーの総定員({total_seminar_capacity})より少ないです。セミナーの定員を学生数に近づけるか、学生数を増やすことを検討してください。")
+                else:
+                    logger.info(f"提案: 学生数とセミナー総定員は一致していますが、学生の希望とセミナーの定員制約が厳しすぎる可能性があります。希望の多様化や定員の調整を検討してください。")
+            return {}, 0, status
 
 class SeminarOptimizer:
-    """
-    セミナー割当最適化のメインクラス。
-    複数の最適化戦略をサポートし、進捗をGUIに報告します。
-    """
-    def __init__(self, config: Config, students: List[Student], progress_callback: Optional[Callable[[str], None]] = None):
-        self.config = config
-        self.students = students
-        self.student_preferences_map = {s.id: s.preferences for s in students}
-        self.progress_callback = progress_callback
-        self.seminar_names = config.seminars
-        self.min_size = config.min_size
-        self.max_size = config.max_size
-        self.magnification = config.magnification
-        self.preference_weights = config.preference_weights
-        self.num_students = len(self.students)
+    """セミナー割り当ての全体的なプロセスを管理するクラス"""
+    def __init__(self, config_path='config/config.json'):
+        self.config_loader = ConfigLoader(config_path)
+        self.config = self.config_loader.config
+        self.data_loader = DataLoader(self.config)
+        self.debug_mode = self.config.get('debug_mode', False)
+        if self.debug_mode:
+            logger.debug("デバッグモードが有効です。")
 
-        # TargetSizeOptimizer はここでインスタンス化
-        from utils import TargetSizeOptimizer
-        self.target_size_optimizer = TargetSizeOptimizer(asdict(self.config))
-
-    def _report_progress(self, message: str):
-        """進捗をGUIに報告するヘルパー関数"""
-        if self.progress_callback:
-            self.progress_callback(message)
-            logger.info(f"Progress: {message}")
-
-    def _initial_assignment_greedy(self, target_sizes: Dict[str, int]) -> Dict[str, List[int]]:
-        """
-        学生を貪欲法で初期割り当てします。
-        各学生の第一希望を優先し、定員に空きがある限り割り当てます。
-        """
-        assignments: Dict[str, List[int]] = {sem: [] for sem in self.seminar_names}
+    def run_clustering(self, students):
+        """学生の希望に基づいてK-Meansクラスタリングを実行する"""
+        logger.info("K-Meansクラスタリングを開始します...")
+        seminar_ids_from_data = [s['id'] for s in self.data_loader.seminars] # DataLoaderから読み込んだセミナーIDを使用
         
-        # 学生をランダムな順序で処理
-        shuffled_students = list(self.students)
-        random.shuffle(shuffled_students)
+        student_vectors = []
+        for i, student in enumerate(students):
+            vector = [0] * len(seminar_ids_from_data)
+            for pref_seminar_id in student['preferences']:
+                try:
+                    idx = seminar_ids_from_data.index(pref_seminar_id)
+                    rank = student['preferences'].index(pref_seminar_id)
+                    if rank == 0: vector[idx] = 3
+                    elif rank == 1: vector[idx] = 2
+                    elif rank == 2: vector[idx] = 1
+                    else: vector[idx] = 0.5
+                except ValueError:
+                    logger.warning(f"学生 {student['id']} の希望 {pref_seminar_id} は存在しないセミナーIDです。")
+                    pass
+            student_vectors.append(vector)
 
-        # 第一希望の割り当て
-        for student in shuffled_students:
-            for pref_sem in student.preferences:
-                if pref_sem in self.seminar_names and len(assignments[pref_sem]) < target_sizes[pref_sem]:
-                    assignments[pref_sem].append(student.id)
-                    break # 割り当てられたら次の学生へ
+        if not student_vectors:
+            logger.warning("クラスタリングする学生データがありません。")
+            return {}
 
-        # 未割り当ての学生を処理
-        unassigned_students = [
-            s.id for s in shuffled_students
-            if s.id not in [sid for sublist in assignments.values() for sid in sublist]
-        ]
+        num_clusters = self.config.get('k_means_clusters', 5)
+        if num_clusters > len(student_vectors):
+            num_clusters = len(student_vectors)
+            logger.warning(f"学生数({len(student_vectors)})がクラスター数({self.config.get('k_means_clusters', 5)})より少ないため、クラスター数を{num_clusters}に調整しました。")
         
-        # 未割り当ての学生を空きのあるセミナーにランダムに割り当てる
-        for student_id in unassigned_students:
-            # まだ定員に空きがあるセミナーをランダムに選択
-            available_seminars = [
-                sem for sem in self.seminar_names
-                if len(assignments[sem]) < target_sizes[sem]
-            ]
-            if available_seminars:
-                chosen_sem = random.choice(available_seminars)
-                assignments[chosen_sem].append(student_id)
+        if num_clusters == 0:
+            logger.warning("学生数が0人のため、K-Meansクラスタリングは実行されません。")
+            return {}
+
+        kmeans = KMeans(n_clusters=num_clusters, random_state=0, n_init=10)
+        clusters = kmeans.fit_predict(student_vectors)
+
+        student_clusters = {students[i]['id']: clusters[i] for i in range(len(students))}
+        
+        logger.info(f"K-Meansクラスタリングが完了しました。クラスター数: {num_clusters}")
+        
+        cluster_counts = {np.int32(cluster_id): sum(1 for student_id, c_id in student_clusters.items() if c_id == cluster_id) for cluster_id in set(clusters)}
+        logger.info(f"各クラスターの学生数: {cluster_counts}")
+
+        if self.debug_mode:
+            logger.debug("学生のクラスタリング結果:")
+            for student_id, cluster_id in student_clusters.items():
+                student_info = next(s for s in students if s['id'] == student_id)
+                logger.debug(f"学生ID: {student_id}, 希望: {student_info['preferences']}, クラスタID: {cluster_id}")
+
+        return student_clusters
+
+    def run_optimization(self):
+        """最適化プロセスを実行する"""
+        seminars, students = self.data_loader.load_data()
+        if not seminars or not students:
+            logger.error("セミナーまたは学生データが読み込まれていません。最適化を中止します。")
+            return
+
+        student_clusters = self.run_clustering(students)
+
+        cluster_results = {i: {'students': [], 'seminars': self.data_loader.seminars} for i in range(self.config.get('k_means_clusters', 5))}
+        
+        for student_id, cluster_id in student_clusters.items():
+            student_info = next(s for s in students if s['id'] == student_id)
+            if cluster_id in cluster_results:
+                cluster_results[cluster_id]['students'].append(student_info)
             else:
-                # 全てのセミナーが定員に達している場合、最小定員を無視して割り当てる
-                # これは非常に稀なケースだが、全ての学生を割り当てるために必要
-                chosen_sem = random.choice(self.seminar_names)
-                assignments[chosen_sem].append(student_id)
-                logger.warning(f"Student {student_id} assigned to {chosen_sem} even though it's full. This should be rare.")
+                cluster_results[cluster_id] = {'students': [student_info], 'seminars': self.data_loader.seminars}
 
-        return assignments
-
-    def _calculate_assignment_score(self, assignments: Dict[str, List[int]]) -> float:
-        """
-        割り当て結果のスコアを計算します。
-        utils.calculate_score を使用します。
-        """
-        from utils import calculate_score
-        # student_preferences_map は {student_id: [pref1, pref2, ...]} の形式
-        # calculate_score は {seminar_name: [(student_id, score_contrib), ...]} の形式を期待する
-        # ここでは student_id のリストなので、ダミーのスコア貢献度0.0で渡す
-        formatted_assignments = {sem: [(sid, 0.0) for sid in sids] for sem, sids in assignments.items()}
-        return calculate_score(formatted_assignments, self.student_preferences_map, self.preference_weights)
-
-    def _perform_local_search(self, initial_assignments: Dict[str, List[int]], target_sizes: Dict[str, int]) -> Dict[str, List[int]]:
-        """
-        与えられた初期割り当てに対して焼きなまし法による局所探索を行います。
-        """
-        current_assignments = initial_assignments
-        current_score = self._calculate_assignment_score(current_assignments)
-        best_assignments = current_assignments
-        best_score = current_score
-
-        T = self.config.initial_temperature
-        cooling_rate = self.config.cooling_rate
+        final_assignment = {}
+        total_overall_score = 0
         
-        # 割り当てを学生IDからセミナー名へのマップに変換
-        student_to_seminar: Dict[int, str] = {}
-        for sem, sids in current_assignments.items():
-            for sid in sids:
-                student_to_seminar[sid] = sem
+        logger.info("CP-SATソルバーによる最適化を開始します...")
 
-        for i in range(self.config.local_search_iterations):
-            # 新しい状態を生成 (近傍探索)
-            # 1. ランダムな学生を選び、別のセミナーに移動させる
-            # 2. 2人の学生を選び、セミナーを交換する
-            
-            new_student_to_seminar = student_to_seminar.copy()
-            
-            move_type = random.choice(["move", "swap"])
-
-            if move_type == "move":
-                student_id = random.choice(list(self.student_preferences_map.keys()))
-                current_sem = new_student_to_seminar[student_id]
-                
-                # 移動先のセミナー候補 (現在のセミナー以外)
-                possible_target_seminars = [s for s in self.seminar_names if s != current_sem]
-                if not possible_target_seminars:
-                    continue # 移動できない場合はスキップ
-
-                target_sem = random.choice(possible_target_seminars)
-                
-                new_student_to_seminar[student_id] = target_sem
-
-            elif move_type == "swap":
-                if len(self.students) < 2: # 学生が2人未満なら交換できない
-                    continue
-                
-                student1_id, student2_id = random.sample(list(self.student_preferences_map.keys()), 2)
-                sem1 = new_student_to_seminar[student1_id]
-                sem2 = new_student_to_seminar[student2_id]
-
-                if sem1 == sem2: # 同じセミナーにいる場合は交換しても意味がない
-                    continue
-
-                new_student_to_seminar[student1_id] = sem2
-                new_student_to_seminar[student2_id] = sem1
-
-            # 新しい割り当て辞書を構築
-            new_assignments: Dict[str, List[int]] = {sem: [] for sem in self.seminar_names}
-            for sid, sem in new_student_to_seminar.items():
-                new_assignments[sem].append(sid)
-
-            # 定員制約の確認 (ソフト制約としてスコアに反映させることも可能)
-            # ここではハード制約として、定員超過の場合はペナルティを課すか、無効な状態とする
-            is_valid_assignment = True
-            for sem, sids in new_assignments.items():
-                if len(sids) > target_sizes[sem]:
-                    is_valid_assignment = False
-                    break
-            
-            if not is_valid_assignment:
-                # 無効な割り当ては受け入れない
+        for cluster_id, data in cluster_results.items():
+            cluster_students = data['students']
+            if not cluster_students:
+                logger.info(f"クラスター {cluster_id} に学生がいません。スキップします。")
                 continue
 
-            new_score = self._calculate_assignment_score(new_assignments)
+            logger.info(f"クラスター {cluster_id} の学生 {len(cluster_students)} 人に対して最適化を実行します。")
+            
+            optimizer = CPSATOptimizer(data['seminars'], cluster_students, self.debug_mode)
+            assignment, score, status = optimizer.solve()
 
-            # 焼きなまし法の判定
-            if new_score > current_score:
-                current_assignments = new_assignments
-                current_score = new_score
+            if status == cp_model.OPTIMAL or status == cp_model.FEASIBLE:
+                final_assignment.update(assignment)
+                total_overall_score += score
             else:
-                # 悪い解でも一定確率で受け入れる
-                delta_score = new_score - current_score
-                if T > 0 and random.random() < math.exp(delta_score / T):
-                    current_assignments = new_assignments
-                    current_score = new_score
-            
-            # ベストスコアの更新
-            if current_score > best_score:
-                best_assignments = current_assignments
-                best_score = current_score
-            
-            # 温度の冷却
-            T *= cooling_rate
-        
-        return best_assignments
+                logger.warning(f"クラスター {cluster_id} で解が見つかりませんでした。このクラスターの結果は統合されません。")
 
-    def _run_greedy_local_search(self) -> Tuple[Dict[str, int], float, Dict[str, List[Tuple[int, float]]]]:
-        """
-        貪欲法と局所探索を組み合わせた最適化を実行します。
-        """
-        overall_best_score = -1.0
-        overall_best_pattern_sizes: Dict[str, int] = {}
-        overall_final_assignments: Dict[str, List[Tuple[int, float]]] = {}
+        if final_assignment:
+            logger.info("\n--- 最適化結果 ---")
+            logger.info(f"総適合度 (合計スコア): {total_overall_score}")
 
-        self._report_progress("目標定員パターンの生成と最適化を開始します...")
-
-        for i in range(self.config.num_patterns):
-            if i % 100 == 0:
-                self._report_progress(f"試行 {i+1}/{self.config.num_patterns} を実行中...")
-
-            # 1. 目標定員パターンを生成
-            # generate_balanced_sizes は {seminar_name: size} のDictを返す
-            target_sizes = self.target_size_optimizer.generate_balanced_sizes(self.students, seed=random.randint(0, 100000))
-            
-            # 2. 初期割り当て (貪欲法)
-            initial_assignments = self._initial_assignment_greedy(target_sizes)
-            
-            # 3. 局所探索 (焼きなまし法)
-            optimized_assignments = self._perform_local_search(initial_assignments, target_sizes)
-            
-            # 4. スコア計算
-            current_score = self._calculate_assignment_score(optimized_assignments)
-            
-            # 5. 最良のパターンを更新
-            if current_score > overall_best_score:
-                overall_best_score = current_score
-                overall_best_pattern_sizes = target_sizes
+            logger.info("\n--- 学生の割り当て ---")
+            for student_id in sorted(final_assignment.keys(), key=lambda x: int(x.split(' ')[1])):
+                assigned_seminar = final_assignment[student_id]
+                original_student_info = next(s for s in students if s['id'] == student_id)
+                preferences = original_student_info.get('preferences', [])
                 
-                # final_assignments の形式に変換 (学生IDとスコア貢献度)
-                overall_final_assignments = {
-                    sem: [(sid, self._get_student_score_contribution(sid, sem)) for sid in sids]
-                    for sem, sids in optimized_assignments.items()
+                rank = -1
+                if assigned_seminar in preferences:
+                    rank = preferences.index(assigned_seminar) + 1
+                
+                rank_str = f"({rank}位希望)" if rank != -1 else "(希望外)"
+                logger.info(f"学生 {student_id}: {assigned_seminar} {rank_str}")
+
+            logger.info("\n--- セミナーの割り当て状況 ---")
+            seminar_counts = {s['id']: 0 for s in seminars}
+            for assigned_seminar in final_assignment.values():
+                seminar_counts[assigned_seminar] += 1
+
+            for seminar in seminars:
+                seminar_id = seminar['id']
+                capacity = seminar['capacity']
+                assigned_students = seminar_counts.get(seminar_id, 0)
+                status = "定員内"
+                if assigned_students > capacity:
+                    status = f"定員超過 (+{assigned_students - capacity})"
+                elif assigned_students < capacity:
+                    status = f"空きあり ({capacity - assigned_students}席)"
+                logger.info(f"セミナー {seminar_id}: 割り当て {assigned_students} / 定員 {capacity} ({status})")
+
+            results_path = os.path.join(self.data_loader.data_dir, self.config.get('results_file', 'optimization_results.json'))
+            output_data = {
+                "total_score": total_overall_score,
+                "student_assignments": final_assignment,
+                "seminar_summary": {
+                    s['id']: {
+                        "capacity": s['capacity'],
+                        "assigned_students": seminar_counts.get(s['id'], 0)
+                    } for s in seminars
                 }
-                logger.info(f"New best score found: {overall_best_score:.2f} with pattern: {target_sizes}")
-        
-        self._report_progress("最適化が完了しました。")
-        return overall_best_pattern_sizes, overall_best_score, overall_final_assignments
+            }
+            with open(results_path, 'w', encoding='utf-8') as f:
+                json.dump(output_data, f, indent=4, ensure_ascii=False)
+            logger.info(f"最適化結果が '{results_path}' に保存されました。")
 
-    def _get_student_score_contribution(self, student_id: int, assigned_seminar: str) -> float:
-        """
-        特定の学生が割り当てられたセミナーから得るスコア貢献度を計算します。
-        """
-        prefs = self.student_preferences_map.get(student_id, [])
-        weights = self.preference_weights
-        
-        try:
-            rank = prefs.index(assigned_seminar.lower()) + 1 # 0-indexed to 1-indexed
-            if rank == 1:
-                return weights.get("1st", 5.0)
-            elif rank == 2:
-                return weights.get("2nd", 2.0)
-            elif rank == 3:
-                return weights.get("3rd", 1.0)
-            else:
-                return 0.0 # 3位以下の希望はスコア貢献なし
-        except ValueError:
-            return 0.0 # 希望リストにないセミナーに割り当てられた場合
-
-    def _run_genetic_algorithm_local_search(self) -> Tuple[Dict[str, int], float, Dict[str, List[Tuple[int, float]]]]:
-        """
-        遺伝的アルゴリズムと局所探索を組み合わせた最適化を実行します。
-        各個体はセミナーの目標定員パターンと、そのパターンに対する割り当て解を表します。
-        """
-        population_size = self.config.ga_population_size
-        num_generations = self.config.num_patterns # num_patternsを世代数として使用
-        crossover_rate = self.config.ga_crossover_rate
-        mutation_rate = self.config.ga_mutation_rate
-
-        self._report_progress("遺伝的アルゴリズムの初期個体群を生成中...")
-
-        # 個体群の初期化: 各個体は (target_sizes, assignments, score) のタプル
-        population: List[Tuple[Dict[str, int], Dict[str, List[int]], float]] = []
-        for _ in range(population_size):
-            target_sizes = self.target_size_optimizer.generate_balanced_sizes(self.students)
-            initial_assignments = self._initial_assignment_greedy(target_sizes)
-            # GAの各個体生成時にも局所探索を適用
-            optimized_assignments = self._perform_local_search(initial_assignments, target_sizes)
-            score = self._calculate_assignment_score(optimized_assignments)
-            population.append((target_sizes, optimized_assignments, score))
-        
-        overall_best_score = max(p[2] for p in population)
-        overall_best_individual = next(p for p in population if p[2] == overall_best_score)
-        
-        self._report_progress(f"GA開始時のベストスコア: {overall_best_score:.2f}")
-
-        for generation in range(num_generations):
-            self._report_progress(f"GA世代 {generation+1}/{num_generations} を実行中...")
-
-            # 選択 (ルーレット選択など)
-            # スコアが負にならないように調整
-            min_score = min(p[2] for p in population)
-            adjusted_scores = [p[2] - min_score + 1 for p in population] # 全て正の値にする
-            total_adjusted_score = sum(adjusted_scores)
-            
-            if total_adjusted_score == 0: # 全てのスコアが同じで0の場合
-                selection_probabilities = [1.0 / population_size] * population_size
-            else:
-                selection_probabilities = [s / total_adjusted_score for s in adjusted_scores]
-
-            # 新しい個体群の準備
-            new_population: List[Tuple[Dict[str, int], Dict[str, List[int]], float]] = []
-
-            # エリート選択 (最も良い個体を次世代に引き継ぐ)
-            best_current_individual = max(population, key=lambda x: x[2])
-            new_population.append(best_current_individual)
-
-            while len(new_population) < population_size:
-                # 親の選択
-                parent1_idx = random.choices(range(population_size), weights=selection_probabilities, k=1)[0]
-                parent2_idx = random.choices(range(population_size), weights=selection_probabilities, k=1)[0]
-                
-                parent1_target_sizes = population[parent1_idx][0]
-                parent2_target_sizes = population[parent2_idx][0]
-
-                child_target_sizes = parent1_target_sizes # デフォルトは親1
-                
-                # 交叉
-                if random.random() < crossover_rate:
-                    child_target_sizes = self._crossover_target_sizes(parent1_target_sizes, parent2_target_sizes)
-                
-                # 突然変異
-                if random.random() < mutation_rate:
-                    child_target_sizes = self._mutate_target_sizes(child_target_sizes)
-                
-                # 新しい目標定員で割り当てと局所探索
-                child_initial_assignments = self._initial_assignment_greedy(child_target_sizes)
-                child_optimized_assignments = self._perform_local_search(child_initial_assignments, child_target_sizes)
-                child_score = self._calculate_assignment_score(child_optimized_assignments)
-                
-                new_population.append((child_target_sizes, child_optimized_assignments, child_score))
-            
-            population = new_population
-
-            # 全体ベストの更新
-            current_generation_best_score = max(p[2] for p in population)
-            if current_generation_best_score > overall_best_score:
-                overall_best_score = current_generation_best_score
-                overall_best_individual = max(population, key=lambda x: x[2])
-                logger.info(f"Generation {generation+1}: New best score found: {overall_best_score:.2f}")
-
-        self._report_progress("遺伝的アルゴリズム最適化が完了しました。")
-        
-        # 最終結果の整形
-        best_target_sizes = overall_best_individual[0]
-        best_assignments_raw = overall_best_individual[1] # student_idのリスト
-        final_assignments_formatted = {
-            sem: [(sid, self._get_student_score_contribution(sid, sem)) for sid in sids]
-            for sem, sids in best_assignments_raw.items()
-        }
-
-        return best_target_sizes, overall_best_score, final_assignments_formatted
-
-    def _crossover_target_sizes(self, parent1: Dict[str, int], parent2: Dict[str, int]) -> Dict[str, int]:
-        """
-        目標定員パターンに対する交叉操作。
-        各セミナーの定員をランダムに親から引き継ぐ。
-        """
-        child = {}
-        for sem in self.seminar_names:
-            if random.random() < 0.5:
-                child[sem] = parent1.get(sem, self.config.min_size)
-            else:
-                child[sem] = parent2.get(sem, self.config.min_size)
-        
-        # 合計学生数を維持するように調整 (簡略化のため、ここでは単純な合計調整)
-        current_total = sum(child.values())
-        diff = self.num_students - current_total
-        
-        # 調整はランダムなセミナーに対して行う
-        adjustable_seminars = list(self.seminar_names)
-        random.shuffle(adjustable_seminars)
-
-        for sem in adjustable_seminars:
-            if diff == 0:
-                break
-            if diff > 0: # 足りない場合
-                if child[sem] < self.config.max_size:
-                    child[sem] += 1
-                    diff -= 1
-            else: # 多い場合
-                if child[sem] > self.config.min_size:
-                    child[sem] -= 1
-                    diff += 1
-        
-        # 最終的に合計が合わない場合、ランダムに調整を試みる (厳密な制約は難しい)
-        while diff != 0:
-            sem = random.choice(self.seminar_names)
-            if diff > 0:
-                if child[sem] < self.config.max_size:
-                    child[sem] += 1
-                    diff -= 1
-            else:
-                if child[sem] > self.config.min_size:
-                    child[sem] -= 1
-                    diff += 1
-
-        return child
-
-    def _mutate_target_sizes(self, target_sizes: Dict[str, int]) -> Dict[str, int]:
-        """
-        目標定員パターンに対する突然変異操作。
-        ランダムなセミナーの定員を増減させる。
-        """
-        mutated_sizes = target_sizes.copy()
-        
-        # ランダムなセミナーを2つ選び、一方を増やし、もう一方を減らす
-        if len(self.seminar_names) < 2:
-            return mutated_sizes # セミナーが少ない場合は変異できない
-
-        sem1, sem2 = random.sample(self.seminar_names, 2)
-
-        # sem1を増やし、sem2を減らす (定員制約内で)
-        if mutated_sizes[sem1] < self.config.max_size and mutated_sizes[sem2] > self.config.min_size:
-            mutated_sizes[sem1] += 1
-            mutated_sizes[sem2] -= 1
-        elif mutated_sizes[sem2] < self.config.max_size and mutated_sizes[sem1] > self.config.min_size:
-            # 逆の操作
-            mutated_sizes[sem2] += 1
-            mutated_sizes[sem1] -= 1
-        
-        return mutated_sizes
-
-    def _run_ilp_optimization(self) -> Tuple[Dict[str, int], float, Dict[str, List[Tuple[int, float]]]]:
-        """
-        整数線形計画法 (ILP) を用いた最適化を実行します。
-        (実装は別途必要)
-        """
-        self._report_progress("整数線形計画法 (ILP) を実行中... (開発中)")
-        # ここにILPソルバーの呼び出しロジックを実装
-        # 例: pulp, ortools などを使用
-        time.sleep(2) # シミュレーション
-        self._report_progress("ILP最適化は現在開発中です。")
-        return {}, -1.0, {} # ダミーの戻り値
-
-    def _run_cp_optimization(self) -> Tuple[Dict[str, int], float, Dict[str, List[Tuple[int, float]]]]:
-        """
-        制約プログラミング (CP-SAT) を用いた最適化を実行します。
-        (実装は別途必要)
-        """
-        self._report_progress("制約プログラミング (CP-SAT) を実行中... (開発中)")
-        # ここにCP-SATソルバーの呼び出しロジックを実装
-        # 例: ortools を使用
-        time.sleep(2) # シミュレーション
-        self._report_progress("CP-SAT最適化は現在開発中です。")
-        return {}, -1.0, {} # ダミーの戻り値
-
-    def _run_multilevel_optimization(self) -> Tuple[Dict[str, int], float, Dict[str, List[Tuple[int, float]]]]:
-        """
-        多段階最適化を実行します。
-        (実装は別途必要)
-        """
-        self._report_progress("多段階最適化を実行中... (開発中)")
-        # ここに多段階最適化のロジックを実装
-        time.sleep(2) # シミュレーション
-        self._report_progress("多段階最適化は現在開発中です。")
-        return {}, -1.0, {} # ダミーの戻り値
-
-    def run_optimization(self) -> Tuple[Dict[str, int], float, Dict[str, List[Tuple[int, float]]]]:
-        """
-        選択された最適化戦略に基づいて最適化を実行します。
-        """
-        start_time = time.time()
-        
-        # どの最適化戦略が実行されるかを進捗報告に表示
-        self._report_progress(f"最適化戦略 '{self.config.optimization_strategy}' を開始します。")
-
-        best_pattern_sizes: Dict[str, int] = {}
-        overall_best_score: float = -1.0
-        final_assignments: Dict[str, List[Tuple[int, float]]] = {}
-
-        if self.config.optimization_strategy == "Greedy_LS":
-            best_pattern_sizes, overall_best_score, final_assignments = self._run_greedy_local_search()
-        elif self.config.optimization_strategy == "GA_LS":
-            best_pattern_sizes, overall_best_score, final_assignments = self._run_genetic_algorithm_local_search()
-        elif self.config.optimization_strategy == "ILP":
-            best_pattern_sizes, overall_best_score, final_assignments = self._run_ilp_optimization()
-        elif self.config.optimization_strategy == "CP":
-            best_pattern_sizes, overall_best_score, final_assignments = self._run_cp_optimization()
-        elif self.config.optimization_strategy == "Multilevel":
-            best_pattern_sizes, overall_best_score, final_assignments = self._run_multilevel_optimization()
         else:
-            self._report_progress(f"不明な最適化戦略: {self.config.optimization_strategy}")
-            logger.error(f"Unknown optimization strategy: {self.config.optimization_strategy}")
-
-        end_time = time.time()
-        elapsed_time = end_time - start_time
-        self._report_progress(f"最適化処理が完了しました。所要時間: {elapsed_time:.2f}秒")
-        logger.info(f"Optimization finished in {elapsed_time:.2f} seconds.")
-
-        # 結果を保存
-        from utils import save_results
-        save_results(best_pattern_sizes, overall_best_score, final_assignments, self.config, True, False) # log_enabled, save_intermediate は仮
-
-        return best_pattern_sizes, overall_best_score, final_assignments
+            logger.error("最適化結果が得られませんでした。")
 
 if __name__ == "__main__":
-    # この部分はGUIから呼び出されるため、直接実行されることは少ない
-    # デバッグ用に簡単なテストケースを記述
-    from utils import PreferenceGenerator, setup_logging
-
-    setup_logging(log_enabled=True)
-
-    # デフォルト設定
-    default_seminars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't']
-    default_magnification = {'a': 2.0, 'b': 1.5, 'q': 3.0}
-    default_preference_weights = {"1st": 5.0, "2nd": 2.0, "3rd": 1.0}
-
-    # Configオブジェクトの作成
-    config = Config(
-        seminars=default_seminars,
-        magnification=default_magnification,
-        min_size=5,
-        max_size=10,
-        num_students=112, # この値はPreferenceGeneratorによって上書きされる
-        q_boost_probability=0.2,
-        num_patterns=1000, # テスト用に少なく設定
-        max_workers=4,
-        local_search_iterations=100, # テスト用に少なく設定
-        initial_temperature=1.0,
-        cooling_rate=0.995,
-        preference_weights=default_preference_weights,
-        optimization_strategy="Greedy_LS", # テスト戦略
-        ga_population_size=50,
-        ga_crossover_rate=0.8,
-        ga_mutation_rate=0.05
-    )
-
-    # 学生の希望を自動生成
-    pref_gen = PreferenceGenerator(asdict(config))
-    students = pref_gen.generate_realistic_preferences(seed=42)
-    config.num_students = len(students) # 実際の学生数でConfigを更新
-
-    # 最適化の実行
-    optimizer = SeminarOptimizer(config, students)
-    best_sizes, best_score, final_assigns = optimizer.run_optimization()
-
-    print("\n--- 最適化結果 ---")
-    print(f"最終ベストスコア: {best_score:.2f}")
-    print(f"最適目標定員パターン: {best_sizes}")
-    # print("最終割り当て:", final_assigns) # 量が多いのでコメントアウト
+    config_loader = ConfigLoader()
+    data_loader = DataLoader(config_loader.config) 
+    optimizer = SeminarOptimizer(config_path='config/config.json')
+    optimizer.run_optimization()
