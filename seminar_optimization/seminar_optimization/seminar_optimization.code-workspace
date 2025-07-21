@@ -1,8 +1,7 @@
 {
     "folders": [
         {
-            "name": "seminar_optimization",
-            "path": ".."
+            "path": "."
         }
     ]
 }
