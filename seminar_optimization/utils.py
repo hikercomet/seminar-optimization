@@ -61,7 +61,7 @@ class BaseOptimizer:
                  students: List[Dict[str, Any]],
                  config: Dict[str, Any],
                  progress_callback: Optional[Callable[[str], None]] = None):
-        logger.debug("BaseOptimizer: 初期化を開始します。")
+        logger.debug("BaseOptimizer: 初期化を開始シマス。")
         self.seminars = seminars
         self.students = students
         self.config = config
@@ -99,7 +99,7 @@ class BaseOptimizer:
         セミナーの倍率が設定されている場合、そのセミナーに割り当てられた学生のスコアに乗算する。
         """
         score = 0.0
-        logger.debug(f"_calculate_score: 割り当てのスコア計算を開始します。割り当て数: {len(assignment)}")
+        logger.debug(f"_calculate_score: 割り当てのスコア計算を開始シマス。割り当て数: {len(assignment)}")
         
         # スコア計算の重み付けをconfigから取得、デフォルト値を設定
         score_weights = self.config.get("score_weights", {
@@ -112,7 +112,7 @@ class BaseOptimizer:
 
         for student_id, assigned_seminar_id in assignment.items():
             if student_id not in self.student_preferences:
-                logger.warning(f"_calculate_score: 学生ID '{student_id}' の希望が見つかりませんでした。スキップします。")
+                logger.warning(f"_calculate_score: 学生ID '{student_id}' の希望が見つかりませんでした。スキップシマス。")
                 continue
 
             preferences = self.student_preferences[student_id]
@@ -148,7 +148,7 @@ class BaseOptimizer:
         """
         与えられた割り当てが定員制約を満たしているかチェックする。
         """
-        logger.debug(f"_is_feasible_assignment: 定員制約チェックを開始します。割り当て数: {len(assignment)}")
+        logger.debug(f"_is_feasible_assignment: 定員制約チェックを開始シマス。割り当て数: {len(assignment)}")
         seminar_counts: Dict[str, int] = {s_id: 0 for s_id in self.seminar_ids}
         
         # 割り当てられた学生数をカウント
@@ -157,7 +157,7 @@ class BaseOptimizer:
                 seminar_counts[seminar_id] += 1
                 logger.debug(f"学生 {student_id} がセミナー {seminar_id} に割り当てられました。現在のカウント: {seminar_counts[seminar_id]}")
             else:
-                logger.warning(f"_is_feasible_assignment: 不正なセミナーID '{seminar_id}' が割り当てに存在します。無効な割り当てです。")
+                logger.warning(f"_is_feasible_assignment: 不正なセミナーID '{seminar_id}' が割り当てに存在シマス。無効な割り当てです。")
                 return False # 存在しないセミナーIDへの割り当ては不正
 
         # 定員と比較
@@ -175,7 +175,7 @@ class BaseOptimizer:
         """
         割り当てられていない学生のリストを返す。
         """
-        logger.debug("_get_unassigned_students: 未割り当て学生のリストを生成します。")
+        logger.debug("_get_unassigned_students: 未割り当て学生のリストを生成シマス。")
         assigned_student_ids = set(assignment.keys())
         all_student_ids = set(self.student_ids)
         unassigned = list(all_student_ids - assigned_student_ids)

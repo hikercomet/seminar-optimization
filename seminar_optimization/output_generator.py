@@ -43,7 +43,7 @@ def _calculate_satisfaction_stats(students: List[Dict[str, Any]], assignment: Di
     Returns:
         満足度統計の辞書
     """
-    logger.debug("_calculate_satisfaction_stats: 学生満足度統計の計算を開始します。")
+    logger.debug("_calculate_satisfaction_stats: 学生満足度統計の計算を開始シマス。")
     # student_preferences_map はこの関数のローカルスコープで定義されるため、
     # Pylanceがグローバルスコープで未定義と警告することがありますが、これは静的解析の特性によるもので、
     # 実行時には問題ありません。
@@ -96,7 +96,7 @@ def _get_seminar_assignment_details(
     """
     各セミナーの割り当て詳細（割り当て数、残り定員、倍率など）を計算する。
     """
-    logger.debug("_get_seminar_assignment_details: セミナー割り当て詳細の計算を開始します。")
+    logger.debug("_get_seminar_assignment_details: セミナー割り当て詳細の計算を開始シマス。")
     seminar_details: List[Dict[str, Any]] = []
     seminar_counts: Dict[str, int] = {s_id: 0 for s_id in seminar_capacities.keys()}
 
@@ -134,7 +134,7 @@ def save_pdf_report(
     """
     最適化結果をPDFレポートとして保存する。
     """
-    logger.info("save_pdf_report: PDFレポートの生成を開始します。")
+    logger.info("save_pdf_report: PDFレポートの生成を開始シマス。")
     try:
         output_dir = config.get("output_directory", "results")
         os.makedirs(output_dir, exist_ok=True)
@@ -302,7 +302,7 @@ def save_csv_results(
     """
     最適化結果をCSVファイルとして保存する。
     """
-    logger.info("save_csv_results: CSVレポートの生成を開始します。")
+    logger.info("save_csv_results: CSVレポートの生成を開始シマス。")
     try:
         output_dir = config.get("output_directory", "results")
         os.makedirs(output_dir, exist_ok=True)

@@ -32,7 +32,7 @@ class AdaptiveOptimizer(BaseOptimizer): # BaseOptimizerを継承
                  progress_callback: Optional[Callable[[str], None]] = None): # progress_callbackを追加
         # BaseOptimizerの__init__を呼び出す
         super().__init__(seminars, students, config, progress_callback)
-        logger.debug("AdaptiveOptimizer: 初期化を開始します。")
+        logger.debug("AdaptiveOptimizer: 初期化を開始シマス。")
 
         # 利用可能な最適化戦略の辞書
         self.optimizers: Dict[str, BaseOptimizer] = {
@@ -67,7 +67,7 @@ class AdaptiveOptimizer(BaseOptimizer): # BaseOptimizerを継承
         """
         total_weight = sum(self.strategy_weights.values())
         if total_weight == 0: # 全ての重みが0の場合、均等に選択
-            logger.warning("AdaptiveOptimizer: 全ての戦略重みが0です。ランダムに戦略を選択します。")
+            logger.warning("AdaptiveOptimizer: 全ての戦略重みが0です。ランダムに戦略を選択シマス。")
             return random.choice(list(self.optimizers.keys()))
 
         r = random.uniform(0, total_weight)
@@ -127,7 +127,7 @@ class AdaptiveOptimizer(BaseOptimizer): # BaseOptimizerを継承
         """
         適応型最適化プロセスを実行する。
         """
-        self._log("AdaptiveOptimizer: 最適化を開始します。")
+        self._log("AdaptiveOptimizer: 最適化を開始シマス。")
         logger.debug("AdaptiveOptimizer: optimize メソッド呼び出し。")
 
         attempts = 0
@@ -136,7 +136,7 @@ class AdaptiveOptimizer(BaseOptimizer): # BaseOptimizerを継承
         while attempts < self.max_optimization_attempts:
             if cancel_event and cancel_event.is_set():
                 self._log(f"AdaptiveOptimizer: 最適化がキャンセルされました。")
-                logger.info("AdaptiveOptimizer: キャンセルイベントが設定されたため、ループを終了します。")
+                logger.info("AdaptiveOptimizer: キャンセルイベントが設定されたため、ループを終了シマス。")
                 break
 
             attempts += 1
@@ -152,11 +152,11 @@ class AdaptiveOptimizer(BaseOptimizer): # BaseOptimizerを継承
 
             optimizer = self.optimizers.get(self.current_strategy_name)
             if not optimizer:
-                self._log(f"AdaptiveOptimizer: 戦略 '{self.current_strategy_name}' が見つかりません。スキップします。", level=logging.ERROR)
+                self._log(f"AdaptiveOptimizer: 戦略 '{self.current_strategy_name}' が見つかりません。スキップシマス。", level=logging.ERROR)
                 continue
 
             try:
-                self._log(f"AdaptiveOptimizer: 戦略 '{self.current_strategy_name}' の実行を開始します。")
+                self._log(f"AdaptiveOptimizer: 戦略 '{self.current_strategy_name}' の実行を開始シマス。")
                 strategy_start_time = time.time()
                 
                 # ILP/CP/MultilevelOptimizerはcancel_eventを受け取る
@@ -181,7 +181,7 @@ class AdaptiveOptimizer(BaseOptimizer): # BaseOptimizerを継承
                         self._log(f"AdaptiveOptimizer: 新しい全体ベストスコアが見つかりました: {self.best_overall_score:.2f} (戦略: {self.current_strategy_name})")
                         # 最適解が見つかったら、さらなる改善の可能性が低いと判断し、早期終了も検討できる
                         # if self.config.get("adaptive_stop_on_optimal", False) and result.status == "OPTIMAL":
-                        #     self._log("AdaptiveOptimizer: 最適解が見つかったため、最適化を早期終了します。")
+                        #     self._log("AdaptiveOptimizer: 最適解が見つかったため、最適化を早期終了シマス。")
                         #     break
                 
                 if result.status == "CANCELLED":

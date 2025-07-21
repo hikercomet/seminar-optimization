@@ -22,7 +22,7 @@ class CPSATOptimizer(BaseOptimizer): # BaseOptimizerを継承
                  progress_callback: Optional[Callable[[str], None]] = None): # progress_callbackを追加
         # BaseOptimizerの__init__を呼び出す
         super().__init__(seminars, students, config, progress_callback)
-        logger.debug("CPSATOptimizer: 初期化を開始します。")
+        logger.debug("CPSATOptimizer: 初期化を開始シマス。")
 
         # 固有のパラメータはconfigから取得
         self.time_limit = config.get("cp_time_limit", 300) # 秒
@@ -35,7 +35,7 @@ class CPSATOptimizer(BaseOptimizer): # BaseOptimizerを継承
         """
         CP-SAT最適化を実行する。
         """
-        self._log("CP-SAT 最適化を開始します。")
+        self._log("CP-SAT 最適化を開始シマス。")
         start_time = time.time()
         logger.debug("CPSATOptimizer: optimize メソッド呼び出し。")
 
@@ -103,7 +103,7 @@ class CPSATOptimizer(BaseOptimizer): # BaseOptimizerを継承
                     logger.debug(f"CPSATOptimizer: 学生 {student_id} -> セミナー {seminar_id} (希望外): スコア係数 0 を追加。")
         
         model.Maximize(sum(objective_expr))
-        self._log("CP-SAT: モデル構築完了。ソルバーを実行します。")
+        self._log("CP-SAT: モデル構築完了。ソルバーを実行シマス。")
         logger.debug("CPSATOptimizer: 目的関数を最大化するように設定しました。")
 
         # 最適化の実行
