@@ -1,23 +1,32 @@
 import numpy as np
 import random
 import time
-import logging
+import logging # ロギングを追加
 import threading
 from typing import Dict, List, Tuple, Any, Callable, Optional
 from collections import deque # パフォーマンス履歴を保持するため
 
 # BaseOptimizerとOptimizationResultをutilsからインポート
-from utils import BaseOptimizer, OptimizationResult
+from seminar_optimization.utils import BaseOptimizer, OptimizationResult
+# ロギングは logger_config.py で一元的に設定されるため、ここではロガーの取得のみ
+from seminar_optimization.logger_config import logger
 
 # 各最適化アルゴリズムをインポート
+# 動的インポートを避けるため、ここにリストアップ
 from optimizers.greedy_ls_optimizer import GreedyLSOptimizer
 from optimizers.genetic_algorithm_optimizer import GeneticAlgorithmOptimizer
 from optimizers.ilp_optimizer import ILPOptimizer
 from optimizers.cp_sat_optimizer import CPSATOptimizer
 from optimizers.multilevel_optimizer import MultilevelOptimizer
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG) # DEBUGレベルのメッセージも出力
+# オプティマイザのマッピングを定義
+OPTIMIZER_MAP = {
+    "Greedy_LS": GreedyLSOptimizer,
+    "GA_LS": GeneticAlgorithmOptimizer,
+    "ILP": ILPOptimizer,
+    "CP": CPSATOptimizer,
+    "Multilevel": MultilevelOptimizer
+}
 
 class AdaptiveOptimizer(BaseOptimizer): # BaseOptimizerを継承
     """
@@ -33,205 +42,171 @@ class AdaptiveOptimizer(BaseOptimizer): # BaseOptimizerを継承
                  progress_callback: Optional[Callable[[str], None]] = None):
         # BaseOptimizerの__init__を呼び出す
         super().__init__(seminars, students, config, progress_callback)
-        self._log("AdaptiveOptimizer: 初期化を開始シマス。")
+        logger.debug("AdaptiveOptimizer: 初期化を開始します。")
 
-        # 利用可能な最適化戦略
-        # Pylanceエラー対策のため、インポートされたクラス名を直接参照
-        self.strategies: Dict[str, Callable[..., BaseOptimizer]] = {
-            "Greedy_LS": GreedyLSOptimizer,
-            "GA_LS": GeneticAlgorithmOptimizer,
-            "ILP": ILPOptimizer,
-            "CP": CPSATOptimizer,
-            "Multilevel": MultilevelOptimizer,
-        }
-        self.strategy_names = list(self.strategies.keys())
-
-        # 各戦略の初期重み (均等に開始)
-        self.strategy_weights: Dict[str, float] = {name: 1.0 / len(self.strategy_names) for name in self.strategy_names}
-        # 各戦略のパフォーマンス履歴 (dequeで最新のN件を保持)
-        self.strategy_performance_history: Dict[str, deque] = {name: deque(maxlen=self.config.get("adaptive_history_size", 5)) for name in self.strategy_names}
-
-        # 適応型最適化のパラメータ
-        self.max_adaptive_iterations = config.get("max_adaptive_iterations", 5)
-        self.exploration_epsilon = config.get("adaptive_exploration_epsilon", 0.2) # ε-greedy探索の確率
-        self.learning_rate = config.get("adaptive_learning_rate", 0.1) # 重み更新の学習率
-
+        # 適応型最適化固有のパラメータ
+        self.strategy_history: Dict[str, deque] = {name: deque(maxlen=config.get("adaptive_history_size", 5)) for name in OPTIMIZER_MAP.keys()}
+        self.exploration_epsilon = config.get("adaptive_exploration_epsilon", 0.1) # 探索率
+        self.learning_rate = config.get("adaptive_learning_rate", 0.2) # 学習率
+        
         # パフォーマンス評価の重み
         self.score_weight = config.get("adaptive_score_weight", 0.6)
         self.unassigned_weight = config.get("adaptive_unassigned_weight", 0.3)
         self.time_weight = config.get("adaptive_time_weight", 0.1)
+        self.max_time_for_normalization = config.get("max_time_for_normalization", 600) # 時間正規化のための最大時間 (秒)
 
-        # 正規化のための最大値 (config.jsonで設定可能に)
-        self.max_time_for_normalization = config.get("max_time_for_normalization", 600) # 例: 10分
-        # 最大可能スコアの概算 (学生数 * 第1希望の重み * 最大倍率)
-        self.max_score_for_normalization = len(self.student_ids) * self.config.get("preference_weights", {}).get("1st", 5.0) * max(self.seminar_magnifications.values(), default=1.0)
+        self.strategy_scores: Dict[str, float] = {name: 0.0 for name in OPTIMIZER_MAP.keys()} # 各戦略の累積スコア
+        self.current_strategy_name: Optional[str] = None
         
-        self._log(f"AdaptiveOptimizer: {len(self.strategy_names)} 個の戦略で初期化されました。")
-        self._log(f"AdaptiveOptimizer: 初期重み: {self.strategy_weights}")
-        self._log(f"AdaptiveOptimizer: 最大適応イテレーション: {self.max_adaptive_iterations}, 探索率: {self.exploration_epsilon}")
+        logger.info("AdaptiveOptimizer: 適応型最適化の初期化が完了しました。")
+        logger.debug(f"AdaptiveOptimizer: 探索率={self.exploration_epsilon}, 学習率={self.learning_rate}")
+        logger.debug(f"AdaptiveOptimizer: スコア重み={self.score_weight}, 未割り当て重み={self.unassigned_weight}, 時間重み={self.time_weight}")
 
-    def _calculate_performance_score(self, result: OptimizationResult, duration: float) -> float:
+
+    def _normalize_score(self, score: float, min_score: float, max_score: float) -> float:
+        """スコアを0-1の範囲に正規化する"""
+        if max_score == min_score:
+            return 0.5 # 変化がない場合は中間値
+        return (score - min_score) / (max_score - min_score)
+
+    def _normalize_unassigned(self, unassigned_count: int, max_unassigned: int) -> float:
+        """未割り当て数を0-1の範囲に正規化する (少ないほど良いので1-x)"""
+        if max_unassigned == 0:
+            return 1.0 # 未割り当てがなければ最高
+        return 1.0 - (unassigned_count / max_unassigned)
+
+    def _normalize_time(self, duration: float) -> float:
+        """時間を0-1の範囲に正規化する (短いほど良いので1-x)"""
+        # max_time_for_normalization を超える場合は0に近づける
+        normalized_time = min(duration, self.max_time_for_normalization) / self.max_time_for_normalization
+        return 1.0 - normalized_time
+
+
+    def _update_strategy_performance(self, strategy_name: str, result: OptimizationResult, duration: float):
         """
-        最適化結果と実行時間に基づいて、戦略のパフォーマンススコアを計算する。
-        スコアは0から1の範囲に正規化されることを目指す。
+        各戦略のパフォーマンスを更新する。
+        スコア、未割り当て学生数、実行時間を考慮して評価する。
         """
-        if result.status in ["FAILED", "INFEASIBLE", "MODEL_INVALID", "NO_SOLUTION_FOUND"]:
-            self._log(f"パフォーマンス計算: 戦略 '{result.optimization_strategy}' が失敗ステータス '{result.status}' を返しました。スコアは0とします。", level=logging.WARNING)
-            return 0.0 # 失敗した戦略のパフォーマンスは0
+        if result.status in ["OPTIMAL", "FEASIBLE"]:
+            # 正規化されたパフォーマンス指標を計算
+            # スコアは高いほど良い
+            # 未割り当て学生数は少ないほど良い
+            # 実行時間は短いほど良い
 
-        # スコアの正規化 (0-1)
-        normalized_score = result.best_score / self.max_score_for_normalization if self.max_score_for_normalization > 0 else 0.0
-        normalized_score = max(0.0, min(1.0, normalized_score)) # 0-1の範囲にクリップ
+            # スコアの正規化 (仮の最小・最大スコアを使用)
+            # 実際のアプリケーションでは、過去の実行履歴から動的に範囲を決定するか、
+            # 経験的な値を設定する必要があります。
+            # ここでは、学生数 * 1st_choice_weight を最大スコアの目安とする
+            max_possible_score = len(self.student_ids) * self.config.get("score_weights", {}).get("1st_choice", 3.0)
+            min_possible_score = 0.0 # 最低は0点
+            normalized_score = self._normalize_score(result.best_score, min_possible_score, max_possible_score)
 
-        # 未割り当て学生数の正規化 (0-1, 0が最適)
-        if len(self.student_ids) > 0:
-            normalized_unassigned = 1.0 - (len(result.unassigned_students) / len(self.student_ids))
-        else:
-            normalized_unassigned = 1.0 # 学生がいない場合は完全に割り当てられたとみなす
-        normalized_unassigned = max(0.0, min(1.0, normalized_unassigned))
+            # 未割り当て学生数の正規化
+            max_unassigned = len(self.student_ids) # 全員未割り当てが最大
+            normalized_unassigned = self._normalize_unassigned(len(result.unassigned_students), max_unassigned)
 
-        # 実行時間の正規化 (0-1, 短いほど最適)
-        normalized_time = 1.0 - (duration / self.max_time_for_normalization) if self.max_time_for_normalization > 0 else 0.0
-        normalized_time = max(0.0, min(1.0, normalized_time)) # 0-1の範囲にクリップ
+            # 時間の正規化
+            normalized_time = self._normalize_time(duration)
 
-        # 加重平均で総合パフォーマンススコアを計算
-        performance_score = (
-            self.score_weight * normalized_score +
-            self.unassigned_weight * normalized_unassigned +
-            self.time_weight * normalized_time
-        )
-        
-        self._log(f"パフォーマンス計算: 戦略 '{result.optimization_strategy}' - スコア: {normalized_score:.2f}, 未割り当て: {normalized_unassigned:.2f}, 時間: {normalized_time:.2f} -> 総合: {performance_score:.2f}")
-        return performance_score
-
-    def _update_strategy_weights(self, strategy_name: str, performance_score: float):
-        """
-        戦略のパフォーマンススコアに基づいて、その戦略の重みを更新する。
-        指数移動平均 (EMA) の概念を使用。
-        """
-        self.strategy_performance_history[strategy_name].append(performance_score)
-        
-        # 履歴の平均を新しい重みとする
-        # 失敗した戦略は重みを非常に低く設定し、選択されにくくする
-        if performance_score == 0.0 and len(self.strategy_performance_history[strategy_name]) == self.strategy_performance_history[strategy_name].maxlen:
-            # 履歴が全て0の場合、重みを大幅に減らす
-            self.strategy_weights[strategy_name] = -100.0 # 非常に低い値
-            self._log(f"戦略 '{strategy_name}' が連続して低パフォーマンスのため、重みを大幅に減らしました。", level=logging.WARNING)
-        else:
-            # EMA (Exponential Moving Average) のように更新
-            current_average_performance = np.mean(list(self.strategy_performance_history[strategy_name]))
-            current_weight = self.strategy_weights.get(strategy_name, 0.0) # 既存の重みを取得
+            # 総合パフォーマンススコアを計算
+            performance_score = (
+                self.score_weight * normalized_score +
+                self.unassigned_weight * normalized_unassigned +
+                self.time_weight * normalized_time
+            )
             
-            # 学習率を適用して重みを更新
-            new_weight = (1 - self.learning_rate) * current_weight + self.learning_rate * current_average_performance
-            self.strategy_weights[strategy_name] = new_weight
-            self._log(f"戦略 '{strategy_name}' の重みを更新しました。新重み: {new_weight:.4f} (平均パフォーマンス: {current_average_performance:.4f})")
-
-        # 全体の重みを正規化 (合計が1になるように)
-        # 負の重みは正規化から除外、または非常に低い値として扱う
-        positive_weights = {name: w for name, w in self.strategy_weights.items() if w > 0}
-        total_positive_weight = sum(positive_weights.values())
-
-        if total_positive_weight > 0:
-            for name in positive_weights:
-                self.strategy_weights[name] /= total_positive_weight
+            self.strategy_history[strategy_name].append(performance_score)
+            
+            # 移動平均や指数平滑平均のような形で累積スコアを更新
+            # ここでは簡易的に、過去の履歴の平均を使用
+            avg_performance = sum(self.strategy_history[strategy_name]) / len(self.strategy_history[strategy_name])
+            
+            # 学習率を考慮して戦略の累積スコアを更新
+            self.strategy_scores[strategy_name] = (1 - self.learning_rate) * self.strategy_scores[strategy_name] + self.learning_rate * avg_performance
+            
+            self._log(f"AdaptiveOptimizer: 戦略 '{strategy_name}' のパフォーマンスを更新しました。正規化スコア: {normalized_score:.2f}, 未割り当て: {normalized_unassigned:.2f}, 時間: {normalized_time:.2f}, 総合パフォーマンス: {performance_score:.2f}, 累積スコア: {self.strategy_scores[strategy_name]:.2f}")
         else:
-            # 全ての重みが0以下の場合、均等にリセット
-            self._log("全ての戦略の重みが0以下になりました。重みを均等にリセットします。", level=logging.WARNING)
-            self.strategy_weights = {name: 1.0 / len(self.strategy_names) for name in self.strategy_names}
-
-        self._log(f"AdaptiveOptimizer: 更新後の戦略重み: {self.strategy_weights}")
+            # 失敗した場合はペナルティを与えるか、スコアを更新しない
+            # ここでは、累積スコアを少し下げる
+            self.strategy_scores[strategy_name] = max(0.0, self.strategy_scores[strategy_name] * 0.8 - 0.1) # 0.8倍して0.1引く
+            self._log(f"AdaptiveOptimizer: 戦略 '{strategy_name}' が失敗しました。累積スコアを調整: {self.strategy_scores[strategy_name]:.2f}")
 
 
     def _select_strategy(self) -> str:
         """
-        現在の重みに基づいて、ε-greedy戦略で次の最適化戦略を選択する。
+        現在のパフォーマンス履歴に基づいて最適な戦略を選択する。
+        ε-greedy戦略を使用し、探索と活用のバランスを取る。
         """
-        # 探索 (Exploration)
         if random.random() < self.exploration_epsilon:
-            # 失敗していない戦略の中からランダムに選択
-            available_strategies = [name for name, weight in self.strategy_weights.items() if weight > -99.0] # 非常に低い重みは避ける
-            if available_strategies:
-                selected_strategy = random.choice(available_strategies)
-                self._log(f"AdaptiveOptimizer: 探索のため、戦略 '{selected_strategy}' をランダムに選択しました。")
-                return selected_strategy
+            # 探索: ランダムな戦略を選択
+            selected_strategy = random.choice(list(OPTIMIZER_MAP.keys()))
+            self._log(f"AdaptiveOptimizer: ε-greedy探索により戦略 '{selected_strategy}' をランダムに選択しました。")
+        else:
+            # 活用: 最も高い累積スコアを持つ戦略を選択
+            # 初期状態（全て0.0）の場合もランダムに選ぶ
+            if all(score == 0.0 for score in self.strategy_scores.values()):
+                selected_strategy = random.choice(list(OPTIMIZER_MAP.keys()))
+                self._log(f"AdaptiveOptimizer: 全ての戦略スコアが初期値のため、ランダムに戦略 '{selected_strategy}' を選択しました。")
             else:
-                self._log("AdaptiveOptimizer: 探索可能な戦略が見つかりませんでした。重みから選択します。", level=logging.WARNING)
+                selected_strategy = max(self.strategy_scores, key=self.strategy_scores.get)
+                self._log(f"AdaptiveOptimizer: 活用により戦略 '{selected_strategy}' を選択しました (累積スコア: {self.strategy_scores[selected_strategy]:.2f})。")
         
-        # 活用 (Exploitation)
-        # 現在の重みが最も高い戦略を選択
-        # 負の無限大の重みを持つ戦略は選択肢から除外
-        valid_strategies = {name: weight for name, weight in self.strategy_weights.items() if weight > -99.0}
-        if not valid_strategies:
-            self._log("AdaptiveOptimizer: 選択可能な有効な戦略がありません。Greedy_LSをフォールバックとして使用します。", level=logging.ERROR)
-            return "Greedy_LS" # フォールバック
-
-        selected_strategy = max(valid_strategies, key=valid_strategies.get)
-        self._log(f"AdaptiveOptimizer: 活用のため、最も重みの高い戦略 '{selected_strategy}' を選択しました。")
+        self.current_strategy_name = selected_strategy
         return selected_strategy
 
     def optimize(self, cancel_event: Optional[threading.Event] = None) -> OptimizationResult:
         """
-        適応型最適化アルゴリズムを実行する。
+        適応型最適化プロセスを実行する。
+        複数の戦略を順番に試行し、最も良い結果を返す。
         """
-        self._log("AdaptiveOptimizer: 最適化を開始します。")
         start_overall_time = time.time()
+        self._log("AdaptiveOptimizer: 適応型最適化を開始します...")
 
         best_overall_score = -float('inf')
         best_overall_assignment: Dict[str, str] = {}
         final_status = "NO_SOLUTION_FOUND"
-        final_message = "最適解が見つかりませんでした。"
+        final_message = "適応型最適化で有効な解が見つかりませんでした。"
         final_strategy_used = "N/A"
 
-        for iteration in range(self.max_adaptive_iterations):
+        # 試行する戦略のリスト (ここではすべての戦略を一度は試す)
+        strategies_to_try = list(OPTIMIZER_MAP.keys())
+        random.shuffle(strategies_to_try) # 試行順序をランダム化
+
+        for strategy_name in strategies_to_try:
             if cancel_event and cancel_event.is_set():
-                self._log("AdaptiveOptimizer: 最適化がユーザーによってキャンセルされました。")
+                self._log("AdaptiveOptimizer: 全体最適化がキャンセルされました。")
                 final_status = "CANCELLED"
                 final_message = "最適化がユーザーによってキャンセルされました。"
                 break
 
-            self._log(f"--- AdaptiveOptimizer イテレーション {iteration + 1}/{self.max_adaptive_iterations} ---")
-            
-            # 次の戦略を選択
-            self.current_strategy_name = self._select_strategy()
-            self._log(f"AdaptiveOptimizer: 選択された戦略: {self.current_strategy_name}")
+            # ε-greedy選択 (ここでは既に全戦略を試すので、選択ロジックは簡略化)
+            # 実際の適応型では、ここで _select_strategy() を呼び出す
+            self.current_strategy_name = strategy_name
+            self._log(f"AdaptiveOptimizer: 戦略 '{self.current_strategy_name}' を試行します。")
 
-            # 選択された戦略のオプティマイザをインスタンス化
-            optimizer_class = self.strategies.get(self.current_strategy_name)
+            optimizer_class = OPTIMIZER_MAP.get(self.current_strategy_name)
             if not optimizer_class:
-                self._log(f"AdaptiveOptimizer: 不明な戦略 '{self.current_strategy_name}' が選択されました。スキップします。", level=logging.ERROR)
+                self._log(f"AdaptiveOptimizer: 未知の最適化戦略: {self.current_strategy_name}。スキップします。", level=logging.ERROR)
                 continue
 
-            current_optimizer = optimizer_class(self.seminars, self.students, self.config, 
-                                                progress_callback=lambda msg: self._log(f"[{self.current_strategy_name}] {msg}", level=logging.DEBUG))
-            
-            iteration_start_time = time.time()
-            current_result: Optional[OptimizationResult] = None
-            try:
-                # 各オプティマイザのoptimizeメソッドにcancel_eventを渡す
-                current_result = current_optimizer.optimize(cancel_event=cancel_event)
-            except Exception as e:
-                self._log(f"AdaptiveOptimizer: 戦略 '{self.current_strategy_name}' の実行中に予期せぬエラーが発生しました: {e}", level=logging.ERROR, exc_info=True)
-                # エラーが発生した戦略はパフォーマンススコアを0として扱う
-                current_result = OptimizationResult(
-                    status="FAILED",
-                    message=f"エラー: {e}",
-                    best_score=-float('inf'),
-                    best_assignment={},
-                    seminar_capacities=self.seminar_capacities,
-                    unassigned_students=self.student_ids,
-                    optimization_strategy=self.current_strategy_name
-                )
-            
-            iteration_end_time = time.time()
-            duration = iteration_end_time - iteration_start_time
-            self._log(f"AdaptiveOptimizer: 戦略 '{self.current_strategy_name}' 完了。ステータス: {current_result.status}, スコア: {current_result.best_score:.2f}, 時間: {duration:.2f}s")
+            optimizer_instance = optimizer_class(
+                seminars=self.seminars,
+                students=self.students,
+                config=self.config,
+                progress_callback=self.progress_callback
+            )
 
-            # パフォーマンススコアを計算し、重みを更新
-            performance_score = self._calculate_performance_score(current_result, duration)
-            self._update_strategy_weights(self.current_strategy_name, performance_score)
+            strategy_start_time = time.time()
+            current_result = optimizer_instance.optimize(cancel_event)
+            strategy_end_time = time.time()
+            duration = strategy_end_time - strategy_start_time
 
-            # 全体的なベスト結果を更新
+            self._log(f"AdaptiveOptimizer: 戦略 '{self.current_strategy_name}' 完了。ステータス: {current_result.status}, スコア: {current_result.best_score:.2f}, 時間: {duration:.2f}秒")
+
+            # パフォーマンスを更新
+            self._update_strategy_performance(self.current_strategy_name, current_result, duration)
+
+            # 最も良い結果を保持
             if current_result.status in ["OPTIMAL", "FEASIBLE"] and current_result.best_score > best_overall_score:
                 best_overall_score = current_result.best_score
                 best_overall_assignment = current_result.best_assignment
@@ -253,6 +228,13 @@ class AdaptiveOptimizer(BaseOptimizer): # BaseOptimizerを継承
             unassigned_students = self._get_unassigned_students(best_overall_assignment)
             self._log(f"AdaptiveOptimizer: 最終的なベストスコア: {best_overall_score:.2f}, 最終ステータス: {final_status}, 未割り当て学生数: {len(unassigned_students)}")
 
+        # キャンセルされた場合は、キャンセルステータスを優先
+        if cancel_event and cancel_event.is_set():
+            final_status = "CANCELLED"
+            final_message = "最適化がユーザーによってキャンセルされました。"
+            best_overall_score = -float('inf') # キャンセルされた場合はスコアを無効にする
+            unassigned_students = self.student_ids # 全員未割り当てとみなす
+
         return OptimizationResult(
             status=final_status,
             message=final_message,
@@ -260,5 +242,5 @@ class AdaptiveOptimizer(BaseOptimizer): # BaseOptimizerを継承
             best_assignment=best_overall_assignment,
             seminar_capacities=self.seminar_capacities,
             unassigned_students=unassigned_students,
-            optimization_strategy="Adaptive" # AdaptiveOptimizerが最終的に使用された戦略
+            optimization_strategy=final_strategy_used
         )

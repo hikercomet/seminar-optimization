@@ -1,13 +1,12 @@
-import logging
 import random
 import time
+import threading
 from typing import Dict, List, Any, Callable, Optional, Tuple
 
 # BaseOptimizerとOptimizationResultをutilsからインポート
-from utils import BaseOptimizer, OptimizationResult
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG) # DEBUGレベルのメッセージも出力
+from seminar_optimization.utils import BaseOptimizer, OptimizationResult
+# ロギングは logger_config.py で一元的に設定されるため、ここではロガーの取得のみ
+from seminar_optimization.logger_config import logger
 
 class GreedyLSOptimizer(BaseOptimizer): # BaseOptimizerを継承
     """
@@ -27,127 +26,154 @@ class GreedyLSOptimizer(BaseOptimizer): # BaseOptimizerを継承
         self.early_stop_no_improvement_limit = config.get("early_stop_no_improvement_limit", 5000)
         logger.debug(f"GreedyLSOptimizer: イテレーション数: {self.iterations}, 早期停止リミット: {self.early_stop_no_improvement_limit}")
 
-    def _generate_initial_assignment(self) -> Dict[str, str]:
+    def _initial_assignment(self) -> Dict[str, str]:
         """
-        貪欲法で初期割り当てを生成する。
-        学生をランダムな順序で処理し、希望するセミナーに可能な限り割り当てる。
+        学生の希望に基づいて初期割り当てを生成する（貪欲法）。
+        各学生は、まだ定員に空きがある中で最も希望順位の高いセミナーに割り当てられる。
         """
-        self._log("Greedy_LS: 初期割り当てを貪欲法で生成中...")
+        logger.debug("GreedyLSOptimizer: 初期割り当て（貪欲法）を開始します。")
         assignment: Dict[str, str] = {}
-        seminar_current_counts: Dict[str, int] = {s_id: 0 for s_id in self.seminar_ids}
-        
-        # 学生をランダムな順序で処理することで、初期解の多様性を確保
-        shuffled_student_ids = list(self.student_ids)
-        random.shuffle(shuffled_student_ids)
-        logger.debug(f"_generate_initial_assignment: シャッフルされた学生ID: {shuffled_student_ids[:5]}...") # 最初の5つだけ表示
+        seminar_current_counts = {s_id: 0 for s_id in self.seminar_ids}
 
-        for student_id in shuffled_student_ids:
-            student_preferences = self.student_preferences.get(student_id, [])
+        # 学生をランダムな順序で処理することで、異なる初期解を生成する可能性を高める
+        shuffled_students = list(self.student_ids)
+        random.shuffle(shuffled_students)
+
+        for student_id in shuffled_students:
+            preferences = self.student_preferences.get(student_id, [])
             assigned = False
-            logger.debug(f"学生 {student_id} の割り当てを試行中。希望: {student_preferences}")
-
-            for preferred_seminar_id in student_preferences:
-                capacity = self.seminar_capacities.get(preferred_seminar_id, 0)
-                current_count = seminar_current_counts.get(preferred_seminar_id, 0)
-
-                if current_count < capacity:
+            for preferred_seminar_id in preferences:
+                capacity = self.seminar_capacities.get(preferred_seminar_id)
+                if capacity is not None and seminar_current_counts[preferred_seminar_id] < capacity:
                     assignment[student_id] = preferred_seminar_id
                     seminar_current_counts[preferred_seminar_id] += 1
                     assigned = True
-                    logger.debug(f"学生 {student_id} をセミナー {preferred_seminar_id} に割り当てました。現在の定員: {current_count+1}/{capacity}")
-                    break # この学生は割り当てられたので次の学生へ
-                else:
-                    logger.debug(f"セミナー {preferred_seminar_id} は満員です ({current_count}/{capacity})。")
-            
+                    logger.debug(f"学生 {student_id} をセミナー {preferred_seminar_id} に初期割り当てしました。")
+                    break
             if not assigned:
-                logger.debug(f"学生 {student_id} は初期割り当てで未割り当てのままです。")
-
-        self._log(f"Greedy_LS: 初期割り当て生成完了。割り当て学生数: {len(assignment)}")
-        logger.debug(f"_generate_initial_assignment: 初期割り当ての実行可能性チェック: {self._is_feasible_assignment(assignment)}")
+                logger.debug(f"学生 {student_id} は初期割り当てで希望するセミナーに割り当てられませんでした。")
+        
+        logger.info(f"GreedyLSOptimizer: 初期割り当てが完了しました。割り当てられた学生数: {len(assignment)}")
         return assignment
 
-    def _local_search(self, initial_assignment: Dict[str, str]) -> Tuple[Dict[str, str], float]:
+    def _local_search(self, initial_assignment: Dict[str, str], cancel_event: Optional[threading.Event] = None) -> Tuple[Dict[str, str], float]:
         """
-        局所探索で解を改善する。
+        局所探索（Local Search）を実行し、割り当てを改善する。
         現在の割り当てから近傍解を生成し、スコアが改善すれば更新する。
         """
-        self._log("Greedy_LS: 局所探索で解を改善中...")
+        logger.debug("GreedyLSOptimizer: 局所探索を開始します。")
         current_assignment = initial_assignment.copy()
         current_score = self._calculate_score(current_assignment)
         best_assignment = current_assignment.copy()
         best_score = current_score
         
         no_improvement_count = 0
-        logger.info(f"Greedy_LS: 局所探索開始時のスコア: {best_score:.2f}")
+
+        self._log(f"Greedy_LS: 局所探索開始。初期スコア: {current_score:.2f}")
 
         for i in range(self.iterations):
-            if i % 10000 == 0: # 10000イテレーションごとに進捗を報告
-                self._log(f"Greedy_LS: 局所探索イテレーション {i}/{self.iterations} (現在のベストスコア: {best_score:.2f})")
-                logger.debug(f"Greedy_LS: 現在の割り当ての実行可能性チェック: {self._is_feasible_assignment(current_assignment)}")
-
-            # 近傍解の生成戦略 (ここでは、ランダムな学生を別のセミナーに移動)
-            # 1. ランダムな学生を選び、現在の割り当てから削除
-            student_to_move_id = random.choice(list(current_assignment.keys()) + self.student_ids) # 割り当て済み or 未割り当てから選択
-            
-            temp_assignment = current_assignment.copy()
-            original_seminar_id = temp_assignment.pop(student_to_move_id, None) # 割り当てられていなければNone
-
-            # 2. その学生をランダムなセミナーに割り当てる (または未割り当てのままにする)
-            possible_seminars = list(self.seminar_ids) + [None] # Noneは未割り当てを意味する
-            random.shuffle(possible_seminars) # ランダムな順序でセミナーを試す
-
-            found_better_neighbor = False
-            for new_seminar_id in possible_seminars:
-                neighbor_assignment = temp_assignment.copy()
-                if new_seminar_id is not None:
-                    neighbor_assignment[student_to_move_id] = new_seminar_id
-                
-                # 新しい割り当てが実行可能かチェック
-                if self._is_feasible_assignment(neighbor_assignment):
-                    neighbor_score = self._calculate_score(neighbor_assignment)
-                    logger.debug(f"イテレーション {i}: 学生 {student_to_move_id} を {original_seminar_id} から {new_seminar_id} へ移動を試行。スコア: {neighbor_score:.2f}")
-
-                    if neighbor_score > best_score:
-                        best_score = neighbor_score
-                        best_assignment = neighbor_assignment.copy()
-                        no_improvement_count = 0 # 改善が見られたのでカウントをリセット
-                        found_better_neighbor = True
-                        logger.info(f"Greedy_LS: スコアが改善しました！新しいベストスコア: {best_score:.2f} (イテレーション {i})")
-                        break # より良い解が見つかったので、この学生の移動はこれで確定
-            
-            if not found_better_neighbor:
-                no_improvement_count += 1
-                logger.debug(f"イテレーション {i}: 改善が見られませんでした。連続改善なしカウント: {no_improvement_count}")
-
-            if no_improvement_count >= self.early_stop_no_improvement_limit:
-                self._log(f"Greedy_LS: {self.early_stop_no_improvement_limit}回改善が見られなかったため、早期終了します。")
-                logger.info(f"Greedy_LS: 早期終了時のベストスコア: {best_score:.2f}")
+            if cancel_event and cancel_event.is_set():
+                self._log(f"Greedy_LS: 局所探索がイテレーション {i} でキャンセルされました。")
                 break
-            
-            # 現在の割り当てを更新 (ここでは、常にベストなものに更新する戦略)
-            current_assignment = best_assignment.copy()
-            current_score = best_score
 
+            # 進捗報告 (例: 10000イテレーションごとに)
+            if (i + 1) % 10000 == 0:
+                self._log(f"Greedy_LS: 局所探索イテレーション {i+1}/{self.iterations}。現在のベストスコア: {best_score:.2f}")
 
-        self._log(f"Greedy_LS: 局所探索完了。最終ベストスコア: {best_score:.2f}")
-        logger.debug(f"Greedy_LS: 最終割り当ての実行可能性チェック: {self._is_feasible_assignment(best_assignment)}")
+            # 1. 未割り当て学生の割り当てを試みる
+            unassigned_students = self._get_unassigned_students(current_assignment)
+            if unassigned_students:
+                student_to_assign = random.choice(unassigned_students)
+                preferences = self.student_preferences.get(student_to_assign, [])
+                random.shuffle(preferences) # 希望順をランダムに試す
+                
+                found_slot = False
+                for seminar_id in preferences:
+                    if seminar_id in self.seminar_capacities and \
+                       list(current_assignment.values()).count(seminar_id) < self.seminar_capacities[seminar_id]:
+                        
+                        new_assignment = current_assignment.copy()
+                        new_assignment[student_to_assign] = seminar_id
+                        
+                        if self._is_feasible_assignment(new_assignment):
+                            new_score = self._calculate_score(new_assignment)
+                            if new_score > current_score:
+                                current_assignment = new_assignment
+                                current_score = new_score
+                                if current_score > best_score:
+                                    best_score = current_score
+                                    best_assignment = current_assignment.copy()
+                                    no_improvement_count = 0
+                                    logger.debug(f"GreedyLSOptimizer: 未割り当て学生 {student_to_assign} を割り当て、スコア改善: {best_score:.2f}")
+                                found_slot = True
+                                break # この学生の割り当て成功
+                if found_slot:
+                    continue # 次のイテレーションへ
+
+            # 2. 既存の割り当てを交換または再割り当てを試みる
+            if current_assignment:
+                student_id = random.choice(list(current_assignment.keys()))
+                original_seminar = current_assignment[student_id]
+                
+                # 選択肢: 別のセミナーに移動するか、未割り当てにする
+                possible_seminars = list(self.seminar_ids)
+                if len(possible_seminars) > 1: # 少なくとも2つセミナーがないと交換できない
+                    # 元のセミナーを除外し、別のセミナーを選択
+                    possible_seminars.remove(original_seminar) 
+                    target_seminar = random.choice(possible_seminars)
+                else: # セミナーが1つしかない場合は、未割り当てを試みる
+                    target_seminar = None # 未割り当てを意味する
+
+                new_assignment = current_assignment.copy()
+                del new_assignment[student_id] # 一旦学生を未割り当てにする
+
+                if target_seminar:
+                    # 新しいセミナーに割り当てを試みる
+                    if list(new_assignment.values()).count(target_seminar) < self.seminar_capacities[target_seminar]:
+                        new_assignment[student_id] = target_seminar
+                        
+                        if self._is_feasible_assignment(new_assignment):
+                            new_score = self._calculate_score(new_assignment)
+                            if new_score > current_score:
+                                current_assignment = new_assignment
+                                current_score = new_score
+                                if current_score > best_score:
+                                    best_score = current_score
+                                    best_assignment = current_assignment.copy()
+                                    no_improvement_count = 0
+                                    logger.debug(f"GreedyLSOptimizer: 学生 {student_id} を {original_seminar} から {target_seminar} へ移動し、スコア改善: {best_score:.2f}")
+                                continue # 改善があったので次のイテレーションへ
+                
+                # 移動で改善がなかった、または移動先がない場合、元の割り当てに戻すか、未割り当てのままにする
+                # ここでは、改善がなければ元の割り当てに戻す
+                if student_id not in new_assignment: # 移動が試行されなかったか、失敗した場合
+                    new_assignment[student_id] = original_seminar # 元に戻す
+                
+                # 元に戻した割り当てのスコアを再計算（これは通常不要だが、念のため）
+                # current_score = self._calculate_score(current_assignment)
+
+            # 改善がなかった場合
+            no_improvement_count += 1
+            if no_improvement_count >= self.early_stop_no_improvement_limit:
+                self._log(f"Greedy_LS: {self.early_stop_no_improvement_limit} イテレーションの間改善がなかったため、早期停止します。")
+                break
+
+        logger.info(f"GreedyLSOptimizer: 局所探索が完了しました。最終ベストスコア: {best_score:.2f}")
         return best_assignment, best_score
 
-    def optimize(self) -> OptimizationResult: # 返り値をOptimizationResultに
+    def optimize(self, cancel_event: Optional[threading.Event] = None) -> OptimizationResult:
         """
-        貪欲法と局所探索を組み合わせた最適化を実行する。
+        最適化プロセスを実行する。
         """
-        self._log("Greedy_LS 最適化を開始します。")
         start_time = time.time()
-        logger.debug("Greedy_LS: optimize メソッド呼び出し。")
+        self._log("Greedy_LS 最適化を開始します...")
 
-        # ステップ1: 貪欲法で初期解を生成
-        initial_assignment = self._generate_initial_assignment()
-        self._log(f"Greedy_LS: 初期割り当てを生成しました。割り当て学生数: {len(initial_assignment)}")
-        logger.debug(f"Greedy_LS: 初期割り当てのスコア: {self._calculate_score(initial_assignment):.2f}")
+        # 初期割り当ての生成
+        initial_assignment = self._initial_assignment()
+        self._log(f"Greedy_LS: 初期割り当て生成完了。割り当て数: {len(initial_assignment)}")
 
-        # ステップ2: 局所探索で解を改善
-        final_assignment, final_score = self._local_search(initial_assignment)
+        # 局所探索による改善
+        final_assignment, final_score = self._local_search(initial_assignment, cancel_event)
         
         end_time = time.time()
         duration = end_time - start_time
@@ -170,7 +196,13 @@ class GreedyLSOptimizer(BaseOptimizer): # BaseOptimizerを継承
                 message = "Greedy_LS最適化は実行不可能な解を返しました。定員制約を満たしていません。"
                 logger.error(f"Greedy_LS: 最終割り当てが実行不可能です。割り当て: {final_assignment}")
                 unassigned_students = self.student_ids # 全員未割り当てとみなす
-                final_assignment = {} # 無効な割り当てはクリア
+                final_score = -float('inf') # 不可能な解はスコアを最低にする
+
+        if cancel_event and cancel_event.is_set():
+            status = "CANCELLED"
+            message = "最適化がユーザーによってキャンセルされました。"
+            final_score = -float('inf') # キャンセルされた場合はスコアを無効にする
+            unassigned_students = self.student_ids # 全員未割り当てとみなす
 
         return OptimizationResult(
             status=status,
@@ -181,4 +213,3 @@ class GreedyLSOptimizer(BaseOptimizer): # BaseOptimizerを継承
             unassigned_students=unassigned_students,
             optimization_strategy="Greedy_LS"
         )
-

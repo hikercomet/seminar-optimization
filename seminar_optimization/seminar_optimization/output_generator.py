@@ -14,23 +14,30 @@ from reportlab.lib.units import cm
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont # 日本語フォント対応のため
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG) # DEBUGレベルのメッセージも出力
+# ロギングは logger_config.py で一元的に設定されるため、ここではロガーの取得のみ
+from seminar_optimization.logger_config import logger
 
 # 日本語フォントの登録 (IPAexGothicを仮定)
-try:
-    # 実際には、このフォントファイルが実行環境に存在する必要があります。
-    # 例: プロジェクトの 'fonts' ディレクトリに 'ipaexg.ttf' を配置
-    # output_generator.py から見て、一つ上のディレクトリの fonts ディレクトリ
-    font_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'fonts', 'ipaexg.ttf')
+# プロジェクトのルートディレクトリからの相対パスでフォントを探す
+# output_generator.py は seminar_optimization/seminar_optimization/output_generator.py にあると仮定
+# プロジェクトルートは一つ上のディレクトリのさらに一つ上のディレクトリ
+def register_japanese_font():
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    # プロジェクトのルートディレクトリを特定
+    # seminar_optimization/seminar_optimization/output_generator.py から見て ../../fonts/ipaexg.ttf
+    project_root = os.path.abspath(os.path.join(script_dir, '..', '..'))
+    font_path = os.path.join(project_root, 'fonts', 'ipaexg.ttf')
     
-    if os.path.exists(font_path):
-        pdfmetrics.registerFont(TTFont('IPAexGothic', font_path))
-        logger.info(f"output_generator: 日本語フォント 'IPAexGothic' を登録しました。パス: {font_path}")
-    else:
-        logger.warning(f"output_generator: 日本語フォントファイルが見つかりません: {font_path}。PDFレポートの日本語表示に問題がある可能性があります。")
-except Exception as e:
-    logger.error(f"output_generator: 日本語フォントの登録中にエラーが発生しました: {e}", exc_info=True)
+    try:
+        if os.path.exists(font_path):
+            pdfmetrics.registerFont(TTFont('IPAexGothic', font_path))
+            logger.info(f"output_generator: 日本語フォント 'IPAexGothic' を登録しました。パス: {font_path}")
+        else:
+            logger.warning(f"output_generator: 日本語フォントファイルが見つかりません: {font_path}。PDFレポートの日本語表示に問題がある可能性があります。フォントファイルを '{os.path.join(project_root, 'fonts')}' ディレクトリに配置してください。")
+    except Exception as e:
+        logger.error(f"output_generator: 日本語フォントの登録中にエラーが発生しました: {e}", exc_info=True)
+
+register_japanese_font()
 
 
 # --- ヘルパー関数 ---
@@ -44,9 +51,6 @@ def _calculate_satisfaction_stats(students: List[Dict[str, Any]], assignment: Di
         満足度統計の辞書
     """
     logger.debug("_calculate_satisfaction_stats: 学生満足度統計の計算を開始シマス。")
-    # student_preferences_map はこの関数のローカルスコープで定義されるため、
-    # Pylanceがグローバルスコープで未定義と警告することがありますが、これは静的解析の特性によるもので、
-    # 実行時には問題ありません。
     student_preferences_map = {s['id']: s['preferences'] for s in students}
 
     stats = {
@@ -185,9 +189,6 @@ def save_pdf_report(
         students_data = config.get('students_data_for_report', [])
         seminars_data = config.get('seminars_data_for_report', [])
         seminar_capacities = {s['id']: s['capacity'] for s in seminars_data}
-        # student_preferences_map はこの関数のローカルスコープで定義されるため、
-        # Pylanceがグローバルスコープで未定義と警告することがありますが、これは静的解析の特性によるもので、
-        # 実行時には問題ありません。
         student_preferences_map = {s['id']: s['preferences'] for s in students_data}
 
 
@@ -315,9 +316,6 @@ def save_csv_results(
         students_data = config.get('students_data_for_report', [])
         seminars_data = config.get('seminars_data_for_report', [])
         seminar_capacities = {s['id']: s['capacity'] for s in seminars_data}
-        # student_preferences_map はこの関数のローカルスコープで定義されるため、
-        # Pylanceがグローバルスコープで未定義と警告することがありますが、これは静的解析の特性によるもので、
-        # 実行時には問題ありません。
         student_preferences_map = {s['id']: s['preferences'] for s in students_data}
 
         # 割り当て結果CSV
@@ -376,4 +374,3 @@ def save_csv_results(
     except Exception as e:
         logger.error(f"save_csv_results: CSVレポートの生成中にエラーが発生しました: {e}", exc_info=True)
         raise
-

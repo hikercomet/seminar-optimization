@@ -10,7 +10,7 @@ if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
 # seminar_optimization パッケージからインポート
-from seminar_optimization.utils import BaseOptimizer, OptimizationResult
+from seminar_optimization.seminar_optimization.utils import BaseOptimizer, OptimizationResult
 
 class TestBaseOptimizer(unittest.TestCase):
     """

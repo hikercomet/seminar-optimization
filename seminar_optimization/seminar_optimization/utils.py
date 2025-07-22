@@ -2,21 +2,11 @@ import logging
 from typing import Dict, List, Any, Callable, Optional, Tuple, Literal
 import time
 import random
+import threading
 import numpy as np
 
-# ロガーの設定を強化
+# ロギングは logger_config.py で一元的に設定されるため、ここではロガーの取得のみ
 logger = logging.getLogger(__name__)
-# DEBUGレベルのメッセージも出力するように設定
-logger.setLevel(logging.DEBUG) 
-
-# ハンドラが設定されていない場合のみ、デフォルトのStreamHandlerを追加
-# これにより、複数回インポートされてもハンドラが重複して追加されるのを防ぎます。
-if not logger.handlers:
-    handler = logging.StreamHandler()
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    logger.debug("utils.py: ロギングハンドラが初期化されました。")
 
 class OptimizationResult:
     """
@@ -204,9 +194,12 @@ class BaseOptimizer:
             logger.debug(f"_get_unassigned_students: 未割り当て学生リスト: {unassigned}")
         return unassigned
 
-    def optimize(self) -> OptimizationResult:
+    def optimize(self, cancel_event: Optional[threading.Event] = None) -> OptimizationResult:
         """
         このメソッドは各サブクラスで実装されるべき抽象メソッド。
+        最適化を実行し、結果を OptimizationResult オブジェクトとして返します。
+        cancel_event を受け取り、最適化の途中でキャンセルできるようにします。
         """
         logger.error("BaseOptimizer: optimize メソッドはサブクラスで実装されていません。")
         raise NotImplementedError("Subclasses must implement the optimize method.")
+

@@ -1,15 +1,13 @@
 import random
-import logging
 import copy
 import threading
 import time
 from typing import Dict, List, Any, Callable, Optional, Tuple
 
 # BaseOptimizerとOptimizationResultをutilsからインポート
-from utils import BaseOptimizer, OptimizationResult 
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG) # DEBUGレベルのメッセージも出力
+from seminar_optimization.utils import BaseOptimizer, OptimizationResult 
+# ロギングは logger_config.py で一元的に設定されるため、ここではロガーの取得のみ
+from seminar_optimization.logger_config import logger
 
 class GeneticAlgorithmOptimizer(BaseOptimizer): # BaseOptimizerを継承
     """
@@ -18,7 +16,7 @@ class GeneticAlgorithmOptimizer(BaseOptimizer): # BaseOptimizerを継承
     def __init__(self, 
                  seminars: List[Dict[str, Any]], 
                  students: List[Dict[str, Any]], 
-                 config: Dict[str, Any],\
+                 config: Dict[str, Any],
                  progress_callback: Optional[Callable[[str], None]] = None # progress_callbackを追加
                  ):
         # BaseOptimizerの__init__を呼び出す
@@ -30,303 +28,283 @@ class GeneticAlgorithmOptimizer(BaseOptimizer): # BaseOptimizerを継承
         self.generations = config.get("ga_generations", 200)
         self.mutation_rate = config.get("ga_mutation_rate", 0.05)
         self.crossover_rate = config.get("ga_crossover_rate", 0.8)
-        self.local_search_iterations = config.get("local_search_iterations", 500) # GA内の局所探索用
-        self.no_improvement_limit = config.get("ga_no_improvement_limit", 50) # 改善が見られない世代数で早期停止
-        logger.debug(f"GAOptimizer: 個体群サイズ: {self.population_size}, 世代数: {self.generations}, 変異率: {self.mutation_rate}, 交叉率: {self.crossover_rate}, 局所探索イテレーション: {self.local_search_iterations}, 改善なし停止リミット: {self.no_improvement_limit}")
+        self.no_improvement_limit = config.get("ga_no_improvement_limit", 50) # 改善がない場合に早期停止する世代数
+        logger.debug(f"GA_LS: 個体群サイズ={self.population_size}, 世代数={self.generations}, 変異率={self.mutation_rate}, 交叉率={self.crossover_rate}, 改善停止世代={self.no_improvement_limit}")
 
-    def _generate_individual(self) -> Dict[str, str]:
+    def _generate_initial_population(self) -> List[Dict[str, str]]:
         """
-        ランダムな個体（学生割り当て）を生成する。
-        定員制約を考慮しつつ、可能な限り希望に沿うように割り当てる。
+        初期個体群を生成する。
+        各個体は、学生の希望に基づいたランダムな割り当て（定員制約を考慮）となる。
         """
-        assignment: Dict[str, str] = {}
-        seminar_current_counts: Dict[str, int] = {s_id: 0 for s_id in self.seminar_ids}
-        
-        shuffled_student_ids = list(self.student_ids)
-        random.shuffle(shuffled_student_ids)
-        logger.debug("_generate_individual: 新しい個体を生成中...")
-
-        for student_id in shuffled_student_ids:
-            student_preferences = self.student_preferences.get(student_id, [])
-            assigned = False
+        logger.debug("GeneticAlgorithmOptimizer: 初期個体群の生成を開始します。")
+        population = []
+        for _ in range(self.population_size):
+            assignment: Dict[str, str] = {}
+            seminar_current_counts = {s_id: 0 for s_id in self.seminar_ids}
             
-            # まず希望するセミナーに割り当てを試みる
-            for preferred_seminar_id in student_preferences:
-                capacity = self.seminar_capacities.get(preferred_seminar_id, 0)
-                if seminar_current_counts.get(preferred_seminar_id, 0) < capacity:
-                    assignment[student_id] = preferred_seminar_id
-                    seminar_current_counts[preferred_seminar_id] += 1
-                    assigned = True
-                    logger.debug(f"学生 {student_id} を希望セミナー {preferred_seminar_id} に割り当て。")
+            # 学生をランダムな順序で処理
+            shuffled_students = list(self.student_ids)
+            random.shuffle(shuffled_students)
+
+            for student_id in shuffled_students:
+                preferences = self.student_preferences.get(student_id, [])
+                assigned = False
+                # 希望順に割り当てを試みる
+                for preferred_seminar_id in preferences:
+                    capacity = self.seminar_capacities.get(preferred_seminar_id)
+                    if capacity is not None and seminar_current_counts[preferred_seminar_id] < capacity:
+                        assignment[student_id] = preferred_seminar_id
+                        seminar_current_counts[preferred_seminar_id] += 1
+                        assigned = True
+                        break
+                # 希望するセミナーに割り当てられなかった場合、ランダムな空きセミナーに割り当てる
+                # または未割り当てのままにする（ここでは未割り当てのまま）
+                if not assigned:
+                    pass # 未割り当てのままにする
+            population.append(assignment)
+        logger.info(f"GeneticAlgorithmOptimizer: {len(population)} 個の初期個体群を生成しました。")
+        return population
+
+    def _evaluate_fitness(self, assignment: Dict[str, str]) -> float:
+        """
+        割り当ての適応度（スコア）を計算する。
+        定員制約を満たさない場合はペナルティを与える。
+        """
+        score = self._calculate_score(assignment)
+        if not self._is_feasible_assignment(assignment):
+            # 定員オーバーのセミナーがある場合、大きなペナルティ
+            # 未割り当て学生がいる場合もペナルティ
+            penalty = 0.0
+            seminar_counts = {s_id: 0 for s_id in self.seminar_ids}
+            for assigned_seminar_id in assignment.values():
+                seminar_counts[assigned_seminar_id] = seminar_counts.get(assigned_seminar_id, 0) + 1
+            
+            for seminar_id, count in seminar_counts.items():
+                capacity = self.seminar_capacities.get(seminar_id, 0)
+                if count > capacity:
+                    penalty += (count - capacity) * 100.0 # 定員オーバー1人あたり100点のペナルティ
+            
+            unassigned_students_count = len(self._get_unassigned_students(assignment))
+            penalty += unassigned_students_count * 50.0 # 未割り当て1人あたり50点のペナルティ
+
+            score -= penalty
+            logger.debug(f"GA_LS: 不適合な割り当てにペナルティ {penalty:.2f} を適用しました。調整後スコア: {score:.2f}")
+        return score
+
+    def _selection(self, population: List[Dict[str, str]], fitnesses: List[float]) -> List[Dict[str, str]]:
+        """
+        ルーレット選択により次世代の親を選択する。
+        """
+        logger.debug("GeneticAlgorithmOptimizer: 親の選択を開始します。")
+        selected_parents = []
+        # 適応度が負の値になる可能性を考慮し、最小値を0にシフト
+        min_fitness = min(fitnesses)
+        adjusted_fitnesses = [f - min_fitness + 1 for f in fitnesses] # 全て正の値にする
+        total_adjusted_fitness = sum(adjusted_fitnesses)
+
+        if total_adjusted_fitness == 0: # 全ての個体が同じ（低い）適応度の場合
+            logger.warning("GA_LS: 全ての個体の適応度が同じか非常に低いため、ランダム選択にフォールバックします。")
+            return random.sample(population, self.population_size)
+
+        for _ in range(self.population_size):
+            pick = random.uniform(0, total_adjusted_fitness)
+            current = 0
+            for i, individual in enumerate(population):
+                current += adjusted_fitnesses[i]
+                if current > pick:
+                    selected_parents.append(individual)
                     break
-            
-            # 希望するセミナーに割り当てられなかった場合、ランダムな空きセミナーに割り当てる
-            if not assigned:
-                available_seminars = [s_id for s_id in self.seminar_ids if seminar_current_counts.get(s_id, 0) < self.seminar_capacities.get(s_id, 0)]
-                if available_seminars:
-                    chosen_seminar = random.choice(available_seminars)
-                    assignment[student_id] = chosen_seminar
-                    seminar_current_counts[chosen_seminar] += 1
-                    assigned = True
-                    logger.debug(f"学生 {student_id} を空きセミナー {chosen_seminar} に割り当て。")
-                else:
-                    logger.debug(f"学生 {student_id} は割り当てられませんでした（空きセミナーなし）。")
-
-        logger.debug(f"_generate_individual: 生成された個体の割り当て学生数: {len(assignment)}")
-        return assignment
-
-    def _repair_assignment(self, assignment: Dict[str, str]) -> Dict[str, str]:
-        """
-        定員超過を修正し、実行可能な割り当てにする。
-        超過しているセミナーからランダムに学生を外し、未割り当てにするか、空きのあるセミナーに再割り当てを試みる。
-        """
-        repaired_assignment = assignment.copy()
-        seminar_counts: Dict[str, int] = {s_id: 0 for s_id in self.seminar_ids}
-        
-        # まず現在のカウントを計算
-        for student_id, seminar_id in repaired_assignment.items():
-            seminar_counts[seminar_id] = seminar_counts.get(seminar_id, 0) + 1
-        
-        logger.debug("_repair_assignment: 割り当ての修復を開始します。")
-        
-        # 定員超過しているセミナーから学生をランダムに外す
-        over_capacity_seminars = [s_id for s_id, count in seminar_counts.items() if count > self.seminar_capacities.get(s_id, 0)]
-        for seminar_id in over_capacity_seminars:
-            capacity = self.seminar_capacities.get(seminar_id, 0)
-            num_to_remove = seminar_counts[seminar_id] - capacity
-            
-            students_in_seminar = [s_id for s_id, sem_id in repaired_assignment.items() if sem_id == seminar_id]
-            random.shuffle(students_in_seminar) # ランダムに学生を選ぶ
-            
-            for i in range(num_to_remove):
-                if students_in_seminar:
-                    student_to_unassign = students_in_seminar.pop()
-                    del repaired_assignment[student_to_unassign]
-                    logger.debug(f"セミナー {seminar_id} の定員超過を修正: 学生 {student_to_unassign} を割り当てから外しました。")
-                else:
-                    logger.warning(f"セミナー {seminar_id} から外す学生がいませんでしたが、まだ定員超過しています。")
-                    break # これ以上外す学生がいない
-
-        # 未割り当てになった学生を再割り当て試行
-        unassigned_students = self._get_unassigned_students(repaired_assignment)
-        random.shuffle(unassigned_students)
-        logger.debug(f"_repair_assignment: 修復後、未割り当て学生: {len(unassigned_students)}")
-
-        for student_id in unassigned_students:
-            student_preferences = self.student_preferences.get(student_id, [])
-            
-            # まず希望するセミナーに割り当てを試みる
-            assigned = False
-            for preferred_seminar_id in student_preferences:
-                capacity = self.seminar_capacities.get(preferred_seminar_id, 0)
-                current_count = repaired_assignment.values().count(preferred_seminar_id) # 再計算
-                if current_count < capacity:
-                    repaired_assignment[student_id] = preferred_seminar_id
-                    assigned = True
-                    logger.debug(f"修復中に学生 {student_id} を希望セミナー {preferred_seminar_id} に再割り当てしました。")
-                    break
-            
-            # 希望に沿えなければ、ランダムな空きセミナーに割り当てる
-            if not assigned:
-                available_seminars = [s_id for s_id in self.seminar_ids if repaired_assignment.values().count(s_id) < self.seminar_capacities.get(s_id, 0)]
-                if available_seminars:
-                    chosen_seminar = random.choice(available_seminars)
-                    repaired_assignment[student_id] = chosen_seminar
-                    logger.debug(f"修復中に学生 {student_id} を空きセミナー {chosen_seminar} に再割り当てしました。")
-                else:
-                    logger.debug(f"修復中に学生 {student_id} を再割り当てできませんでした（空きセミナーなし）。")
-
-        logger.info(f"_repair_assignment: 修復完了。実行可能性: {self._is_feasible_assignment(repaired_assignment)}")
-        return repaired_assignment
+        logger.debug(f"GeneticAlgorithmOptimizer: {len(selected_parents)} 個の親を選択しました。")
+        return selected_parents
 
     def _crossover(self, parent1: Dict[str, str], parent2: Dict[str, str]) -> Tuple[Dict[str, str], Dict[str, str]]:
         """
-        2つの親から2つの子を生成する交叉操作。
-        ここでは、各学生の割り当てをランダムに親から継承する。
+        2つの親から2つの子を生成する（一点交叉）。
+        学生の割り当てをランダムな点で分割し、組み合わせる。
         """
+        logger.debug("GeneticAlgorithmOptimizer: 交叉を開始します。")
         child1 = {}
         child2 = {}
-        logger.debug("_crossover: 交叉操作を実行中。")
+        
+        student_ids = list(self.student_ids)
+        if not student_ids: # 学生がいない場合は空の割り当てを返す
+            return {}, {}
 
-        for student_id in self.student_ids:
-            if random.random() < 0.5: # 50%の確率で親1から、50%の確率で親2から継承
+        crossover_point = random.randint(1, len(student_ids) - 1)
+
+        for i, student_id in enumerate(student_ids):
+            if i < crossover_point:
                 child1[student_id] = parent1.get(student_id)
                 child2[student_id] = parent2.get(student_id)
             else:
                 child1[student_id] = parent2.get(student_id)
                 child2[student_id] = parent1.get(student_id)
-            logger.debug(f"学生 {student_id}: 親1から {parent1.get(student_id)}, 親2から {parent2.get(student_id)} を継承。")
         
-        # None が含まれる可能性があるため、後で修復が必要
-        child1_filtered = {k: v for k, v in child1.items() if v is not None}
-        child2_filtered = {k: v for k, v in child2.items() if v is not None}
+        # None値を持つ割り当てを削除（未割り当てとして扱う）
+        child1 = {k: v for k, v in child1.items() if v is not None}
+        child2 = {k: v for k, v in child2.items() if v is not None}
 
-        logger.debug("_crossover: 交叉完了。子の割り当てを修復します。")
-        return self._repair_assignment(child1_filtered), self._repair_assignment(child2_filtered)
+        logger.debug("GeneticAlgorithmOptimizer: 交叉が完了しました。")
+        return child1, child2
 
-    def _mutate(self, individual: Dict[str, str]) -> Dict[str, str]:
+    def _mutate(self, assignment: Dict[str, str]) -> Dict[str, str]:
         """
-        個体に変異を導入する。
-        ランダムな学生の割り当てをランダムなセミナーに変更する。
+        割り当てに突然変異を導入する。
+        ランダムな学生の割り当てを変更するか、未割り当てにする。
         """
-        mutated_individual = individual.copy()
-        logger.debug("_mutate: 変異操作を実行中。")
-
+        logger.debug("GeneticAlgorithmOptimizer: 突然変異を適用します。")
+        mutated_assignment = assignment.copy()
         for student_id in self.student_ids:
             if random.random() < self.mutation_rate:
-                # ランダムなセミナーに割り当てる (未割り当ての可能性も含む)
-                new_seminar_id = random.choice(self.seminar_ids + [None]) 
-                if new_seminar_id is None:
-                    if student_id in mutated_individual:
-                        del mutated_individual[student_id]
-                        logger.debug(f"学生 {student_id} を未割り当てにしました。")
-                else:
-                    mutated_individual[student_id] = new_seminar_id
-                    logger.debug(f"学生 {student_id} の割り当てを {new_seminar_id} に変異させました。")
-        
-        # 変異後も実行可能な割り当てを保証するために修復
-        logger.debug("_mutate: 変異後の個体を修復します。")
-        return self._repair_assignment(mutated_individual)
-
-    def _local_search_for_ga(self, assignment: Dict[str, str]) -> Dict[str, str]:
-        """
-        GAの各個体に適用される局所探索。
-        Greedy_LSの局所探索と似ているが、イテレーション数が少ない。
-        """
-        current_assignment = assignment.copy()
-        current_score = self._calculate_score(current_assignment)
-        logger.debug(f"_local_search_for_ga: GAのための局所探索を開始。初期スコア: {current_score:.2f}")
-
-        for _ in range(self.local_search_iterations):
-            temp_assignment = current_assignment.copy()
-            
-            # ランダムな学生を選び、現在の割り当てから削除
-            if not temp_assignment: # 割り当てが空の場合の例外処理
-                student_to_move_id = random.choice(self.student_ids)
-                original_seminar_id = None
-            else:
-                student_to_move_id = random.choice(list(temp_assignment.keys()))
-                original_seminar_id = temp_assignment.pop(student_to_move_id)
-
-            # その学生をランダムなセミナーに割り当てる (または未割り当てのままにする)
-            possible_seminars = list(self.seminar_ids) + [None] # Noneは未割り当てを意味する
-            random.shuffle(possible_seminars)
-
-            found_better_move = False
-            for new_seminar_id in possible_seminars:
-                neighbor_assignment = temp_assignment.copy()
-                if new_seminar_id is not None:
-                    neighbor_assignment[student_to_move_id] = new_seminar_id
+                # 突然変異の種類を選択:
+                # 1. 未割り当ての学生を割り当てる
+                # 2. 割り当て済みの学生のセミナーを変更する
+                # 3. 割り当て済みの学生を未割り当てにする
                 
-                # 新しい割り当てが実行可能かチェック
-                if self._is_feasible_assignment(neighbor_assignment):
-                    neighbor_score = self._calculate_score(neighbor_assignment)
-                    if neighbor_score > current_score:
-                        current_score = neighbor_score
-                        current_assignment = neighbor_assignment.copy()
-                        found_better_move = True
-                        logger.debug(f"GA局所探索: 改善が見られました。学生 {student_to_move_id} を {original_seminar_id} から {new_seminar_id} へ。新スコア: {current_score:.2f}")
-                        break # より良い解が見つかったので、この学生の移動はこれで確定
-            
-            if not found_better_move:
-                # 改善が見られなかった場合は元の割り当てに戻すか、そのまま次のイテレーションへ
-                if original_seminar_id is not None:
-                    current_assignment[student_to_move_id] = original_seminar_id # 元に戻す
-                logger.debug(f"GA局所探索: 学生 {student_to_move_id} の移動で改善なし。")
+                if student_id not in mutated_assignment: # 未割り当ての場合
+                    preferences = self.student_preferences.get(student_id, [])
+                    if preferences:
+                        # 希望の中からランダムに選択し、定員に空きがあれば割り当てる
+                        random.shuffle(preferences)
+                        for preferred_seminar_id in preferences:
+                            if preferred_seminar_id in self.seminar_capacities and \
+                               list(mutated_assignment.values()).count(preferred_seminar_id) < self.seminar_capacities[preferred_seminar_id]:
+                                mutated_assignment[student_id] = preferred_seminar_id
+                                logger.debug(f"GA_LS: 学生 {student_id} を未割り当てから {preferred_seminar_id} に変異させました。")
+                                break
+                else: # 割り当て済みの場合
+                    current_seminar = mutated_assignment[student_id]
+                    # 50%の確率で別のセミナーへ移動、50%の確率で未割り当てにする
+                    if random.random() < 0.5 and len(self.seminar_ids) > 1:
+                        available_seminars = [s for s in self.seminar_ids if s != current_seminar]
+                        if available_seminars:
+                            new_seminar = random.choice(available_seminars)
+                            if list(mutated_assignment.values()).count(new_seminar) < self.seminar_capacities[new_seminar]:
+                                mutated_assignment[student_id] = new_seminar
+                                logger.debug(f"GA_LS: 学生 {student_id} を {current_seminar} から {new_seminar} に変異させました。")
+                            else: # 新しいセミナーの定員が満杯なら未割り当てにする
+                                del mutated_assignment[student_id]
+                                logger.debug(f"GA_LS: 学生 {student_id} を {current_seminar} から未割り当てに変異させました (移動失敗)。")
+                        else: # 他にセミナーがない場合、未割り当てにする
+                            del mutated_assignment[student_id]
+                            logger.debug(f"GA_LS: 学生 {student_id} を {current_seminar} から未割り当てに変異させました (移動先なし)。")
+                    else:
+                        del mutated_assignment[student_id] # 未割り当てにする
+                        logger.debug(f"GA_LS: 学生 {student_id} を {current_seminar} から未割り当てに変異させました。")
+        return mutated_assignment
 
-        logger.debug(f"_local_search_for_ga: GAのための局所探索完了。最終スコア: {current_score:.2f}")
+    def _apply_local_search(self, assignment: Dict[str, str], iterations: int = 100) -> Dict[str, str]:
+        """
+        個体に局所探索を適用して、さらに改善を試みる。
+        これは GreedyLSOptimizer の _local_search の簡易版。
+        """
+        logger.debug("GeneticAlgorithmOptimizer: 局所探索を個体に適用します。")
+        current_assignment = assignment.copy()
+        current_score = self._evaluate_fitness(current_assignment)
+
+        for _ in range(iterations):
+            if not current_assignment:
+                break # 割り当てがない場合は終了
+
+            student_id = random.choice(list(current_assignment.keys()))
+            original_seminar = current_assignment[student_id]
+
+            # 別のセミナーに移動を試みる
+            possible_moves = []
+            # 未割り当てにするオプション
+            temp_assignment_unassigned = current_assignment.copy()
+            del temp_assignment_unassigned[student_id]
+            if self._is_feasible_assignment(temp_assignment_unassigned):
+                possible_moves.append((temp_assignment_unassigned, self._evaluate_fitness(temp_assignment_unassigned)))
+
+            # 別のセミナーへの移動オプション
+            for target_seminar in self.seminar_ids:
+                if target_seminar == original_seminar:
+                    continue
+                temp_assignment_move = current_assignment.copy()
+                # 元のセミナーの定員を一旦解放
+                temp_assignment_move[student_id] = target_seminar # 新しいセミナーに割り当て
+
+                if self._is_feasible_assignment(temp_assignment_move):
+                    possible_moves.append((temp_assignment_move, self._evaluate_fitness(temp_assignment_move)))
+            
+            if possible_moves:
+                best_move_assignment, best_move_score = max(possible_moves, key=lambda x: x[1])
+                if best_move_score > current_score:
+                    current_assignment = best_move_assignment
+                    current_score = best_move_score
+                    logger.debug(f"GA_LS: 個体への局所探索でスコア改善: {current_score:.2f}")
+            
         return current_assignment
 
-    def optimize(self) -> OptimizationResult:
+    def optimize(self, cancel_event: Optional[threading.Event] = None) -> OptimizationResult:
         """
-        遺伝的アルゴリズムの最適化を実行する。
+        最適化プロセスを実行する。
         """
-        self._log("GA_LS 最適化を開始します。")
         start_time = time.time()
-        logger.debug("GeneticAlgorithmOptimizer: optimize メソッド呼び出し。")
+        self._log("GA_LS 最適化を開始します...")
 
-        population: List[Dict[str, str]] = []
-        for _ in range(self.population_size):
-            individual = self._generate_individual()
-            population.append(self._repair_assignment(individual)) # 初期個体も修復
-        logger.info(f"GA_LS: 初期個体群 ({self.population_size}個体) を生成しました。")
-
+        population = self._generate_initial_population()
         best_overall_assignment: Dict[str, str] = {}
         best_overall_score = -float('inf')
-        no_improvement_generations = 0
+        no_improvement_count = 0
 
         for generation in range(self.generations):
-            self._log(f"GA_LS: 世代 {generation+1}/{self.generations} を実行中...")
-            logger.debug(f"GA_LS: 現在の個体群サイズ: {len(population)}")
+            if cancel_event and cancel_event.is_set():
+                self._log(f"GA_LS: 最適化が世代 {generation} でキャンセルされました。")
+                break
 
-            # 1. 評価 (Fitness Evaluation)
-            # 各個体のスコアを計算し、実行可能でない場合はペナルティを与えるか、修復する
-            # ここでは、生成時に修復しているので、スコア計算のみ
-            fitness_scores: List[Tuple[float, Dict[str, str]]] = []
-            for individual in population:
-                score = self._calculate_score(individual)
-                fitness_scores.append((score, individual))
-            
-            fitness_scores.sort(key=lambda x: x[0], reverse=True) # スコアの高い順にソート
-            current_best_score = fitness_scores[0][0]
-            current_best_assignment = fitness_scores[0][1]
-            logger.debug(f"世代 {generation+1}: 現在の世代のベストスコア: {current_best_score:.2f}")
+            self._log(f"GA_LS: 世代 {generation+1}/{self.generations} を処理中...")
+
+            # 適応度の評価
+            fitnesses = [self._evaluate_fitness(individual) for individual in population]
+
+            # 現在の世代のベスト個体を追跡
+            current_best_idx = fitnesses.index(max(fitnesses))
+            current_best_assignment = population[current_best_idx]
+            current_best_score = fitnesses[current_best_idx]
 
             if current_best_score > best_overall_score:
                 best_overall_score = current_best_score
                 best_overall_assignment = current_best_assignment.copy()
-                no_improvement_generations = 0
-                self._log(f"GA_LS: 新しい全体ベストスコアが見つかりました: {best_overall_score:.2f} (世代 {generation+1})")
+                no_improvement_count = 0
+                self._log(f"GA_LS: 世代 {generation+1} でベストスコアを更新: {best_overall_score:.2f}")
             else:
-                no_improvement_generations += 1
-                logger.debug(f"世代 {generation+1}: 改善なし。連続改善なし世代数: {no_improvement_generations}")
-            
-            if no_improvement_generations >= self.no_improvement_limit:
-                self._log(f"GA_LS: {self.no_improvement_limit}世代改善が見られなかったため、早期終了します。")
+                no_improvement_count += 1
+                self._log(f"GA_LS: 世代 {generation+1} で改善なし。連続改善なし: {no_improvement_count} 世代。")
+
+            if no_improvement_count >= self.no_improvement_limit:
+                self._log(f"GA_LS: {self.no_improvement_limit} 世代の間改善がなかったため、早期停止します。")
                 break
 
-            # 2. 選択 (Selection) - トーナメント選択
-            # スコアの高い個体が選ばれやすいようにする
-            new_population: List[Dict[str, str]] = []
-            for _ in range(self.population_size):
-                # ランダムに2つの個体を選び、スコアが高い方を次世代に残す
-                ind1 = random.choice(population)
-                ind2 = random.choice(population)
-                if self._calculate_score(ind1) > self._calculate_score(ind2):
-                    new_population.append(ind1)
-                else:
-                    new_population.append(ind2)
-            logger.debug(f"世代 {generation+1}: 選択操作完了。")
+            # 選択
+            parents = self._selection(population, fitnesses)
 
-            # 3. 交叉 (Crossover)
-            offspring_population: List[Dict[str, str]] = []
-            for i in range(0, self.population_size, 2):
-                parent1 = new_population[i]
-                parent2 = new_population[i+1] if i+1 < self.population_size else random.choice(new_population) # 奇数サイズ対応
-                
+            # 交叉と突然変異
+            next_population = []
+            # エリート選択: 最も良い個体を次世代にそのまま引き継ぐ
+            if best_overall_assignment:
+                next_population.append(best_overall_assignment)
+
+            while len(next_population) < self.population_size:
+                parent1 = random.choice(parents)
+                parent2 = random.choice(parents)
+
                 if random.random() < self.crossover_rate:
                     child1, child2 = self._crossover(parent1, parent2)
-                    offspring_population.extend([child1, child2])
                 else:
-                    offspring_population.extend([parent1, parent2])
-            logger.debug(f"世代 {generation+1}: 交叉操作完了。生成された子孫数: {len(offspring_population)}")
+                    child1, child2 = parent1.copy(), parent2.copy() # 交叉しない場合は親をそのままコピー
 
-            # 4. 変異 (Mutation)
-            mutated_population: List[Dict[str, str]] = []
-            for individual in offspring_population:
-                mutated_population.append(self._mutate(individual))
-            logger.debug(f"世代 {generation+1}: 変異操作完了。")
+                mutated_child1 = self._mutate(child1)
+                mutated_child2 = self._mutate(child2)
 
-            # 5. 局所探索 (Local Search) - 各個体に適用
-            # 実行可能解を維持しつつ、個々の解の質を向上させる
-            next_generation_population = []
-            for individual in mutated_population:
-                ls_improved_individual = self._local_search_for_ga(individual)
-                next_generation_population.append(self._repair_assignment(ls_improved_individual)) # 局所探索後も修復
-            logger.debug(f"世代 {generation+1}: 局所探索適用完了。")
-
-            population = next_generation_population
-            logger.debug(f"世代 {generation+1}: 次の世代の個体群が設定されました。")
+                # 局所探索を適用して個体を強化
+                next_population.append(self._apply_local_search(mutated_child1, iterations=self.config.get("local_search_iterations", 100)))
+                if len(next_population) < self.population_size:
+                    next_population.append(self._apply_local_search(mutated_child2, iterations=self.config.get("local_search_iterations", 100)))
+            
+            population = next_population[:self.population_size] # サイズ調整
+            logger.debug(f"GA_LS: 世代 {generation+1}: 次の世代の個体群が設定されました。")
 
         end_time = time.time()
         duration = end_time - start_time
@@ -338,6 +316,7 @@ class GeneticAlgorithmOptimizer(BaseOptimizer): # BaseOptimizerを継承
         unassigned_students: List[str] = []
 
         if best_overall_assignment:
+            # 最終的なベスト割り当てが実行可能か再確認
             if self._is_feasible_assignment(best_overall_assignment):
                 status_str = "OPTIMAL" # GAは厳密な最適解を保証しないが、ここではベストとみなす
                 message_str = "GA最適化が成功しました。"
@@ -348,7 +327,13 @@ class GeneticAlgorithmOptimizer(BaseOptimizer): # BaseOptimizerを継承
                 message_str = "GA最適化は実行不可能な解を返しました。定員制約を満たしていません。"
                 logger.error(f"GA_LS: 最終割り当てが実行不可能です。割り当て: {best_overall_assignment}")
                 unassigned_students = self.student_ids # 全員未割り当てとみなす
-                best_overall_assignment = {} # 無効な割り当てはクリア
+                best_overall_score = -float('inf') # 不可能な解はスコアを最低にする
+
+        if cancel_event and cancel_event.is_set():
+            status_str = "CANCELLED"
+            message_str = "最適化がユーザーによってキャンセルされました。"
+            best_overall_score = -float('inf') # キャンセルされた場合はスコアを無効にする
+            unassigned_students = self.student_ids # 全員未割り当てとみなす
 
         return OptimizationResult(
             status=status_str,
@@ -359,4 +344,3 @@ class GeneticAlgorithmOptimizer(BaseOptimizer): # BaseOptimizerを継承
             unassigned_students=unassigned_students,
             optimization_strategy="GA_LS"
         )
-

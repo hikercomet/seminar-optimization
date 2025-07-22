@@ -2,41 +2,13 @@ import json
 import csv
 import random
 import logging
-from typing import List, Dict, Any, Optional, Tuple # <-- ここにTupleを追加
+from typing import List, Dict, Any, Optional, Tuple
 import jsonschema # データスキーマ検証用
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-
-# --- スキーマ定義 (入力データ検証用) ---
-SEMINARS_SCHEMA = {
-    "type": "array",
-    "items": {
-        "type": "object",
-        "properties": {
-            "id": {"type": "string"},
-            "capacity": {"type": "integer", "minimum": 1},
-            "magnification": {"type": "number", "minimum": 0} # オプションフィールド
-        },
-        "required": ["id", "capacity"]
-    }
-}
-
-STUDENTS_SCHEMA = {
-    "type": "array",
-    "items": {
-        "type": "object",
-        "properties": {
-            "id": {"type": "string"},
-            "preferences": {
-                "type": "array",
-                "items": {"type": "string"},
-                "minItems": 1 # 最低1つの希望は必須とする
-            }
-        },
-        "required": ["id", "preferences"]
-    }
-}
+# ロギングは logger_config.py で一元的に設定されるため、ここではロガーの取得のみ
+from seminar_optimization.logger_config import logger
+# スキーマ定義は schemas.py からインポート
+from seminar_optimization.schemas import SEMINARS_SCHEMA, STUDENTS_SCHEMA
 
 class DataGenerator:
     """
@@ -137,14 +109,14 @@ class DataGenerator:
             self.logger.info("DataGenerator: JSONデータのロードと検証が完了しました。")
             return seminars_data, students_data
         except FileNotFoundError as e:
-            self.logger.error(f"DataGenerator: ファイルが見つかりません: {e}", exc_info=True)
-            raise
+            self.logger.error(f"DataGenerator: ファイルが見つかりません: {e.filename}", exc_info=True)
+            raise FileNotFoundError(f"指定されたファイルが見つかりません: {e.filename}")
         except json.JSONDecodeError as e:
-            self.logger.error(f"DataGenerator: JSONファイルの解析エラー: {e}", exc_info=True)
-            raise
+            self.logger.error(f"DataGenerator: JSONファイルの解析エラー: {e.msg} (行: {e.lineno}, 列: {e.colno})", exc_info=True)
+            raise ValueError(f"JSONファイルの形式が不正です: {e.msg}")
         except Exception as e:
             self.logger.error(f"DataGenerator: JSONファイルのロード中に予期せぬエラーが発生しました: {e}", exc_info=True)
-            raise
+            raise RuntimeError(f"JSONファイルのロード中にエラーが発生しました: {e}")
 
     def load_from_csv(self, seminars_file_path: str, students_file_path: str) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
         """
@@ -157,6 +129,8 @@ class DataGenerator:
             # セミナーCSVの読み込み
             with open(seminars_file_path, 'r', newline='', encoding='utf-8') as f:
                 reader = csv.DictReader(f)
+                if 'id' not in reader.fieldnames or 'capacity' not in reader.fieldnames:
+                    raise ValueError("セミナーCSVには 'id' と 'capacity' カラムが必要です。")
                 for row in reader:
                     seminars_data.append({
                         "id": row["id"],
@@ -168,6 +142,8 @@ class DataGenerator:
             # 学生CSVの読み込み
             with open(students_file_path, 'r', newline='', encoding='utf-8') as f:
                 reader = csv.DictReader(f)
+                if 'id' not in reader.fieldnames or 'preferences' not in reader.fieldnames:
+                    raise ValueError("学生CSVには 'id' と 'preferences' カラムが必要です。")
                 for row in reader:
                     preferences = [p.strip() for p in row["preferences"].split(',') if p.strip()]
                     students_data.append({
@@ -180,17 +156,17 @@ class DataGenerator:
             self.logger.info("DataGenerator: CSVデータのロードと検証が完了しました。")
             return seminars_data, students_data
         except FileNotFoundError as e:
-            self.logger.error(f"DataGenerator: ファイルが見つかりません: {e}", exc_info=True)
-            raise
+            self.logger.error(f"DataGenerator: ファイルが見つかりません: {e.filename}", exc_info=True)
+            raise FileNotFoundError(f"指定されたファイルが見つかりません: {e.filename}")
         except ValueError as e:
-            self.logger.error(f"DataGenerator: CSVデータの型変換エラー: {e}。数値フィールドを確認してください。", exc_info=True)
-            raise
+            self.logger.error(f"DataGenerator: CSVデータの型変換エラーまたは形式エラー: {e}。数値フィールドや必須カラムを確認してください。", exc_info=True)
+            raise ValueError(f"CSVデータの形式が不正です: {e}")
         except KeyError as e:
             self.logger.error(f"DataGenerator: CSVヘッダーが見つかりません: {e}。必要なカラムが存在するか確認してください。", exc_info=True)
-            raise
+            raise ValueError(f"CSVの必須カラム '{e}' が見つかりません。")
         except Exception as e:
             self.logger.error(f"DataGenerator: CSVファイルのロード中に予期せぬエラーが発生しました: {e}", exc_info=True)
-            raise
+            raise RuntimeError(f"CSVファイルのロード中にエラーが発生しました: {e}")
 
     def _validate_data(self, seminars: List[Dict[str, Any]], students: List[Dict[str, Any]]):
         """
@@ -201,18 +177,22 @@ class DataGenerator:
             jsonschema.validate(instance=seminars, schema=SEMINARS_SCHEMA)
             self.logger.debug("DataGenerator: セミナーデータのスキーマ検証に成功しました。")
         except jsonschema.exceptions.ValidationError as e:
-            self.logger.error(f"DataGenerator: セミナーデータのスキーマ検証エラー: {e.message} (パス: {e.path})", exc_info=True)
-            raise ValueError(f"セミナーデータの形式が不正です: {e.message} (パス: {e.path})")
+            self.logger.error(f"DataGenerator: セミナーデータのスキーマ検証エラー: {e.message} (パス: {'.'.join(map(str, e.path))})", exc_info=True)
+            raise ValueError(f"セミナーデータの形式が不正です: {e.message} (パス: {'.'.join(map(str, e.path))})")
         
         try:
             jsonschema.validate(instance=students, schema=STUDENTS_SCHEMA)
             self.logger.debug("DataGenerator: 学生データのスキーマ検証に成功しました。")
         except jsonschema.exceptions.ValidationError as e:
-            self.logger.error(f"DataGenerator: 学生データのスキーマ検証エラー: {e.message} (パス: {e.path})", exc_info=True)
-            raise ValueError(f"学生データの形式が不正です: {e.message} (パス: {e.path})")
+            self.logger.error(f"DataGenerator: 学生データのスキーマ検証エラー: {e.message} (パス: {'.'.join(map(str, e.path))})", exc_info=True)
+            raise ValueError(f"学生データの形式が不正です: {e.message} (パス: {'.'.join(map(str, e.path))})")
 
         # 論理的な検証
         seminar_ids = {s['id'] for s in seminars}
+        if not seminar_ids:
+            self.logger.error("DataGenerator: 論理的検証エラー: セミナーが一つも定義されていません。")
+            raise ValueError("セミナーが一つも定義されていません。")
+
         for student in students:
             for pref_seminar_id in student['preferences']:
                 if pref_seminar_id not in seminar_ids:

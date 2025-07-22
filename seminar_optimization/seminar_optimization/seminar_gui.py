@@ -14,101 +14,16 @@ import csv # CSV読み込み用
 import time # シミュレーションの進捗表示のために追加
 import logging # ロギングを追加
 
-# logging設定をここで一元化
-# 他のモジュールがbasicConfigを呼ばないように注意
-if not logging.root.handlers:
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s:%(lineno)d - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__) # loggerの定義をここへ移動
-logger.setLevel(logging.DEBUG) # DEBUGレベルのメッセージも出力
-
-# sys.pathにプロジェクトのトップレベルパッケージディレクトリを追加
-# seminar_gui.py が C:/Users/hiker/seminar_optimization/seminar_optimization/seminar_optimization/seminar_gui.py にある場合、
-# トップレベルパッケージは C:/Users/hiker/seminar_optimization/seminar_optimization/ になります。
-script_dir = os.path.dirname(os.path.abspath(__file__))
-# script_dir から一つ上のディレクトリが、目的のパッケージルート
-package_root_to_add = os.path.abspath(os.path.join(script_dir, '..'))
-
-if package_root_to_add not in sys.path:
-    sys.path.insert(0, package_root_to_add)
-    logger.info(f"'{package_root_to_add}' を sys.path に追加しました。")
-else:
-    logger.info(f"'{package_root_to_add}' は既に sys.path に存在します。")
-
-# パッケージの存在と __init__.py ファイルのチェック
-# 想定されるパッケージ構造に基づいて、必要な __init__.py ファイルの存在を確認します。
-missing_init_files = []
-
-# トップレベルパッケージのルート (例: C:/Users/hiker/seminar_optimization/seminar_optimization/)
-if not os.path.exists(os.path.join(package_root_to_add, '__init__.py')):
-    missing_init_files.append(os.path.join(package_root_to_add, '__init__.py'))
-
-# optimizers サブパッケージ
-optimizers_path = os.path.join(package_root_to_add, 'optimizers')
-if not os.path.exists(os.path.join(optimizers_path, '__init__.py')):
-    missing_init_files.append(os.path.join(optimizers_path, '__init__.py'))
-    
-# config サブパッケージ
-config_path = os.path.join(package_root_to_add, 'config')
-if not os.path.exists(os.path.join(config_path, '__init__.py')):
-    missing_init_files.append(os.path.join(config_path, '__init__.py'))
-
-# data サブパッケージ
-data_path = os.path.join(package_root_to_add, 'data')
-if not os.path.exists(os.path.join(data_path, '__init__.py')):
-    missing_init_files.append(os.path.join(data_path, '__init__.py'))
-
-# seminar_gui.py が存在する内側の seminar_optimization サブパッケージ
-# (例: C:/Users/hiker/seminar_optimization/seminar_optimization/seminar_optimization/)
-inner_seminar_optimization_path = os.path.join(package_root_to_add, 'seminar_optimization')
-if not os.path.exists(os.path.join(inner_seminar_optimization_path, '__init__.py')):
-    missing_init_files.append(os.path.join(inner_seminar_optimization_path, '__init__.py'))
-
-# data_generator.py の存在チェック (inner_seminar_optimization_path 内にあると仮定)
-data_generator_path = os.path.join(inner_seminar_optimization_path, 'data_generator.py')
-if not os.path.exists(data_generator_path):
-    missing_init_files.append(data_generator_path) # Treat as missing init for simplicity of message
-
-# utils.py の存在チェック (inner_seminar_optimization_path 内にあると仮定)
-utils_path = os.path.join(inner_seminar_optimization_path, 'utils.py')
-if not os.path.exists(utils_path):
-    missing_init_files.append(utils_path)
-
-# output_generator.py の存在チェック (inner_seminar_optimization_path 内にあると仮定)
-output_generator_path = os.path.join(inner_seminar_optimization_path, 'output_generator.py')
-if not os.path.exists(output_generator_path):
-    missing_init_files.append(output_generator_path)
-
-
-if missing_init_files:
-    error_message = "Pythonパッケージの初期化ファイルまたは必要なモジュールファイルが見つかりません。以下のファイルが存在することを確認してください:\n"
-    for f in missing_init_files:
-        error_message += f"- {f}\n"
-    error_message += "\nこれらのファイルがないと、Pythonはモジュールを正しくインポートできません。"
-    logger.critical(f"seminar_gui.py: パッケージ初期化ファイルまたはモジュールが見つかりません: {missing_init_files}")
-    messagebox.showerror("エラー: パッケージ構造", error_message)
-    sys.exit(1)
-
-
+# ロギング設定は logger_config.py で一元化されるため、ここではロガーの取得のみ
+from seminar_optimization.logger_config import setup_logging, logger
 # アプリケーション固有のモジュールをインポート
-try:
-    # optimizers.optimizer_service は package_root_to_add/optimizers/optimizer_service.py にあると仮定
-    from ..optimizers.optimizer_service import OptimizerService, run_optimization_service
-    # data_generator, utils, output_generator は seminar_gui.py と同じディレクトリにあると仮定
-    from data_generator import DataGenerator # <-- ここを修正
-    from utils import OptimizationResult
-    from output_generator import save_csv_results, save_pdf_report
-    logger.debug("seminar_gui.py: 必要なモジュールのインポートに成功しました。")
-except ImportError as e:
-    logger.critical(f"seminar_gui.py: モジュールのインポートに致命的な失敗: {e}", exc_info=True)
-    messagebox.showerror("エラー", f"モジュールのインポートに失敗しました: {e}\n\n考えられる原因:\n1. Pythonのパス設定が正しくない。\n2. 'seminar_optimization' パッケージの構造が想定と異なる。\n\nプロジェクトのルートディレクトリ ('{package_root_to_add}') と、各モジュールのファイルパスを再確認してください。")
-    sys.exit(1)
-
-# ReportLab のインポートチェック (PDF生成機能が有効な場合のみ使用)
-# output_generatorでインポートしているのでここでは不要だが、念のため
-try:
-    from reportlab.lib.pagesizes import A4 # 存在チェック
-except ImportError:
-    logger.warning("ReportLabがインストールされていません。PDFレポート生成は無効になります。")
+# optimizer_service.py は optimizers/ に移動したため、そのパスでインポート
+from optimizers.optimizer_service import run_optimization_service
+from seminar_optimization.data_generator import DataGenerator
+from seminar_optimization.utils import OptimizationResult
+from seminar_optimization.output_generator import save_csv_results, save_pdf_report # ReportLabのインポートチェックはoutput_generator内で完結
+from seminar_optimization.schemas import CONFIG_SCHEMA # 設定スキーマをインポート
+import jsonschema # 設定スキーマ検証用
 
 # DPIスケーリングを有効にする（Windowsの場合）
 try:
@@ -230,9 +145,13 @@ class ConfigManager:
         for key, value in settings.items():
             self.config['GUI'][key] = str(value)
             logger.debug(f"ConfigManager: 設定 '{key}' = '{value}' を追加/更新しました。")
-        with open(self.config_file, 'w') as f:
-            self.config.write(f)
-        logger.info(f"ConfigManager: GUI設定を正常に保存しました: {self.config_file}")
+        try:
+            with open(self.config_file, 'w', encoding='utf-8') as f: # エンコーディング指定
+                self.config.write(f)
+            logger.info(f"ConfigManager: GUI設定を正常に保存しました: {self.config_file}")
+        except Exception as e:
+            logger.error(f"ConfigManager: GUI設定の保存中にエラーが発生しました: {e}", exc_info=True)
+
 
 class ProgressDialog:
     """
@@ -337,23 +256,34 @@ class SeminarGUI:
 
 
     def _load_default_optimization_config(self):
-        """config.jsonから最適化のデフォルト設定を読み込む。"""
-        # config.json は package_root_to_add/config/config.json にあると仮定
-        config_path = os.path.join(package_root_to_add, 'config', 'config.json')
+        """config.jsonから最適化のデフォルト設定を読み込み、スキーマ検証を行う。"""
+        # config.json は プロジェクトルート/config/config.json にあると仮定
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.abspath(os.path.join(script_dir, '..', '..'))
+        config_path = os.path.join(project_root, 'config', 'config.json')
         logger.debug(f"SeminarGUI: config.json のロードを試行中: {config_path}")
         try:
             with open(config_path, 'r', encoding='utf-8') as f:
                 config_data = json.load(f)
-                logger.info(f"SeminarGUI: config.json を正常にロードしました。")
+                # スキーマ検証
+                jsonschema.validate(instance=config_data, schema=CONFIG_SCHEMA)
+                logger.info(f"SeminarGUI: config.json を正常にロードし、スキーマ検証に成功しました。")
                 return config_data
         except FileNotFoundError:
             logger.warning(f"SeminarGUI: config.jsonが見つかりません: {config_path}。空の設定を使用します。")
+            messagebox.showwarning("設定ファイルエラー", f"設定ファイル '{config_path}' が見つかりません。デフォルト設定を使用します。")
             return {}
         except json.JSONDecodeError as e:
             logger.error(f"SeminarGUI: config.jsonのデコードエラー: {e}。空の設定を使用します。", exc_info=True)
+            messagebox.showerror("設定ファイルエラー", f"設定ファイル '{config_path}' の形式が不正です: {e}。デフォルト設定を使用します。")
+            return {}
+        except jsonschema.exceptions.ValidationError as e:
+            logger.error(f"SeminarGUI: config.jsonのスキーマ検証エラー: {e.message} (パス: {'.'.join(map(str, e.path))})。空の設定を使用します。", exc_info=True)
+            messagebox.showerror("設定ファイルエラー", f"設定ファイル '{config_path}' の内容がスキーマに準拠していません: {e.message} (パス: {'.'.join(map(str, e.path))})。デフォルト設定を使用します。")
             return {}
         except Exception as e:
             logger.error(f"SeminarGUI: config.jsonのロード中に予期せぬエラーが発生しました: {e}", exc_info=True)
+            messagebox.showerror("設定ファイルエラー", f"設定ファイルのロード中に予期せぬエラーが発生しました: {e}。デフォルト設定を使用します。")
             return {}
 
     def _initialize_defaults(self):
@@ -388,8 +318,10 @@ class SeminarGUI:
         self.data_input_method_var = tk.StringVar(value=self.gui_settings.get("data_input_method", "generate")) # gui_settingsから初期値をロード
         
         # config.jsonからデフォルトのファイルパスを設定
-        # dataディレクトリは package_root_to_add/data にあると仮定
-        default_data_dir = os.path.join(package_root_to_add, 'data') 
+        # dataディレクトリは プロジェクトルート/data にあると仮定
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.abspath(os.path.join(script_dir, '..', '..'))
+        default_data_dir = os.path.join(project_root, 'data') 
         self.seminars_file_path_var = tk.StringVar(value=self.gui_settings.get('seminars_file_path', os.path.join(default_data_dir, self.optimization_config.get('seminars_file', 'seminars.json'))))
         self.students_file_path_var = tk.StringVar(value=self.gui_settings.get('students_file_path', os.path.join(default_data_dir, self.optimization_config.get('students_file', 'students.json'))))
         logger.debug(f"SeminarGUI: デフォルトのデータファイルパス: セミナー='{self.seminars_file_path_var.get()}', 学生='{self.students_file_path_var.get()}'")
@@ -548,7 +480,11 @@ class SeminarGUI:
         elif selected_method == "csv":
             filetypes = [("CSV files", "*.csv"), ("All files", "*.*")]
         
-        initial_dir = os.path.dirname(var.get()) if var.get() else os.path.join(package_root_to_add, 'data')
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.abspath(os.path.join(script_dir, '..', '..'))
+        default_data_dir = os.path.join(project_root, 'data') 
+
+        initial_dir = os.path.dirname(var.get()) if var.get() and os.path.exists(os.path.dirname(var.get())) else default_data_dir
         logger.debug(f"SeminarGUI: ファイル参照の初期ディレクトリ: {initial_dir}")
         
         filepath = filedialog.askopenfilename(
@@ -598,7 +534,7 @@ class SeminarGUI:
         ttk.Combobox(generate_frame, textvariable=self.preference_dist_var, values=dist_options, state="readonly", width=10).grid(row=row, column=1, padx=5, pady=2, sticky="ew")
         row += 1
 
-        generate_frame.grid_columnconfigure(1, weight=1)
+        generate_frame.grid_column_configure(1, weight=1)
         logger.debug("SeminarGUI: データ自動生成セクションの作成が完了しました。")
 
     def _create_manual_input_section(self, parent_frame):
@@ -1192,7 +1128,7 @@ class SeminarGUI:
         except Exception as e:
             logger.exception("SeminarGUI: 最適化スレッド内で予期せぬエラーが発生しました。")
             error_results = OptimizationResult(
-                status="ERROR",
+                status="FAILED", # ERRORからFAILEDに変更
                 message=f"最適化スレッドエラー: {e}",
                 best_score=-1,
                 best_assignment={},
@@ -1202,9 +1138,8 @@ class SeminarGUI:
             )
             self.root.after(0, self._handle_optimization_completion, error_results, seminars_data, students_data) # エラー時もデータは渡す
         finally:
-            if self.progress_dialog:
-                self.root.after(0, self.progress_dialog.close)
-                logger.debug("SeminarGUI: 最適化スレッド終了時にプログレスダイアログを閉じました。")
+            # スレッド終了時にプログレスダイアログを閉じる処理は _handle_optimization_completion に移動
+            pass
 
 
     def _check_optimization_thread(self):
@@ -1234,10 +1169,10 @@ class SeminarGUI:
         if results.status == "CANCELLED":
             messagebox.showinfo("最適化結果", results.message)
             logger.info("SeminarGUI: 最適化がキャンセルされました。")
-        elif results.status == "ERROR" or results.status == "FAILED" or results.status == "NO_SOLUTION_FOUND":
+        elif results.status in ["FAILED", "NO_SOLUTION_FOUND", "INFEASIBLE", "MODEL_INVALID"]: # エラー系ステータスをまとめる
             messagebox.showerror("最適化エラー", results.message)
             logger.error(f"SeminarGUI: 最適化エラーが発生しました: {results.message}")
-        else:
+        else: # OPTIMAL, FEASIBLE
             messagebox.showinfo("最適化完了", results.message)
             logger.info("SeminarGUI: 最適化が成功しました。")
         
@@ -1291,7 +1226,7 @@ class SeminarGUI:
             preferences = student_info.get('preferences', []) if student_info else []
             
             rank_str = "希望外"
-            if assigned_seminar in preferences:
+            if assigned_seminar and assigned_seminar in preferences: # assigned_seminar が None でないことを確認
                 try:
                     rank = preferences.index(assigned_seminar) + 1
                     rank_str = f"第{rank}希望"
@@ -1299,7 +1234,7 @@ class SeminarGUI:
                     # これは発生しないはずだが、念のため
                     pass
             
-            self.results_text.insert(tk.END, f"学生 {student_id}: {assigned_seminar} ({rank_str})\n")
+            self.results_text.insert(tk.END, f"学生 {student_id}: {assigned_seminar if assigned_seminar else 'UNASSIGNED'} ({rank_str})\n")
             count += 1
 
         self.results_text.config(state=tk.DISABLED)
@@ -1338,7 +1273,10 @@ class SeminarGUI:
                 if self.progress_dialog and self.progress_dialog.dialog.winfo_exists():
                     self.progress_dialog.close()
                 if self.optimization_thread and self.optimization_thread.is_alive():
-                    self.optimization_thread.join(timeout=1.0) # スレッドが終了するのを待つ（短い時間）
+                    # スレッドが安全に終了するのを待つ（短い時間）
+                    self.optimization_thread.join(timeout=5.0) 
+                    if self.optimization_thread.is_alive():
+                        logger.warning("SeminarGUI: 最適化スレッドがタイムアウト内に終了しませんでした。")
                 
                 # GUIハンドラを削除してからGUIを破棄
                 if self.text_handler in logging.getLogger().handlers:
@@ -1370,6 +1308,31 @@ class SeminarGUI:
 
 # アプリケーションのエントリポイント
 if __name__ == "__main__":
+    # ロギングを最初に設定
+    # デバッグモードとログ出力のGUI設定は、GUIがロードされる前にconfig.jsonから読み込まれる
+    # config.jsonのパスを解決
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.abspath(os.path.join(script_dir, '..', '..'))
+    config_file_path = os.path.join(project_root, 'config', 'config.json')
+    
+    initial_config = {}
+    try:
+        with open(config_file_path, 'r', encoding='utf-8') as f:
+            initial_config = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        # config.json がない、または不正な場合はデフォルト値を使用
+        pass
+
+    log_level = "DEBUG" if initial_config.get("debug_mode", False) else "INFO"
+    log_file = None
+    if initial_config.get("log_enabled", True):
+        log_dir = os.path.join(project_root, 'logs')
+        os.makedirs(log_dir, exist_ok=True)
+        log_file = os.path.join(log_dir, f"seminar_optimization_{datetime.now().strftime('%Y%m%d')}.log")
+
+    setup_logging(log_level=log_level, log_file=log_file)
+    logger.info("main: アプリケーションのロギングが初期化されました。")
+
     root = tk.Tk()
     app = SeminarGUI(root)
     app.run()

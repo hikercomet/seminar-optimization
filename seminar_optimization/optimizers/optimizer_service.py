@@ -10,12 +10,19 @@ from typing import Dict, List, Any, Optional, Callable, Tuple
 import jsonschema # データスキーマ検証用
 
 # 新しく作成したutilsモジュールから共通関数をインポート
-from utils import (
+# optimizer_service.py が optimizers/ に移動したため、
+# seminar_optimization パッケージ内のモジュールは絶対パスでインポートします。
+from seminar_optimization.utils import (
     BaseOptimizer,
     OptimizationResult
 )
+# ロギングは logger_config.py で一元的に設定されるため、ここではロガーの取得のみ
+from seminar_optimization.logger_config import logger
+# スキーマ定義は schemas.py からインポート
+from seminar_optimization.schemas import SEMINARS_SCHEMA, STUDENTS_SCHEMA, CONFIG_SCHEMA
 
-# 各最適化アルゴリズムをインポート
+# 各最適化アルゴリズムをインポート（同じ optimizers パッケージ内なので相対インポートも可能ですが、
+# 明示的に絶対インポートを維持します。これは好みによります。）
 from optimizers.greedy_ls_optimizer import GreedyLSOptimizer
 from optimizers.genetic_algorithm_optimizer import GeneticAlgorithmOptimizer
 from optimizers.ilp_optimizer import ILPOptimizer
@@ -23,347 +30,127 @@ from optimizers.cp_sat_optimizer import CPSATOptimizer
 from optimizers.multilevel_optimizer import MultilevelOptimizer
 from optimizers.adaptive_optimizer import AdaptiveOptimizer
 
-logger = logging.getLogger(__name__) # モジュールレベルのロガーを使用
-logger.setLevel(logging.DEBUG) # DEBUGレベルのメッセージも出力
-
-# --- スキーマ定義 (入力データ検証用) ---
-SEMINARS_SCHEMA = {
-    "type": "array",
-    "items": {
-        "type": "object",
-        "properties": {
-            "id": {"type": "string"},
-            "capacity": {"type": "integer", "minimum": 1},
-            "magnification": {"type": "number", "minimum": 0} # オプションフィールド
-        },
-        "required": ["id", "capacity"]
-    }
+# オプティマイザのマッピングを定義
+OPTIMIZER_MAP = {
+    "Greedy_LS": GreedyLSOptimizer,
+    "GA_LS": GeneticAlgorithmOptimizer,
+    "ILP": ILPOptimizer,
+    "CP": CPSATOptimizer,
+    "Multilevel": MultilevelOptimizer,
+    "Adaptive": AdaptiveOptimizer
 }
 
-STUDENTS_SCHEMA = {
-    "type": "array",
-    "items": {
-        "type": "object",
-        "properties": {
-            "id": {"type": "string"},
-            "preferences": {
-                "type": "array",
-                "items": {"type": "string"},
-                "minItems": 1 # 最低1つの希望は必要
-            }
-        },
-        "required": ["id", "preferences"]
-    }
-}
-
-class DataLoader:
+class OptimizerService:
     """
-    セミナーと学生のデータをロード、生成、検証するクラス。
+    セミナー割り当て最適化のビジネスロジックをカプセル化するサービス。
+    データの読み込み、最適化の実行、結果の保存を担当する。
     """
-    def __init__(self, config: Dict[str, Any], logger: logging.Logger): # logger 引数を追加
+    def __init__(self, config: Dict[str, Any]):
         self.config = config
-        self.logger = logger # ロガーをインスタンス変数として保持
-        self.logger.debug("DataLoader: 設定とロガーで初期化されました。")
-
-    def _validate_data(self, seminars: List[Dict[str, Any]], students: List[Dict[str, Any]]):
-        """
-        入力データをスキーマに対して検証する。
-        """
-        self.logger.debug("DataLoader: 入力データのスキーマ検証を開始します。")
+        logger.debug("OptimizerService: 初期化を開始します。")
+        # 設定のスキーマ検証
         try:
-            jsonschema.validate(instance=seminars, schema=SEMINARS_SCHEMA)
-            jsonschema.validate(instance=students, schema=STUDENTS_SCHEMA)
-            self.logger.info("DataLoader: セミナーと学生のデータはスキーマ検証に合格しました。")
+            jsonschema.validate(instance=self.config, schema=CONFIG_SCHEMA)
+            logger.info("OptimizerService: 設定のスキーマ検証に成功しました。")
         except jsonschema.exceptions.ValidationError as e:
-            self.logger.error(f"DataLoader: データ検証エラー: {e.message} (パス: {e.path})", exc_info=True)
-            raise ValueError(f"入力データがスキーマに準拠していません: {e.message} (パス: {e.path})")
+            logger.critical(f"OptimizerService: 設定のスキーマ検証エラー: {e.message} (パス: {'.'.join(map(str, e.path))})", exc_info=True)
+            raise ValueError(f"設定ファイルの形式が不正です: {e.message} (パス: {'.'.join(map(str, e.path))})")
+
+        # プロジェクトのルートディレクトリを基準に出力ディレクトリを解決
+        # optimizer_service.py は seminar_optimization/optimizers/optimizer_service.py にあると仮定
+        # プロジェクトルートは一つ上のディレクトリのさらに一つ上のディレクトリ
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.abspath(os.path.join(script_dir, '..', '..'))
         
-        # 追加の論理的検証
-        seminar_ids = {s['id'] for s in seminars}
-        student_ids = {s['id'] for s in students}
-
-        if not seminar_ids:
-            raise ValueError("セミナーデータが空です。")
-        if not student_ids:
-            raise ValueError("学生データが空です。")
+        # configから取得した相対パスをプロジェクトルートからの絶対パスに変換
+        output_dir_relative = self.config.get("output_directory", "results")
+        self.output_directory = os.path.join(project_root, output_dir_relative)
         
-        # 学生の希望が実在するセミナーIDであるかチェック
-        for student in students:
-            for pref_seminar_id in student['preferences']:
-                if pref_seminar_id not in seminar_ids:
-                    self.logger.error(f"DataLoader: 不正な希望セミナーID: 学生 '{student['id']}' が存在しないセミナー '{pref_seminar_id}' を希望しています。")
-                    raise ValueError(f"学生 '{student['id']}' の希望セミナー '{pref_seminar_id}' が存在しません。")
-        self.logger.debug("DataLoader: 論理的データ検証も完了しました。")
+        os.makedirs(self.output_directory, exist_ok=True) # 出力ディレクトリが存在しない場合は作成
+        logger.info(f"OptimizerService: 出力ディレクトリ: {self.output_directory}")
 
-    def load_from_json(self, seminars_file_path: str, students_file_path: str) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    def run_optimization(self,
+                         seminars: List[Dict[str, Any]],
+                         students: List[Dict[str, Any]],
+                         cancel_event: Optional[threading.Event] = None,
+                         progress_callback: Optional[Callable[[str], None]] = None) -> OptimizationResult:
         """
-        JSONファイルからセミナーと学生のデータをロードする。
+        指定されたデータと戦略に基づいて最適化を実行する。
         """
-        self.logger.info(f"DataLoader: JSONファイルからデータをロード中: セミナー '{seminars_file_path}', 学生 '{students_file_path}'")
-        try:
-            with open(seminars_file_path, 'r', encoding='utf-8') as f:
-                seminars = json.load(f)
-            with open(students_file_path, 'r', encoding='utf-8') as f:
-                students = json.load(f)
-            
-            self._validate_data(seminars, students)
-            self.logger.info(f"DataLoader: JSONファイルからデータ ({len(seminars)}セミナー, {len(students)}学生) を正常にロードしました。")
-            return seminars, students
-        except FileNotFoundError as e:
-            # ファイルが見つからない場合
-            self.logger.error(f"DataLoader: JSONファイルが見つかりません: {e.filename}", exc_info=True)
-            raise FileNotFoundError(f"指定されたJSONファイルが見つかりません: {e.filename}")
-        except json.JSONDecodeError as e:
-            # JSON形式が不正な場合
-            self.logger.error(f"DataLoader: JSONファイルの解析に失敗しました: {e.msg} (ファイル: {e.doc})", exc_info=True)
-            raise ValueError(f"JSONファイルの形式が不正です: {e.msg}")
-        except ValueError as e:
-            # _validate_data からの検証エラー
-            self.logger.error(f"DataLoader: ロードされたJSONデータの検証に失敗しました: {e}", exc_info=True)
-            raise # そのまま再スロー
-        except Exception as e:
-            # その他の予期せぬエラー
-            self.logger.error(f"DataLoader: JSONロード中に予期せぬエラーが発生しました: {e}", exc_info=True)
-            raise RuntimeError(f"JSONデータのロード中に予期せぬエラーが発生しました: {e}")
+        logger.info(f"OptimizerService: 最適化戦略 '{self.optimization_strategy}' を実行します。")
+        
+        optimizer_class = OPTIMIZER_MAP.get(self.optimization_strategy)
+        if not optimizer_class:
+            logger.error(f"OptimizerService: 未知の最適化戦略が指定されました: {self.optimization_strategy}")
+            return OptimizationResult(
+                status="MODEL_INVALID",
+                message=f"未知の最適化戦略: {self.optimization_strategy}",
+                best_score=-float('inf'),
+                best_assignment={},
+                seminar_capacities={s['id']: s['capacity'] for s in seminars},
+                unassigned_students=[s['id'] for s in students],
+                optimization_strategy=self.optimization_strategy
+            )
 
-    def load_from_csv(self, seminars_file_path: str, students_file_path: str) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
-        """
-        CSVファイルからセミナーと学生のデータをロードする。
-        """
-        self.logger.info(f"DataLoader: CSVファイルからデータをロード中: セミナー '{seminars_file_path}', 学生 '{students_file_path}'")
-        seminars: List[Dict[str, Any]] = []
-        students: List[Dict[str, Any]] = []
+        optimizer = optimizer_class(
+            seminars=seminars,
+            students=students,
+            config=self.config,
+            progress_callback=progress_callback
+        )
 
         try:
-            # セミナーCSVのロード
-            with open(seminars_file_path, 'r', encoding='utf-8') as f:
-                reader = csv.DictReader(f)
-                for row in reader:
-                    seminar_id = row.get('id')
-                    capacity_str = row.get('capacity')
-                    magnification_str = row.get('magnification')
-
-                    if not seminar_id or not capacity_str:
-                        raise ValueError(f"セミナーCSVに 'id' または 'capacity' がありません。行: {row}")
-                    
-                    try:
-                        capacity = int(capacity_str)
-                        if capacity <= 0:
-                            raise ValueError(f"セミナー '{seminar_id}' の定員は正の整数である必要があります。")
-                    except ValueError:
-                        raise ValueError(f"セミナー '{seminar_id}' の定員 '{capacity_str}' が不正な数値です。")
-                    
-                    seminar_data = {'id': seminar_id, 'capacity': capacity}
-                    if magnification_str:
-                        try:
-                            magnification = float(magnification_str)
-                            seminar_data['magnification'] = magnification
-                        except ValueError:
-                            self.logger.warning(f"セミナー '{seminar_id}' の倍率 '{magnification_str}' が不正な数値です。スキップします。")
-                    seminars.append(seminar_data)
-            self.logger.debug(f"DataLoader: {len(seminars)} 個のセミナーをCSVからロードしました。")
-
-            # 学生CSVのロード
-            with open(students_file_path, 'r', encoding='utf-8') as f:
-                reader = csv.DictReader(f)
-                for row in reader:
-                    student_id = row.get('id')
-                    preferences_str = row.get('preferences')
-
-                    if not student_id or not preferences_str:
-                        raise ValueError(f"学生CSVに 'id' または 'preferences' がありません。行: {row}")
-                    
-                    preferences = [p.strip() for p in preferences_str.split(',') if p.strip()]
-                    if not preferences:
-                        self.logger.warning(f"学生 '{student_id}' の希望リストが空です。")
-
-                    students.append({'id': student_id, 'preferences': preferences})
-            self.logger.debug(f"DataLoader: {len(students)} 人の学生をCSVからロードしました。")
-            
-            self._validate_data(seminars, students)
-            self.logger.info(f"DataLoader: CSVファイルからデータ ({len(seminars)}セミナー, {len(students)}学生) を正常にロードしました。")
-            return seminars, students
-        except FileNotFoundError as e:
-            # ファイルが見つからない場合
-            self.logger.error(f"DataLoader: CSVファイルが見つかりません: {e.filename}", exc_info=True)
-            raise FileNotFoundError(f"指定されたCSVファイルが見つかりません: {e.filename}")
-        except csv.Error as e:
-            # CSV形式が不正な場合
-            self.logger.error(f"DataLoader: CSVファイルの解析に失敗しました: {e}", exc_info=True)
-            raise ValueError(f"CSVファイルの形式が不正です: {e}")
-        except ValueError as e:
-            # _validate_data やデータパースからの検証エラー
-            self.logger.error(f"DataLoader: ロードされたCSVデータの検証に失敗しました: {e}", exc_info=True)
-            raise # そのまま再スロー
+            result = optimizer.optimize(cancel_event)
+            logger.info(f"OptimizerService: 最適化が完了しました。ステータス: {result.status}, スコア: {result.best_score:.2f}")
+            return result
         except Exception as e:
-            # その他の予期せぬエラー
-            self.logger.error(f"DataLoader: CSVロード中に予期せぬエラーが発生しました: {e}", exc_info=True)
-            raise RuntimeError(f"CSVデータのロード中に予期せぬエラーが発生しました: {e}")
-
-    def generate_data(
-                      self,
-                      num_seminars: int,
-                      min_capacity: int,
-                      max_capacity: int,
-                      num_students: int,
-                      min_preferences: int,
-                      max_preferences: int,
-                      preference_distribution: str = "random"
-                      ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
-        """
-        ランダムなセミナーと学生のデータを生成する。
-        """
-        self.logger.info(f"DataLoader: ランダムデータを生成中: セミナー数={num_seminars}, 学生数={num_students}")
-        seminars: List[Dict[str, Any]] = []
-        students: List[Dict[str, Any]] = []
-
-        # セミナーの生成
-        for i in range(num_seminars):
-            seminar_id = f"Sem{i+1:03d}"
-            capacity = random.randint(min_capacity, max_capacity)
-            magnification = round(random.uniform(0.8, 1.5), 2) # 倍率もランダムに生成
-            seminars.append({"id": seminar_id, "capacity": capacity, "magnification": magnification})
-            self.logger.debug(f"DataLoader: 生成されたセミナー: ID={seminar_id}, 定員={capacity}, 倍率={magnification}")
-        
-        seminar_ids = [s['id'] for s in seminars]
-        
-        # 学生の生成
-        for i in range(num_students):
-            student_id = f"S{i+1:04d}"
-            num_prefs = random.randint(min_preferences, max_preferences)
-            
-            preferences: List[str] = []
-            if preference_distribution == "random":
-                preferences = random.sample(seminar_ids, min(num_prefs, len(seminar_ids)))
-                self.logger.debug(f"DataLoader: 学生 {student_id}: ランダム希望 {preferences}")
-            elif preference_distribution == "uniform":
-                # 各セミナーが均等に選ばれるようにする（厳密には難しいが、ここではランダムサンプリング）
-                preferences = random.sample(seminar_ids, min(num_prefs, len(seminar_ids)))
-                self.logger.debug(f"DataLoader: 学生 {student_id}: 均等分布希望 {preferences}")
-            elif preference_distribution == "biased":
-                # 特定のセミナーに希望が集中するようにバイアスをかける
-                # 例: 最初の数個のセミナーに高い確率で希望が集中
-                biased_seminars = random.choices(seminar_ids[:min(5, num_seminars)], k=num_prefs) # 最初の5つのセミナーに偏らせる
-                other_seminars = random.sample(seminar_ids, num_prefs) # 残りはランダム
-                preferences = list(set(biased_seminars + other_seminars))[:num_prefs] # 重複を排除し、希望数に合わせる
-                random.shuffle(preferences) # 順序をシャッフル
-                self.logger.debug(f"DataLoader: 学生 {student_id}: 偏った希望 {preferences}")
-            
-            students.append({"id": student_id, "preferences": preferences})
-        self.logger.debug(f"DataLoader: {len(students)} 人の学生を生成しました。")
-
-        self._validate_data(seminars, students)
-        self.logger.info(f"DataLoader: ランダムデータ生成完了。({len(seminars)}セミナー, {len(students)}学生)")
-        return seminars, students
+            logger.exception(f"OptimizerService: 最適化中にエラーが発生しました (戦略: {self.optimization_strategy})")
+            return OptimizationResult(
+                status="FAILED",
+                message=f"最適化中にエラーが発生しました: {e}",
+                best_score=-float('inf'),
+                best_assignment={},
+                seminar_capacities={s['id']: s['capacity'] for s in seminars},
+                unassigned_students=[s['id'] for s in students],
+                optimization_strategy=self.optimization_strategy
+            )
 
 def run_optimization_service(
     seminars: List[Dict[str, Any]],
     students: List[Dict[str, Any]],
     config: Dict[str, Any],
-    cancel_event: threading.Event,
-    progress_callback: Callable[[str], None]
+    cancel_event: Optional[threading.Event] = None,
+    progress_callback: Optional[Callable[[str], None]] = None
 ) -> OptimizationResult:
     """
-    指定されたデータと設定に基づいて最適化を実行するサービス関数。
+    外部から呼び出される最適化サービスのエントリポイント。
     """
     logger.info("optimizer_service: 最適化サービスを開始します。")
-    optimization_strategy = config.get("optimization_strategy", "Greedy_LS")
-    logger.info(f"optimizer_service: 選択された最適化戦略: {optimization_strategy}")
+    service = OptimizerService(config)
+    
+    result = service.run_optimization(seminars, students, cancel_event, progress_callback)
+    
+    # レポート生成
+    _generate_reports(config, result.best_assignment, result.optimization_strategy, seminars, students)
 
-    optimizer: Optional[BaseOptimizer] = None
-    try:
-        logger.info("optimizer_service: オプティマイザのインスタンス生成前")
-        if optimization_strategy == "Greedy_LS":
-            optimizer = GreedyLSOptimizer(seminars, students, config, progress_callback)
-        elif optimization_strategy == "GA_LS":
-            optimizer = GeneticAlgorithmOptimizer(seminars, students, config, progress_callback)
-        elif optimization_strategy == "ILP":
-            optimizer = ILPOptimizer(seminars, students, config, progress_callback)
-        elif optimization_strategy == "CP":
-            optimizer = CPSATOptimizer(seminars, students, config, progress_callback)
-        elif optimization_strategy == "Multilevel":
-            optimizer = MultilevelOptimizer(seminars, students, config, progress_callback)
-        elif optimization_strategy == "Adaptive":
-            optimizer = AdaptiveOptimizer(seminars, students, config, progress_callback)
-        else:
-            raise ValueError(f"不明な最適化戦略: {optimization_strategy}")
-        
-        logger.info("optimizer_service: オプティマイザのインスタンス生成後")
-        logger.debug(f"optimizer_service: オプティマイザ '{optimization_strategy}' のインスタンスを作成しました。")
-
-        # オプティマイザのoptimizeメソッドを呼び出す。cancel_eventをサポートしているかチェック
-        logger.info("optimizer_service: optimize() 実行前")
-        # 各オプティマイザが cancel_event を受け取るように修正されていることを前提とする
-        result = optimizer.optimize(cancel_event=cancel_event)
-        logger.info("optimizer_service: optimize() 実行後")
-        logger.debug(f"optimizer_service: オプティマイザ '{optimization_strategy}' を実行しました。")
-
-        logger.info(f"optimizer_service: 最適化完了。ステータス: {result.status}, スコア: {result.best_score:.2f}")
-
-        # レポート生成
-        logger.info("optimizer_service: レポート生成処理呼び出し前")
-        _generate_reports(config, result.best_assignment, seminars, students, optimization_strategy)
-        logger.info("optimizer_service: レポート生成処理呼び出し後")
-
-        return result
-
-    except ImportError as e:
-        logger.error(f"optimizer_service: 最適化アルゴリズムのインポートエラー: {e}", exc_info=True)
-        return OptimizationResult(
-            status="FAILED",
-            message=f"最適化アルゴリズムのロードに失敗しました: {e}",
-            best_score=-float('inf'),
-            best_assignment={},
-            seminar_capacities={s['id']: s['capacity'] for s in seminars} if seminars else {},
-            unassigned_students=[s['id'] for s in students] if students else [],
-            optimization_strategy=optimization_strategy
-        )
-    except ValueError as e:
-        logger.error(f"optimizer_service: 最適化設定またはデータに問題があります: {e}", exc_info=True)
-        return OptimizationResult(
-            status="FAILED",
-            message=f"最適化設定またはデータエラー: {e}",
-            best_score=-float('inf'),
-            best_assignment={},
-            seminar_capacities={s['id']: s['capacity'] for s in seminars} if seminars else {},
-            unassigned_students=[s['id'] for s in students] if students else [],
-            optimization_strategy=optimization_strategy
-        )
-    except RuntimeError as e:
-        logger.error(f"optimizer_service: データロード中に致命的なエラーが発生しました: {e}", exc_info=True)
-        return OptimizationResult(
-            status="FAILED",
-            message=f"データロード中にエラーが発生しました: {e}",
-            best_score=-float('inf'),
-            best_assignment={},
-            seminar_capacities={s['id']: s['capacity'] for s in seminars} if seminars else {},
-            unassigned_students=[s['id'] for s in students] if students else [],
-            optimization_strategy=optimization_strategy
-        )
-    except Exception as e:
-        logger.error(f"optimizer_service: 最適化中に予期せぬエラーが発生しました: {e}", exc_info=True)
-        return OptimizationResult(
-            status="FAILED",
-            message=f"最適化中に予期せぬエラーが発生しました: {e}",
-            best_score=-float('inf'),
-            best_assignment={},
-            seminar_capacities={s['id']: s['capacity'] for s in seminars} if seminars else {},
-            unassigned_students=[s['id'] for s in students] if students else [],
-            optimization_strategy=optimization_strategy
-        )
+    logger.info("optimizer_service: 最適化サービスが終了しました。")
+    return result
 
 def _generate_reports(
     config: Dict[str, Any],
     assignment: Dict[str, str],
-    seminars: List[Dict[str, Any]], # レポート生成に必要な生データ
-    students: List[Dict[str, Any]], # レポート生成に必要な生データ
-    optimization_strategy: str
+    optimization_strategy: str,
+    seminars: List[Dict[str, Any]],
+    students: List[Dict[str, Any]]
 ):
-    """レポートを生成するヘルパー関数。"""
-    logger.debug("optimizer_service: レポート生成を開始します。")
+    """
+    最適化結果に基づいてレポートを生成するヘルパー関数。
+    """
+    logger.info("optimizer_service: レポート生成処理を開始します。")
     try:
-        # output_generatorを絶対インポートに変更
-        from seminar_optimization.output_generator import save_pdf_report, save_csv_results
+        # output_generator.py からレポート保存関数をインポート
+        # optimizer_service.py が optimizers/ に移動したため、絶対パスでインポートします。
+        from seminar_optimization.output_generator import save_csv_results, save_pdf_report
         
         # output_generatorに渡す前にconfigに必要なデータを追加
         report_config = config.copy()
@@ -394,5 +181,5 @@ def _generate_reports(
         logger.error(f"optimizer_service: レポート生成モジュールのインポートエラー: {e}", exc_info=True)
         logger.error("output_generator.py が seminar_optimization/seminar_optimization/ パッケージ内に正しく配置されているか確認してください。")
     except Exception as e:
-        logger.error(f"optimizer_service: レポートの生成中にエラーが発生しました: {e}", exc_info=True)
-        raise
+        logger.error(f"optimizer_service: レポート生成中に予期せぬエラーが発生しました: {e}", exc_info=True)
+
