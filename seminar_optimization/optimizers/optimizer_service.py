@@ -16,12 +16,12 @@ from utils import (
 )
 
 # 各最適化アルゴリズムをインポート
-from .greedy_ls_optimizer import GreedyLSOptimizer
-from .genetic_algorithm_optimizer import GeneticAlgorithmOptimizer
-from .ilp_optimizer import ILPOptimizer
-from .cp_sat_optimizer import CPSATOptimizer
-from .multilevel_optimizer import MultilevelOptimizer
-from .adaptive_optimizer import AdaptiveOptimizer
+from optimizers.greedy_ls_optimizer import GreedyLSOptimizer
+from optimizers.genetic_algorithm_optimizer import GeneticAlgorithmOptimizer
+from optimizers.ilp_optimizer import ILPOptimizer
+from optimizers.cp_sat_optimizer import CPSATOptimizer
+from optimizers.multilevel_optimizer import MultilevelOptimizer
+from optimizers.adaptive_optimizer import AdaptiveOptimizer
 
 logger = logging.getLogger(__name__) # モジュールレベルのロガーを使用
 logger.setLevel(logging.DEBUG) # DEBUGレベルのメッセージも出力
@@ -110,14 +110,21 @@ class DataLoader:
             self.logger.info(f"DataLoader: JSONファイルからデータ ({len(seminars)}セミナー, {len(students)}学生) を正常にロードしました。")
             return seminars, students
         except FileNotFoundError as e:
-            self.logger.error(f"DataLoader: ファイルが見つかりません: {e.filename}", exc_info=True)
-            raise FileNotFoundError(f"指定されたファイルが見つかりません: {e.filename}")
+            # ファイルが見つからない場合
+            self.logger.error(f"DataLoader: JSONファイルが見つかりません: {e.filename}", exc_info=True)
+            raise FileNotFoundError(f"指定されたJSONファイルが見つかりません: {e.filename}")
         except json.JSONDecodeError as e:
-            self.logger.error(f"DataLoader: JSONデコードエラー: {e.msg} (ファイル: {e.doc})", exc_info=True)
-            raise ValueError(f"JSONファイルの解析に失敗しました: {e.msg}")
+            # JSON形式が不正な場合
+            self.logger.error(f"DataLoader: JSONファイルの解析に失敗しました: {e.msg} (ファイル: {e.doc})", exc_info=True)
+            raise ValueError(f"JSONファイルの形式が不正です: {e.msg}")
+        except ValueError as e:
+            # _validate_data からの検証エラー
+            self.logger.error(f"DataLoader: ロードされたJSONデータの検証に失敗しました: {e}", exc_info=True)
+            raise # そのまま再スロー
         except Exception as e:
+            # その他の予期せぬエラー
             self.logger.error(f"DataLoader: JSONロード中に予期せぬエラーが発生しました: {e}", exc_info=True)
-            raise
+            raise RuntimeError(f"JSONデータのロード中に予期せぬエラーが発生しました: {e}")
 
     def load_from_csv(self, seminars_file_path: str, students_file_path: str) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
         """
@@ -137,7 +144,7 @@ class DataLoader:
                     magnification_str = row.get('magnification')
 
                     if not seminar_id or not capacity_str:
-                        raise ValueError(f"セミナーCSVに 'id' または 'capacity' がありません: {row}")
+                        raise ValueError(f"セミナーCSVに 'id' または 'capacity' がありません。行: {row}")
                     
                     try:
                         capacity = int(capacity_str)
@@ -164,7 +171,7 @@ class DataLoader:
                     preferences_str = row.get('preferences')
 
                     if not student_id or not preferences_str:
-                        raise ValueError(f"学生CSVに 'id' または 'preferences' がありません: {row}")
+                        raise ValueError(f"学生CSVに 'id' または 'preferences' がありません。行: {row}")
                     
                     preferences = [p.strip() for p in preferences_str.split(',') if p.strip()]
                     if not preferences:
@@ -177,13 +184,24 @@ class DataLoader:
             self.logger.info(f"DataLoader: CSVファイルからデータ ({len(seminars)}セミナー, {len(students)}学生) を正常にロードしました。")
             return seminars, students
         except FileNotFoundError as e:
-            self.logger.error(f"ファイルが見つかりません: {e.filename}", exc_info=True)
-            raise FileNotFoundError(f"指定されたファイルが見つかりません: {e.filename}")
+            # ファイルが見つからない場合
+            self.logger.error(f"DataLoader: CSVファイルが見つかりません: {e.filename}", exc_info=True)
+            raise FileNotFoundError(f"指定されたCSVファイルが見つかりません: {e.filename}")
+        except csv.Error as e:
+            # CSV形式が不正な場合
+            self.logger.error(f"DataLoader: CSVファイルの解析に失敗しました: {e}", exc_info=True)
+            raise ValueError(f"CSVファイルの形式が不正です: {e}")
+        except ValueError as e:
+            # _validate_data やデータパースからの検証エラー
+            self.logger.error(f"DataLoader: ロードされたCSVデータの検証に失敗しました: {e}", exc_info=True)
+            raise # そのまま再スロー
         except Exception as e:
+            # その他の予期せぬエラー
             self.logger.error(f"DataLoader: CSVロード中に予期せぬエラーが発生しました: {e}", exc_info=True)
-            raise
+            raise RuntimeError(f"CSVデータのロード中に予期せぬエラーが発生しました: {e}")
 
-    def generate_data(self,
+    def generate_data(
+                      self,
                       num_seminars: int,
                       min_capacity: int,
                       max_capacity: int,
@@ -275,14 +293,10 @@ def run_optimization_service(
 
         # オプティマイザのoptimizeメソッドを呼び出す。cancel_eventをサポートしているかチェック
         logger.info("optimizer_service: optimize() 実行前")
-        if hasattr(optimizer, 'optimize') and 'cancel_event' in optimizer.optimize.__code__.co_varnames:
-            result = optimizer.optimize(cancel_event=cancel_event)
-            logger.info("optimizer_service: optimize()（cancel_event付き）実行後")
-            logger.debug(f"optimizer_service: オプティマイザ '{optimization_strategy}' をキャンセルイベント付きで実行しました。")
-        else:
-            result = optimizer.optimize()
-            logger.info("optimizer_service: optimize() 実行後")
-            logger.debug(f"optimizer_service: オプティマイザ '{optimization_strategy}' を実行しました。")
+        # 各オプティマイザが cancel_event を受け取るように修正されていることを前提とする
+        result = optimizer.optimize(cancel_event=cancel_event)
+        logger.info("optimizer_service: optimize() 実行後")
+        logger.debug(f"optimizer_service: オプティマイザ '{optimization_strategy}' を実行しました。")
 
         logger.info(f"optimizer_service: 最適化完了。ステータス: {result.status}, スコア: {result.best_score:.2f}")
 
@@ -304,11 +318,33 @@ def run_optimization_service(
             unassigned_students=[s['id'] for s in students] if students else [],
             optimization_strategy=optimization_strategy
         )
+    except ValueError as e:
+        logger.error(f"optimizer_service: 最適化設定またはデータに問題があります: {e}", exc_info=True)
+        return OptimizationResult(
+            status="FAILED",
+            message=f"最適化設定またはデータエラー: {e}",
+            best_score=-float('inf'),
+            best_assignment={},
+            seminar_capacities={s['id']: s['capacity'] for s in seminars} if seminars else {},
+            unassigned_students=[s['id'] for s in students] if students else [],
+            optimization_strategy=optimization_strategy
+        )
+    except RuntimeError as e:
+        logger.error(f"optimizer_service: データロード中に致命的なエラーが発生しました: {e}", exc_info=True)
+        return OptimizationResult(
+            status="FAILED",
+            message=f"データロード中にエラーが発生しました: {e}",
+            best_score=-float('inf'),
+            best_assignment={},
+            seminar_capacities={s['id']: s['capacity'] for s in seminars} if seminars else {},
+            unassigned_students=[s['id'] for s in students] if students else [],
+            optimization_strategy=optimization_strategy
+        )
     except Exception as e:
         logger.error(f"optimizer_service: 最適化中に予期せぬエラーが発生しました: {e}", exc_info=True)
         return OptimizationResult(
             status="FAILED",
-            message=f"最適化中にエラーが発生しました: {e}",
+            message=f"最適化中に予期せぬエラーが発生しました: {e}",
             best_score=-float('inf'),
             best_assignment={},
             seminar_capacities={s['id']: s['capacity'] for s in seminars} if seminars else {},

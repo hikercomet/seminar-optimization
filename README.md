@@ -69,6 +69,11 @@ Gitを使用したバージョン管理フローと、VS CodeのLive Share拡張
 ## 2. Gitを使用した初期設定
 
 チームでコードやデータを共有する場合、Gitリポジトリを使用しマス‼
+ortools==9.9.3963
+pandas==2.2.2
+reportlab==4.1.0
+jsonschema==4.22.0
+scikit-learn==1.5.0
 
 * **リポジトリのクローン（初回のみ）**
 
