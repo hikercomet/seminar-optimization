@@ -1,6 +1,8 @@
 import logging
 from typing import Dict, List, Any, Callable, Optional, Tuple, Literal
 import time
+import random
+import numpy as np
 
 # ロガーの設定を強化
 logger = logging.getLogger(__name__)
@@ -67,6 +69,16 @@ class BaseOptimizer:
         self.config = config
         self.progress_callback = progress_callback
 
+        # 乱数シードを初期化
+        random_seed = config.get("random_seed")
+        if random_seed is not None:
+            random.seed(random_seed)
+            np.random.seed(random_seed)
+            logger.info(f"BaseOptimizer: 乱数シードを {random_seed} に設定しました。")
+        else:
+            logger.info("BaseOptimizer: 乱数シードが設定されていません。")
+
+
         self.seminar_capacities: Dict[str, int] = {s['id']: s['capacity'] for s in seminars}
         self.seminar_magnifications: Dict[str, float] = {s['id']: s.get('magnification', 1.0) for s in seminars} # 倍率を初期化
         self.student_preferences: Dict[str, List[str]] = {s['id']: s['preferences'] for s in students}
@@ -90,13 +102,21 @@ class BaseOptimizer:
     def _calculate_score(self, assignment: Dict[str, str]) -> float:
         """
         与えられた割り当ての合計スコアを計算する。
-        各学生の希望順位に基づいてスコアを付与する。
-        - 第1希望: 3点
-        - 第2希望: 2点
-        - 第3希望: 1点
-        - それ以外の希望: 0.5点
-        - 希望しないセミナー、または未割り当て: 0点
-        セミナーの倍率が設定されている場合、そのセミナーに割り当てられた学生のスコアに乗算する。
+
+        各学生の希望順位に基づいてスコアを付与し、セミナーの倍率を考慮する。
+        スコアの重みは `self.config` の "score_weights" から取得される。
+        デフォルトの重みは以下の通り:
+        - 第1希望: 3.0点
+        - 第2希望: 2.0点
+        - 第3希望: 1.0点
+        - その他の希望: 0.5点
+        - 希望リストにないセミナーへの割り当て、または未割り当て: 0点
+
+        Args:
+            assignment (Dict[str, str]): 学生IDをキー、割り当てられたセミナーIDを値とする辞書。
+
+        Returns:
+            float: 計算された合計スコア。
         """
         score = 0.0
         logger.debug(f"_calculate_score: 割り当てのスコア計算を開始シマス。割り当て数: {len(assignment)}")
@@ -190,4 +210,3 @@ class BaseOptimizer:
         """
         logger.error("BaseOptimizer: optimize メソッドはサブクラスで実装されていません。")
         raise NotImplementedError("Subclasses must implement the optimize method.")
-

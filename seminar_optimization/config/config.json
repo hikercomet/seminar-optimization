@@ -36,5 +36,7 @@
     "q_boost_probability": 0.2,
     "num_preferences_to_consider": 3,
     "max_adaptive_iterations": 5,
-    "strategy_time_limit": 60
+    "strategy_time_limit": 60,
+    "random_seed": 42,
+    "pdf_font_path": "seminar_optimization/fonts/ipaexg.ttf"
 }

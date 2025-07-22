@@ -798,8 +798,20 @@ class SeminarGUI:
         # デバッグ/ロギング設定
         debug_frame = ttk.LabelFrame(settings_frame, text="デバッグ/ロギング", padding="10")
         debug_frame.pack(pady=10, fill="x")
-        ttk.Checkbutton(debug_frame, text="デバッグモード", variable=self.debug_mode_var).pack(anchor="w", pady=2)
-        ttk.Checkbutton(debug_frame, text="ログ出力", variable=self.log_enabled_var).pack(anchor="w", pady=2)
+        
+        # Checkbuttonをgrid()に変更
+        debug_row = 0
+        ttk.Checkbutton(debug_frame, text="デバッグモード", variable=self.debug_mode_var).grid(row=debug_row, column=0, columnspan=2, padx=5, pady=2, sticky="w")
+        debug_row += 1
+        ttk.Checkbutton(debug_frame, text="ログ出力", variable=self.log_enabled_var).grid(row=debug_row, column=0, columnspan=2, padx=5, pady=2, sticky="w")
+        debug_row += 1
+        
+        # 乱数シードの入力フィールドを追加
+        self.random_seed_var = tk.IntVar(value=self.optimization_config.get("random_seed", 42)) # デフォルト値は42
+        self._create_setting_row(debug_frame, "乱数シード:", self.random_seed_var, debug_row, min_val=0, max_val=99999999)
+        # debug_row += 1 # この行は乱数シードが最後の項目なので不要ですが、将来の追加に備えて残すこともできます
+        
+        debug_frame.columnconfigure(1, weight=1) # Ensure column 1 expands for entries
         logger.debug("SeminarGUI: デバッグ/ロギング設定フレームを作成しました。")
 
         logger.debug("SeminarGUI: 設定タブの作成が完了しました。")
@@ -984,6 +996,8 @@ class SeminarGUI:
         self.optimization_config["generate_csv_report"] = self.generate_csv_report_var.get()
         self.optimization_config["debug_mode"] = self.debug_mode_var.get()
         self.optimization_config["log_enabled"] = self.log_enabled_var.get()
+        # 乱数シードをconfigに含める
+        self.optimization_config["random_seed"] = self.random_seed_var.get()
         
         # データ生成関連のパラメータもconfigに含める
         self.optimization_config["num_seminars"] = self.num_seminars_var.get()
@@ -1064,8 +1078,60 @@ class SeminarGUI:
             messagebox.showinfo("最適化完了", results.message)
             logger.info("SeminarGUI: 最適化が成功しました。")
         
+        # 結果表示ロジックは別途実装が必要
         self._display_results(results) # 結果タブに詳細を表示
         logger.debug("SeminarGUI: 最適化完了処理が終了しました。")
+
+    def _display_results(self, results: OptimizationResult):
+        """
+        最適化結果を結果タブのテキストエリアに表示する。
+        """
+        logger.info("SeminarGUI: 最適化結果を表示します。")
+        self.results_text.config(state=tk.NORMAL)
+        self.results_text.delete(1.0, tk.END) # クリア
+
+        self.results_text.insert(tk.END, "--- 最適化結果 ---\n")
+        self.results_text.insert(tk.END, f"ステータス: {results.status}\n")
+        self.results_text.insert(tk.END, f"メッセージ: {results.message}\n")
+        self.results_text.insert(tk.END, f"ベストスコア: {results.best_score:.2f}\n")
+        self.results_text.insert(tk.END, f"最適化戦略: {results.optimization_strategy}\n")
+        self.results_text.insert(tk.END, f"未割り当て学生数: {len(results.unassigned_students)}\n")
+        if results.unassigned_students:
+            self.results_text.insert(tk.END, f"  未割り当て学生: {', '.join(results.unassigned_students)}\n")
+        
+        self.results_text.insert(tk.END, "\n--- 割り当て概要 ---\n")
+        seminar_counts: Dict[str, int] = {s_id: 0 for s_id in results.seminar_capacities.keys()}
+        for student_id, seminar_id in results.best_assignment.items():
+            seminar_counts[seminar_id] = seminar_counts.get(seminar_id, 0) + 1
+
+        for seminar_id, capacity in results.seminar_capacities.items():
+            assigned_count = seminar_counts.get(seminar_id, 0)
+            remaining_capacity = capacity - assigned_count
+            self.results_text.insert(tk.END, f"セミナー {seminar_id}: 割り当て数 {assigned_count} / 定員 {capacity} (残り: {remaining_capacity})\n")
+
+        self.results_text.insert(tk.END, "\n--- 個別割り当て (上位20件のみ) ---\n")
+        # 大量データの場合にGUIが重くならないように制限
+        display_limit = 20
+        count = 0
+        for student_id, assigned_seminar in results.best_assignment.items():
+            if count >= display_limit:
+                self.results_text.insert(tk.END, f"...\n(残りの割り当てはCSV/PDFレポートを参照してください)\n")
+                break
+            
+            # 学生の希望順位を特定
+            preferences = next((s['preferences'] for s in self.students_data_for_report if s['id'] == student_id), [])
+            rank_str = "希望外"
+            if assigned_seminar in preferences:
+                rank = preferences.index(assigned_seminar) + 1
+                rank_str = f"第{rank}希望"
+            
+            self.results_text.insert(tk.END, f"学生 {student_id}: {assigned_seminar} ({rank_str})\n")
+            count += 1
+
+        self.results_text.config(state=tk.DISABLED)
+        self.notebook.select(self.notebook.index("end") - 2) # 結果タブに切り替える
+        logger.debug("SeminarGUI: 最適化結果の表示が完了しました。")
+
 
     def _on_closing(self):
         """ウィンドウを閉じるときの処理。最適化が実行中の場合は確認する。"""
