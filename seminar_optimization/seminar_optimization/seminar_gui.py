@@ -63,36 +63,92 @@ inner_seminar_optimization_path = os.path.join(package_root_to_add, 'seminar_opt
 if not os.path.exists(os.path.join(inner_seminar_optimization_path, '__init__.py')):
     missing_init_files.append(os.path.join(inner_seminar_optimization_path, '__init__.py'))
 
+# data_generator.py の存在チェック (inner_seminar_optimization_path 内にあると仮定)
+data_generator_path = os.path.join(inner_seminar_optimization_path, 'data_generator.py')
+if not os.path.exists(data_generator_path):
+    missing_init_files.append(data_generator_path) # Treat as missing init for simplicity of message
+
+# utils.py の存在チェック (inner_seminar_optimization_path 内にあると仮定)
+utils_path = os.path.join(inner_seminar_optimization_path, 'utils.py')
+if not os.path.exists(utils_path):
+    missing_init_files.append(utils_path)
+
+# output_generator.py の存在チェック (inner_seminar_optimization_path 内にあると仮定)
+output_generator_path = os.path.join(inner_seminar_optimization_path, 'output_generator.py')
+if not os.path.exists(output_generator_path):
+    missing_init_files.append(output_generator_path)
+
 
 if missing_init_files:
-    error_message = "Pythonパッケージの初期化ファイルが見つかりません。以下のファイルが存在することを確認してください:\n"
+    error_message = "Pythonパッケージの初期化ファイルまたは必要なモジュールファイルが見つかりません。以下のファイルが存在することを確認してください:\n"
     for f in missing_init_files:
         error_message += f"- {f}\n"
     error_message += "\nこれらのファイルがないと、Pythonはモジュールを正しくインポートできません。"
-    logger.critical(f"seminar_gui.py: パッケージ初期化ファイルが見つかりません: {missing_init_files}")
+    logger.critical(f"seminar_gui.py: パッケージ初期化ファイルまたはモジュールが見つかりません: {missing_init_files}")
     messagebox.showerror("エラー: パッケージ構造", error_message)
     sys.exit(1)
 
 
-# optimizer_serviceとDataLoaderをインポート
+# アプリケーション固有のモジュールをインポート
 try:
-    # package_root_to_add が sys.path に追加されたので、絶対インポートを使用
-    from optimizers.optimizer_service import run_optimization_service, DataLoader
+    # optimizers.optimizer_service は package_root_to_add/optimizers/optimizer_service.py にあると仮定
+    from ..optimizers.optimizer_service import OptimizerService, run_optimization_service
+    # data_generator, utils, output_generator は seminar_gui.py と同じディレクトリにあると仮定
+    from data_generator import DataGenerator # <-- ここを修正
     from utils import OptimizationResult
-    logger.debug("seminar_gui.py: optimizer_service と DataLoader, OptimizationResult のインポートに成功しました。")
+    from output_generator import save_csv_results, save_pdf_report
+    logger.debug("seminar_gui.py: 必要なモジュールのインポートに成功しました。")
 except ImportError as e:
     logger.critical(f"seminar_gui.py: モジュールのインポートに致命的な失敗: {e}", exc_info=True)
     messagebox.showerror("エラー", f"モジュールのインポートに失敗しました: {e}\n\n考えられる原因:\n1. Pythonのパス設定が正しくない。\n2. 'seminar_optimization' パッケージの構造が想定と異なる。\n\nプロジェクトのルートディレクトリ ('{package_root_to_add}') と、各モジュールのファイルパスを再確認してください。")
     sys.exit(1)
 
-# DPI設定 (Windowsのみ)
+# ReportLab のインポートチェック (PDF生成機能が有効な場合のみ使用)
+# output_generatorでインポートしているのでここでは不要だが、念のため
+try:
+    from reportlab.lib.pagesizes import A4 # 存在チェック
+except ImportError:
+    logger.warning("ReportLabがインストールされていません。PDFレポート生成は無効になります。")
+
+# DPIスケーリングを有効にする（Windowsの場合）
 try:
     ctypes.windll.shcore.SetProcessDpiAwareness(1)
-    logger.debug("seminar_gui.py: DPI Awarenesを有効にしました。")
 except AttributeError:
-    logger.debug("seminar_gui.py: Windows環境ではないか、DPI Awareness設定が不要です。")
-    pass # Not on Windows or old Windows version
+    pass # Windows以外では無視
 
+# ログをScrolledTextにリダイレクトするためのカスタムハンドラ
+class TextHandler(logging.Handler):
+    """
+    ログメッセージをTkinterのScrolledTextウィジェットにリダイレクトするハンドラ。
+    """
+    def __init__(self, text_widget, root_tk_instance): # root_tk_instance を追加
+        super().__init__()
+        self.text_widget = text_widget
+        self.root = root_tk_instance # rootインスタンスを保存
+        # 初期状態はDISABLEDにして、ログ追加時のみNORMALにする
+        self.text_widget.config(state=tk.DISABLED) 
+        logger.debug("TextHandler: ScrolledTextへのログハンドラを初期化しました。")
+
+    def emit(self, record):
+        msg = self.format(record)
+        # TkinterのGUI更新はメインスレッドで行う必要があるため、root.after()を使用
+        # rootがまだ存在するか確認
+        if self.root.winfo_exists(): # ウィンドウが存在するかチェック
+            self.root.after(0, self._insert_text, msg + "\n") # 改行も追加
+        else:
+            # GUIがすでに閉じられている場合は、通常のコンソール出力に戻す
+            print(msg)
+
+
+    def _insert_text(self, msg):
+        # このメソッドはメインスレッドで実行される
+        # ウィジェットが破棄されていないことを再度確認
+        if self.text_widget.winfo_exists():
+            self.text_widget.config(state=tk.NORMAL) # ログ追加時に一時的に有効化
+            self.text_widget.insert(tk.END, msg)
+            self.text_widget.see(tk.END) # 最新のログを表示
+            self.text_widget.config(state=tk.DISABLED) # ログ追加後に無効化
+        # else: ウィジェットが破棄されている場合は何もしない
 
 class InputValidator:
     """
@@ -255,7 +311,8 @@ class SeminarGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("セミナー割り当て最適化ツール")
-        self.root.geometry("1000x800")
+        self.root.geometry("1200x800") # ウィンドウサイズを少し大きく設定
+        self.root.protocol("WM_DELETE_WINDOW", self._on_closing) # 閉じるボタンの挙動を制御
         logger.debug("SeminarGUI: GUIウィンドウを初期化しました。")
 
         self.config_manager = ConfigManager()
@@ -265,13 +322,19 @@ class SeminarGUI:
         self.optimization_thread: Optional[threading.Thread] = None
         self.cancel_event = threading.Event()
         self.progress_dialog: Optional[ProgressDialog] = None
+        self.is_optimizing = False # 最適化が実行中かどうかを示すフラグ
+
+        self.log_text: Optional[scrolledtext.ScrolledText] = None # TextHandlerに渡す前に初期化
+        self.text_handler: Optional[TextHandler] = None # TextHandlerインスタンスを保持
 
         self._initialize_defaults() # GUIのデフォルト値を設定
-        self._setup_ui()
-        self._load_saved_settings() # 保存されたGUI設定をロード
+        self._setup_ui() # UIのセットアップ
 
-        self.root.protocol("WM_DELETE_WINDOW", self._on_closing)
-        logger.info("SeminarGUI: GUIアプリケーションの初期化が完了しました。")
+        self._load_saved_settings() # 保存されたGUI設定をロード (UIセットアップ後に行う)
+
+        logger.info("SeminarGUI: 初期化が完了しました。")
+        messagebox.showinfo("起動完了", "アプリケーションが起動しました。")
+
 
     def _load_default_optimization_config(self):
         """config.jsonから最適化のデフォルト設定を読み込む。"""
@@ -319,15 +382,16 @@ class SeminarGUI:
         self.generate_csv_report_var = tk.BooleanVar(value=self.optimization_config.get("generate_csv_report", True))
         self.debug_mode_var = tk.BooleanVar(value=self.optimization_config.get("debug_mode", False))
         self.log_enabled_var = tk.BooleanVar(value=self.optimization_config.get("log_enabled", True))
+        self.random_seed_var = tk.IntVar(value=self.optimization_config.get("random_seed", 42)) # デフォルト値は42
         
         # データ入力方法の変数
-        self.data_input_method_var = tk.StringVar(value="json") # "json", "csv", "generate", "manual"
+        self.data_input_method_var = tk.StringVar(value=self.gui_settings.get("data_input_method", "generate")) # gui_settingsから初期値をロード
         
         # config.jsonからデフォルトのファイルパスを設定
         # dataディレクトリは package_root_to_add/data にあると仮定
         default_data_dir = os.path.join(package_root_to_add, 'data') 
-        self.seminars_file_path_var = tk.StringVar(value=os.path.join(default_data_dir, self.optimization_config.get('seminars_file', 'seminars.json')))
-        self.students_file_path_var = tk.StringVar(value=os.path.join(default_data_dir, self.optimization_config.get('students_file', 'students.json')))
+        self.seminars_file_path_var = tk.StringVar(value=self.gui_settings.get('seminars_file_path', os.path.join(default_data_dir, self.optimization_config.get('seminars_file', 'seminars.json'))))
+        self.students_file_path_var = tk.StringVar(value=self.gui_settings.get('students_file_path', os.path.join(default_data_dir, self.optimization_config.get('students_file', 'students.json'))))
         logger.debug(f"SeminarGUI: デフォルトのデータファイルパス: セミナー='{self.seminars_file_path_var.get()}', 学生='{self.students_file_path_var.get()}'")
 
         # 手動入力用データ格納
@@ -337,9 +401,24 @@ class SeminarGUI:
         self.manual_student_tree: Optional[ttk.Treeview] = None
         logger.debug("SeminarGUI: 手動入力用データ構造を初期化しました。")
 
+        # レポート表示用のオリジナルデータ保持
+        self.seminars_data_for_report: List[Dict[str, Any]] = []
+        self.students_data_for_report: List[Dict[str, Any]] = []
+
+
     def _setup_ui(self):
         """UIの主要な要素をセットアップする。"""
         logger.debug("SeminarGUI: UIのセットアップを開始します。")
+
+        # スタイル設定
+        self.style = ttk.Style()
+        self.style.theme_use('clam') # 'clam', 'alt', 'default', 'classic' など
+        self.style.configure("TFrame", background="#f0f0f0")
+        self.style.configure("TLabel", background="#f0f0f0", font=('Yu Gothic UI', 10))
+        self.style.configure("TButton", font=('Yu Gothic UI', 10, 'bold'), padding=5)
+        self.style.configure("TLabelframe.Label", font=('Yu Gothic UI', 10, 'bold'))
+        self.style.configure("TCheckbutton", background="#f0f0f0", font=('Yu Gothic UI', 10))
+        self.style.configure("TRadiobutton", background="#f0f0f0", font=('Yu Gothic UI', 10))
 
         # メインフレームにCanvas + Scrollbar を作る
         outer_frame = ttk.Frame(self.root)
@@ -365,16 +444,20 @@ class SeminarGUI:
         self.notebook = ttk.Notebook(self.main_frame)
         self.notebook.pack(padx=10, pady=10, fill="both", expand=True)
 
+        # ログタブを最初に作成し、TextHandlerを設定
+        self._create_logs_tab() # <-- ログタブを最初に作成
+
         self._create_data_input_tab()
         self._create_settings_tab()
         self._create_results_tab()
-        self._create_logs_tab()
-
+        
         # 最適化実行ボタン
         control_frame = ttk.Frame(self.main_frame, padding="10")
         control_frame.pack(fill="x")
-        ttk.Button(control_frame, text="最適化を実行", command=self._run_optimization).pack(side="left", padx=5, pady=5)
-        ttk.Button(control_frame, text="キャンセル", command=self._cancel_optimization).pack(side="right", padx=5, pady=5)
+        self.optimize_button = ttk.Button(control_frame, text="最適化を実行", command=self._run_optimization)
+        self.optimize_button.pack(side="left", padx=5, pady=5)
+        self.cancel_button = ttk.Button(control_frame, text="キャンセル", command=self._cancel_optimization, state=tk.DISABLED)
+        self.cancel_button.pack(side="right", padx=5, pady=5)
 
         canvas.bind('<Configure>', lambda e: canvas.itemconfig(self.canvas_window, width=e.width))
         logger.info("SeminarGUI: UIのセットアップが完了しました。")
@@ -807,9 +890,7 @@ class SeminarGUI:
         debug_row += 1
         
         # 乱数シードの入力フィールドを追加
-        self.random_seed_var = tk.IntVar(value=self.optimization_config.get("random_seed", 42)) # デフォルト値は42
         self._create_setting_row(debug_frame, "乱数シード:", self.random_seed_var, debug_row, min_val=0, max_val=99999999)
-        # debug_row += 1 # この行は乱数シードが最後の項目なので不要ですが、将来の追加に備えて残すこともできます
         
         debug_frame.columnconfigure(1, weight=1) # Ensure column 1 expands for entries
         logger.debug("SeminarGUI: デバッグ/ロギング設定フレームを作成しました。")
@@ -841,7 +922,7 @@ class SeminarGUI:
         logger.debug("SeminarGUI: 結果表示タブの作成が完了しました。")
 
     def _create_logs_tab(self):
-        """ログ表示タブを作成する。"""
+        """ログ表示タブを作成し、TextHandlerを設定する。"""
         logger.debug("SeminarGUI: ログ表示タブを作成します。")
         logs_frame = ttk.Frame(self.notebook, padding="10")
         self.notebook.add(logs_frame, text="ログ")
@@ -850,10 +931,11 @@ class SeminarGUI:
         self.log_text.pack(padx=5, pady=5, fill="both", expand=True)
 
         # カスタムハンドラを設定して、ログメッセージをScrolledTextにリダイレクト
-        log_handler = TextHandler(self.log_text)
+        # TextHandlerはここで一度だけ初期化される
+        self.text_handler = TextHandler(self.log_text, self.root) # self.root を渡す
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        log_handler.setFormatter(formatter)
-        logging.getLogger().addHandler(log_handler) # ルートロガーに追加
+        self.text_handler.setFormatter(formatter)
+        logging.getLogger().addHandler(self.text_handler) # ルートロガーに追加
         logger.debug("SeminarGUI: ログ表示タブの作成とカスタムロギングハンドラの設定が完了しました。")
 
 
@@ -871,6 +953,57 @@ class SeminarGUI:
             self.data_input_method_var.set(self.gui_settings['data_input_method'])
             logger.debug(f"SeminarGUI: データ入力方法をロード: {self.gui_settings['data_input_method']}")
             self._on_input_method_changed() # UIを更新
+        
+        # その他の設定もロード (config.jsonからのデフォルト値は_initialize_defaultsで設定済み)
+        # gui_settings.ini に保存する設定を追加する場合はここにも記述
+        if 'num_seminars' in self.gui_settings:
+            self.num_seminars_var.set(self.config_manager.config.getint('GUI', 'num_seminars'))
+        if 'num_students' in self.gui_settings:
+            self.num_students_var.set(self.config_manager.config.getint('GUI', 'num_students'))
+        if 'selected_optimizer' in self.gui_settings:
+            self.optimization_strategy_var.set(self.gui_settings['selected_optimizer'])
+        if 'generate_pdf_report' in self.gui_settings:
+            self.generate_pdf_report_var.set(self.config_manager.config.getboolean('GUI', 'generate_pdf_report'))
+        if 'generate_csv_report' in self.gui_settings:
+            self.generate_csv_report_var.set(self.config_manager.config.getboolean('GUI', 'generate_csv_report'))
+        
+        # 新しく追加されたGUI設定変数のロード
+        if 'min_capacity' in self.gui_settings:
+            self.min_capacity_var.set(self.config_manager.config.getint('GUI', 'min_capacity'))
+        if 'max_capacity' in self.gui_settings:
+            self.max_capacity_var.set(self.config_manager.config.getint('GUI', 'max_capacity'))
+        if 'min_preferences' in self.gui_settings:
+            self.min_preferences_var.set(self.config_manager.config.getint('GUI', 'min_preferences'))
+        if 'max_preferences' in self.gui_settings:
+            self.max_preferences_var.set(self.config_manager.config.getint('GUI', 'max_preferences'))
+        if 'preference_distribution' in self.gui_settings:
+            self.preference_dist_var.set(self.gui_settings['preference_distribution'])
+        if 'ga_population_size' in self.gui_settings:
+            self.ga_population_size_var.set(self.config_manager.config.getint('GUI', 'ga_population_size'))
+        if 'ga_generations' in self.gui_settings:
+            self.ga_generations_var.set(self.config_manager.config.getint('GUI', 'ga_generations'))
+        if 'ilp_time_limit' in self.gui_settings:
+            self.ilp_time_limit_var.set(self.config_manager.config.getint('GUI', 'ilp_time_limit'))
+        if 'cp_time_limit' in self.gui_settings:
+            self.cp_time_limit_var.set(self.config_manager.config.getint('GUI', 'cp_time_limit'))
+        if 'multilevel_clusters' in self.gui_settings:
+            self.multilevel_clusters_var.set(self.config_manager.config.getint('GUI', 'multilevel_clusters'))
+        if 'greedy_ls_iterations' in self.gui_settings:
+            self.greedy_ls_iterations_var.set(self.config_manager.config.getint('GUI', 'greedy_ls_iterations'))
+        if 'local_search_iterations' in self.gui_settings:
+            self.local_search_iterations_var.set(self.config_manager.config.getint('GUI', 'local_search_iterations'))
+        if 'initial_temperature' in self.gui_settings:
+            self.initial_temperature_var.set(self.config_manager.config.getfloat('GUI', 'initial_temperature'))
+        if 'cooling_rate' in self.gui_settings:
+            self.cooling_rate_var.set(self.config_manager.config.getfloat('GUI', 'cooling_rate'))
+        if 'debug_mode' in self.gui_settings:
+            self.debug_mode_var.set(self.config_manager.config.getboolean('GUI', 'debug_mode'))
+        if 'log_enabled' in self.gui_settings:
+            self.log_enabled_var.set(self.config_manager.config.getboolean('GUI', 'log_enabled'))
+        if 'random_seed' in self.gui_settings:
+            self.random_seed_var.set(self.config_manager.config.getint('GUI', 'random_seed'))
+
+
         logger.info("SeminarGUI: 保存された設定のロードが完了しました。")
 
     def _save_current_settings(self):
@@ -880,7 +1013,29 @@ class SeminarGUI:
             'seminars_file_path': self.seminars_file_path_var.get(),
             'students_file_path': self.students_file_path_var.get(),
             'data_input_method': self.data_input_method_var.get(),
-            # 他のGUI設定変数があればここに追加
+            'num_seminars': str(self.num_seminars_var.get()),
+            'num_students': str(self.num_students_var.get()),
+            'selected_optimizer': self.optimization_strategy_var.get(),
+            'generate_pdf_report': str(self.generate_pdf_report_var.get()),
+            'generate_csv_report': str(self.generate_csv_report_var.get()),
+            # その他の設定変数もここに追加
+            'min_capacity': str(self.min_capacity_var.get()),
+            'max_capacity': str(self.max_capacity_var.get()),
+            'min_preferences': str(self.min_preferences_var.get()),
+            'max_preferences': str(self.max_preferences_var.get()),
+            'preference_distribution': self.preference_dist_var.get(),
+            'ga_population_size': str(self.ga_population_size_var.get()),
+            'ga_generations': str(self.ga_generations_var.get()),
+            'ilp_time_limit': str(self.ilp_time_limit_var.get()),
+            'cp_time_limit': str(self.cp_time_limit_var.get()),
+            'multilevel_clusters': str(self.multilevel_clusters_var.get()),
+            'greedy_ls_iterations': str(self.greedy_ls_iterations_var.get()),
+            'local_search_iterations': str(self.local_search_iterations_var.get()),
+            'initial_temperature': str(self.initial_temperature_var.get()),
+            'cooling_rate': str(self.cooling_rate_var.get()),
+            'debug_mode': str(self.debug_mode_var.get()),
+            'log_enabled': str(self.log_enabled_var.get()),
+            'random_seed': str(self.random_seed_var.get()),
         }
         self.config_manager.save_gui_settings(settings_to_save)
         logger.info("SeminarGUI: 現在の設定の保存が完了しました。")
@@ -889,7 +1044,7 @@ class SeminarGUI:
     def _run_optimization(self):
         """最適化処理を開始する。"""
         logger.info("SeminarGUI: 最適化処理の開始をリクエストされました。")
-        if self.optimization_thread and self.optimization_thread.is_alive():
+        if self.is_optimizing: # self.optimization_thread.is_alive() の代わりにフラグを使用
             messagebox.showinfo("情報", "最適化処理が既に実行中です。")
             logger.warning("SeminarGUI: 最適化処理が既に実行中のため、新規開始を拒否しました。")
             return
@@ -907,13 +1062,17 @@ class SeminarGUI:
         self.progress_dialog = ProgressDialog(self.root)
         self.progress_dialog.cancel_callback = self._cancel_optimization # キャンセルボタンにコールバックを設定
         self.cancel_event.clear() # イベントをリセット
+        self.is_optimizing = True # 最適化開始フラグを設定
+        self.optimize_button.config(state=tk.DISABLED)
+        self.cancel_button.config(state=tk.NORMAL)
         logger.debug("SeminarGUI: 新しいプログレスダイアログを初期化し、キャンセルイベントをリセットしました。")
 
         selected_method = self.data_input_method_var.get()
         seminars_data: List[Dict[str, Any]] = []
         students_data: List[Dict[str, Any]] = []
-        # DataLoaderのインスタンス化時にロガーを渡す
-        data_loader = DataLoader(self.optimization_config, logger) # 修正: loggerを渡す
+        
+        # DataGeneratorのインスタンス化時にconfigとロガーを渡す
+        data_generator = DataGenerator(self.optimization_config, logger) 
         logger.debug(f"SeminarGUI: データ入力方法: '{selected_method}'")
 
         try:
@@ -922,17 +1081,17 @@ class SeminarGUI:
                 students_file = self.students_file_path_var.get()
                 if not seminars_file or not students_file:
                     raise ValueError("JSONファイルパスが指定されていません。")
-                seminars_data, students_data = data_loader.load_from_json(seminars_file, students_file)
+                seminars_data, students_data = data_generator.load_from_json(seminars_file, students_file)
                 logger.info("SeminarGUI: JSONファイルからデータをロードしました。")
             elif selected_method == "csv":
                 seminars_file = self.seminars_file_path_var.get()
                 students_file = self.students_file_path_var.get()
                 if not seminars_file or not students_file:
                     raise ValueError("CSVファイルパスが指定されていません。")
-                seminars_data, students_data = data_loader.load_from_csv(seminars_file, students_file)
+                seminars_data, students_data = data_generator.load_from_csv(seminars_file, students_file)
                 logger.info("SeminarGUI: CSVファイルからデータをロードしました。")
             elif selected_method == "generate":
-                seminars_data, students_data = data_loader.generate_data(
+                seminars_data, students_data = data_generator.generate_data(
                     num_seminars=self.num_seminars_var.get(),
                     min_capacity=self.min_capacity_var.get(),
                     max_capacity=self.max_capacity_var.get(),
@@ -947,10 +1106,14 @@ class SeminarGUI:
                 students_data = self.manual_student_data
                 if not seminars_data or not students_data:
                     raise ValueError("手動入力データが不足しています。セミナーと学生のデータを入力してください。")
-                # 手動入力データもDataLoaderのスキーマで検証
-                data_loader._validate_data(seminars_data, students_data)
+                # 手動入力データもDataGeneratorのスキーマで検証
+                data_generator._validate_data(seminars_data, students_data) # DataGeneratorの検証メソッドを呼び出す
                 logger.info("SeminarGUI: 手動入力データを使用します。")
             
+            # レポート表示用にオリジナルデータを保持
+            self.seminars_data_for_report = seminars_data
+            self.students_data_for_report = students_data
+
             # データが正常に準備されたら、configを構築して最適化を開始
             self._update_optimization_config_from_gui() # GUIからconfigを更新
             logger.debug("SeminarGUI: 最適化設定をGUIから更新しました。")
@@ -970,6 +1133,7 @@ class SeminarGUI:
             if self.progress_dialog:
                 self.progress_dialog.close()
                 logger.debug("SeminarGUI: データ準備エラーのためプログレスダイアログを閉じました。")
+            self._reset_gui_state() # エラー時もGUI状態をリセット
 
     def _cancel_optimization(self):
         """最適化処理をキャンセルする。"""
@@ -1024,7 +1188,7 @@ class SeminarGUI:
             )
             logger.info("SeminarGUI: 最適化サービスが完了しました。")
             # GUI更新はメインスレッドで行う
-            self.root.after(0, self._handle_optimization_completion, results)
+            self.root.after(0, self._handle_optimization_completion, results, seminars_data, students_data) # seminars_data, students_data も渡す
         except Exception as e:
             logger.exception("SeminarGUI: 最適化スレッド内で予期せぬエラーが発生しました。")
             error_results = OptimizationResult(
@@ -1036,7 +1200,7 @@ class SeminarGUI:
                 unassigned_students=[s['id'] for s in students_data] if students_data else [],
                 optimization_strategy=config.get("optimization_strategy", "Unknown")
             )
-            self.root.after(0, self._handle_optimization_completion, error_results)
+            self.root.after(0, self._handle_optimization_completion, error_results, seminars_data, students_data) # エラー時もデータは渡す
         finally:
             if self.progress_dialog:
                 self.root.after(0, self.progress_dialog.close)
@@ -1055,13 +1219,12 @@ class SeminarGUI:
 
     def _update_progress(self, message: str):
         """プログレスバーとログにメッセージを更新するコールバック関数。"""
-        logger.debug(f"SeminarGUI: 進捗更新メッセージを受信: '{message}'")
-        if self.progress_dialog:
-            self.root.after(0, lambda: self.progress_dialog.update_progress_message(message))
-        self.root.after(0, lambda: self.log_text.insert(tk.END, f"{datetime.now().strftime('%H:%M:%S')} - {message}\n"))
-        self.root.after(0, lambda: self.log_text.see(tk.END))
+        # この関数は別スレッドから呼び出されるため、直接GUIを操作せず、root.after()を使用する
+        # TextHandlerが既にロギングシステムにアタッチされているため、logger.info()を呼び出すだけでGUIに表示される
+        logger.info(message)
 
-    def _handle_optimization_completion(self, results: OptimizationResult):
+
+    def _handle_optimization_completion(self, results: OptimizationResult, seminars_data: List[Dict[str, Any]], students_data: List[Dict[str, Any]]):
         """最適化完了後の処理（メインスレッドで実行）。"""
         logger.info(f"SeminarGUI: 最適化完了処理を開始します。ステータス: {results.status}")
         if self.progress_dialog:
@@ -1078,11 +1241,12 @@ class SeminarGUI:
             messagebox.showinfo("最適化完了", results.message)
             logger.info("SeminarGUI: 最適化が成功しました。")
         
-        # 結果表示ロジックは別途実装が必要
-        self._display_results(results) # 結果タブに詳細を表示
+        # 結果表示ロジック
+        self._display_results(results, seminars_data, students_data) # seminars_data, students_data を渡す
+        self._reset_gui_state() # GUI状態をリセット
         logger.debug("SeminarGUI: 最適化完了処理が終了しました。")
 
-    def _display_results(self, results: OptimizationResult):
+    def _display_results(self, results: OptimizationResult, seminars_data: List[Dict[str, Any]], students_data: List[Dict[str, Any]]):
         """
         最適化結果を結果タブのテキストエリアに表示する。
         """
@@ -1113,36 +1277,73 @@ class SeminarGUI:
         # 大量データの場合にGUIが重くならないように制限
         display_limit = 20
         count = 0
+        
+        # 学生データマップを作成して、希望順位を効率的に検索できるようにする
+        students_data_map = {s['id']: s for s in students_data}
+
         for student_id, assigned_seminar in results.best_assignment.items():
             if count >= display_limit:
                 self.results_text.insert(tk.END, f"...\n(残りの割り当てはCSV/PDFレポートを参照してください)\n")
                 break
             
             # 学生の希望順位を特定
-            preferences = next((s['preferences'] for s in self.students_data_for_report if s['id'] == student_id), [])
+            student_info = students_data_map.get(student_id)
+            preferences = student_info.get('preferences', []) if student_info else []
+            
             rank_str = "希望外"
             if assigned_seminar in preferences:
-                rank = preferences.index(assigned_seminar) + 1
-                rank_str = f"第{rank}希望"
+                try:
+                    rank = preferences.index(assigned_seminar) + 1
+                    rank_str = f"第{rank}希望"
+                except ValueError:
+                    # これは発生しないはずだが、念のため
+                    pass
             
             self.results_text.insert(tk.END, f"学生 {student_id}: {assigned_seminar} ({rank_str})\n")
             count += 1
 
         self.results_text.config(state=tk.DISABLED)
-        self.notebook.select(self.notebook.index("end") - 2) # 結果タブに切り替える
+        self.notebook.select(self.notebook.index("end") - 1) # 結果タブに切り替える (ログタブの1つ前)
         logger.debug("SeminarGUI: 最適化結果の表示が完了しました。")
 
 
+    def clear_results(self):
+        """結果表示エリアをクリアする"""
+        self.results_text.config(state=tk.NORMAL)
+        self.results_text.delete(1.0, tk.END)
+        self.results_text.config(state=tk.DISABLED)
+        logger.debug("SeminarGUI: 結果表示エリアをクリアしました。")
+
+
+    def _reset_gui_state(self):
+        """
+        最適化終了後にGUIの状態をリセットする（メインスレッドで実行）。
+        """
+        self.optimize_button.config(state=tk.NORMAL)
+        self.cancel_button.config(state=tk.DISABLED)
+        self.cancel_button.config(text="キャンセル") # テキストを元に戻す
+        self.is_optimizing = False
+        logger.info("GUIの状態がリセットされました。")
+
     def _on_closing(self):
-        """ウィンドウを閉じるときの処理。最適化が実行中の場合は確認する。"""
+        """
+        ウィンドウが閉じられようとしたときの処理。
+        実行中の最適化があれば確認ダイアログを表示。
+        """
         logger.debug("SeminarGUI: ウィンドウを閉じようとしています。")
-        if self.optimization_thread and self.optimization_thread.is_alive():
+        if self.is_optimizing:
             logger.info("SeminarGUI: 最適化処理が実行中のため、終了確認ダイアログを表示します。")
             if messagebox.askyesno("確認", "最適化処理が実行中です。強制終了しますか？"):
                 self.cancel_event.set() # キャンセルイベントを設定
                 if self.progress_dialog and self.progress_dialog.dialog.winfo_exists():
                     self.progress_dialog.close()
-                self.optimization_thread.join(timeout=1.0) # スレッドが終了するのを待つ（短い時間）
+                if self.optimization_thread and self.optimization_thread.is_alive():
+                    self.optimization_thread.join(timeout=1.0) # スレッドが終了するのを待つ（短い時間）
+                
+                # GUIハンドラを削除してからGUIを破棄
+                if self.text_handler in logging.getLogger().handlers:
+                    logging.getLogger().removeHandler(self.text_handler)
+                    logger.debug("SeminarGUI: TextHandlerをロギングシステムから削除しました。")
                 self.root.destroy()
                 logger.info("SeminarGUI: 最適化を強制終了し、アプリケーションを閉じました。")
             else:
@@ -1150,6 +1351,10 @@ class SeminarGUI:
                 return # ウィンドウを閉じない
         else:
             self._save_current_settings() # 終了時に設定を保存
+            # GUIハンドラを削除してからGUIを破棄
+            if self.text_handler in logging.getLogger().handlers:
+                logging.getLogger().removeHandler(self.text_handler)
+                logger.debug("SeminarGUI: TextHandlerをロギングシステムから削除しました。")
             self.root.destroy()
             logger.info("SeminarGUI: アプリケーションを正常に閉じました。")
 
@@ -1157,29 +1362,14 @@ class SeminarGUI:
         """GUIのメインループを開始する。"""
         logger.info("SeminarGUI: GUIメインループを開始します。")
         self.root.mainloop()
+        # メインループ終了後にもログが出力される可能性があるため、ここでもハンドラを削除
+        if self.text_handler in logging.getLogger().handlers:
+            logging.getLogger().removeHandler(self.text_handler)
+            logger.debug("SeminarGUI: GUIメインループ終了後にTextHandlerを削除しました。")
         logger.info("SeminarGUI: GUIメインループが終了しました。")
 
-# ログをScrolledTextにリダイレクトするためのカスタムハンドラ
-class TextHandler(logging.Handler):
-    """
-    ログメッセージをTkinterのScrolledTextウィジェットにリダイレクトするハンドラ。
-    """
-    def __init__(self, text_widget):
-        super().__init__()
-        self.text_widget = text_widget
-        self.text_widget.config(state=tk.NORMAL) # ログ追加時に一時的に有効化
-        logger.debug("TextHandler: ScrolledTextへのログハンドラを初期化しました。")
-
-    def emit(self, record):
-        """ログレコードを処理し、ウィジェットに挿入する。"""
-        msg = self.format(record)
-        self.text_widget.insert(tk.END, msg + "\n")
-        self.text_widget.see(tk.END) # 最新のログが見えるようにスクロール
-        self.text_widget.config(state=tk.DISABLED) # 再度無効化 (読み取り専用)
-        # logger.debug(f"TextHandler: ログメッセージをGUIに表示: '{msg[:50]}...'") # 長すぎるログは短縮
-
+# アプリケーションのエントリポイント
 if __name__ == "__main__":
-    # Ensure logging is configured only once at startup
     root = tk.Tk()
     app = SeminarGUI(root)
     app.run()
