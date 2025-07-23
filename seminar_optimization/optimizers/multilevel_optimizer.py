@@ -7,9 +7,9 @@ from sklearn.cluster import KMeans # クラスタリング用
 import numpy as np # KMeansの入力用
 
 # BaseOptimizerとOptimizationResultをutilsからインポート
-from seminar_optimization.utils import BaseOptimizer, OptimizationResult
+from seminar_optimization.seminar_optimization.utils import BaseOptimizer, OptimizationResult # <-- 修正: 相対インポート
 # ロギングは logger_config.py で一元的に設定されるため、ここではロガーの取得のみ
-from seminar_optimization.logger_config import logger
+from seminar_optimization.seminar_optimization.logger_config import logger # <-- 修正: 相対インポート
 
 class MultilevelOptimizer(BaseOptimizer): # BaseOptimizerを継承
     """

@@ -5,9 +5,9 @@ import time
 from typing import Dict, List, Any, Callable, Optional, Tuple
 
 # BaseOptimizerとOptimizationResultをutilsからインポート
-from seminar_optimization.utils import BaseOptimizer, OptimizationResult 
+from seminar_optimization.seminar_optimization.utils import BaseOptimizer, OptimizationResult # <-- 修正: 相対インポート
 # ロギングは logger_config.py で一元的に設定されるため、ここではロガーの取得のみ
-from seminar_optimization.logger_config import logger
+from seminar_optimization.seminar_optimization.logger_config import logger # <-- 修正: 相対インポート
 
 class GeneticAlgorithmOptimizer(BaseOptimizer): # BaseOptimizerを継承
     """

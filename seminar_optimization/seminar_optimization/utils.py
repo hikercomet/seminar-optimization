@@ -5,8 +5,10 @@ import random
 import threading
 import numpy as np
 
+# ロガーの設定を強化
 # ロギングは logger_config.py で一元的に設定されるため、ここではロガーの取得のみ
-logger = logging.getLogger(__name__)
+from seminar_optimization.seminar_optimization.logger_config import logger # <-- 修正: 相対インポート
+
 
 class OptimizationResult:
     """

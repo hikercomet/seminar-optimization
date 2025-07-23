@@ -15,7 +15,7 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont # 日本語フォント対応のため
 
 # ロギングは logger_config.py で一元的に設定されるため、ここではロガーの取得のみ
-from seminar_optimization.logger_config import logger
+from seminar_optimization.seminar_optimization.logger_config import logger # <-- 修正: 相対インポート
 
 # 日本語フォントの登録 (IPAexGothicを仮定)
 # プロジェクトのルートディレクトリからの相対パスでフォントを探す

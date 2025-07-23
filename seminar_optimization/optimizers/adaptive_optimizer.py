@@ -7,17 +7,17 @@ from typing import Dict, List, Tuple, Any, Callable, Optional
 from collections import deque # パフォーマンス履歴を保持するため
 
 # BaseOptimizerとOptimizationResultをutilsからインポート
-from seminar_optimization.utils import BaseOptimizer, OptimizationResult
+from seminar_optimization.seminar_optimization.utils import BaseOptimizer, OptimizationResult # <-- 修正: 相対インポート
 # ロギングは logger_config.py で一元的に設定されるため、ここではロガーの取得のみ
-from seminar_optimization.logger_config import logger
+from seminar_optimization.seminar_optimization.logger_config import logger # <-- 修正: 相対インポート
 
 # 各最適化アルゴリズムをインポート
 # 動的インポートを避けるため、ここにリストアップ
-from optimizers.greedy_ls_optimizer import GreedyLSOptimizer
-from optimizers.genetic_algorithm_optimizer import GeneticAlgorithmOptimizer
-from optimizers.ilp_optimizer import ILPOptimizer
-from optimizers.cp_sat_optimizer import CPSATOptimizer
-from optimizers.multilevel_optimizer import MultilevelOptimizer
+from seminar_optimization.optimizers.greedy_ls_optimizer import GreedyLSOptimizer # <-- 修正: 相対インポート
+from seminar_optimization.optimizers.genetic_algorithm_optimizer import GeneticAlgorithmOptimizer # <-- 修正: 相対インポート
+from seminar_optimization.optimizers.ilp_optimizer import ILPOptimizer # <-- 修正: 相対インポート
+from seminar_optimization.optimizers.cp_sat_optimizer import CPSATOptimizer # <-- 修正: 相対インポート
+from seminar_optimization.optimizers.multilevel_optimizer import MultilevelOptimizer # <-- 修正: 相対インポート
 
 # オプティマイザのマッピングを定義
 OPTIMIZER_MAP = {

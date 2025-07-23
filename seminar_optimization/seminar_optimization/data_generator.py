@@ -6,9 +6,9 @@ from typing import List, Dict, Any, Optional, Tuple
 import jsonschema # データスキーマ検証用
 
 # ロギングは logger_config.py で一元的に設定されるため、ここではロガーの取得のみ
-from seminar_optimization.logger_config import logger
+from seminar_optimization.seminar_optimization.logger_config import logger # <-- 修正: 相対インポート
 # スキーマ定義は schemas.py からインポート
-from seminar_optimization.schemas import SEMINARS_SCHEMA, STUDENTS_SCHEMA
+from seminar_optimization.seminar_optimization.schemas import SEMINARS_SCHEMA, STUDENTS_SCHEMA # <-- 修正: 相対インポート
 
 class DataGenerator:
     """

@@ -14,16 +14,18 @@ import csv # CSV読み込み用
 import time # シミュレーションの進捗表示のために追加
 import logging # ロギングを追加
 
-# ロギング設定は logger_config.py で一元化されるため、ここではロガーの取得のみ
-from seminar_optimization.logger_config import setup_logging, logger
+
+from seminar_optimization.seminar_optimization.logger_config import setup_logging, logger 
 # アプリケーション固有のモジュールをインポート
 # optimizer_service.py は optimizers/ に移動したため、そのパスでインポート
-from optimizers.optimizer_service import run_optimization_service
-from seminar_optimization.data_generator import DataGenerator
-from seminar_optimization.utils import OptimizationResult
-from seminar_optimization.output_generator import save_csv_results, save_pdf_report # ReportLabのインポートチェックはoutput_generator内で完結
-from seminar_optimization.schemas import CONFIG_SCHEMA # 設定スキーマをインポート
+# 現在のseminar_optimizationパッケージから2階層上に上がってからoptimizersパッケージに入る
+from seminar_optimization.optimizers.optimizer_service import run_optimization_service # <-- 修正点
+from seminar_optimization.seminar_optimization.data_generator import DataGenerator
+from seminar_optimization.seminar_optimization.utils import OptimizationResult
+from seminar_optimization.seminar_optimization.output_generator import save_csv_results, save_pdf_report # ReportLabのインポートチェックはoutput_generator内で完結
+from seminar_optimization.seminar_optimization.schemas import CONFIG_SCHEMA # 設定スキーマをインポート
 import jsonschema # 設定スキーマ検証用
+
 
 # DPIスケーリングを有効にする（Windowsの場合）
 try:
@@ -259,7 +261,8 @@ class SeminarGUI:
         """config.jsonから最適化のデフォルト設定を読み込み、スキーマ検証を行う。"""
         # config.json は プロジェクトルート/config/config.json にあると仮定
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        project_root = os.path.abspath(os.path.join(script_dir, '..', '..'))
+        # ユーザーの実際の構造に合わせて、親ディレクトリを2つ遡る
+        project_root = os.path.abspath(os.path.join(script_dir, '..', '..', '..')) # <-- 修正点
         config_path = os.path.join(project_root, 'config', 'config.json')
         logger.debug(f"SeminarGUI: config.json のロードを試行中: {config_path}")
         try:
@@ -318,9 +321,9 @@ class SeminarGUI:
         self.data_input_method_var = tk.StringVar(value=self.gui_settings.get("data_input_method", "generate")) # gui_settingsから初期値をロード
         
         # config.jsonからデフォルトのファイルパスを設定
-        # dataディレクトリは プロジェクトルート/data にあると仮定
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        project_root = os.path.abspath(os.path.join(script_dir, '..', '..'))
+        # ユーザーの実際の構造に合わせて、親ディレクトリを2つ遡る
+        project_root = os.path.abspath(os.path.join(script_dir, '..', '..', '..')) # <-- 修正点
         default_data_dir = os.path.join(project_root, 'data') 
         self.seminars_file_path_var = tk.StringVar(value=self.gui_settings.get('seminars_file_path', os.path.join(default_data_dir, self.optimization_config.get('seminars_file', 'seminars.json'))))
         self.students_file_path_var = tk.StringVar(value=self.gui_settings.get('students_file_path', os.path.join(default_data_dir, self.optimization_config.get('students_file', 'students.json'))))
@@ -481,7 +484,8 @@ class SeminarGUI:
             filetypes = [("CSV files", "*.csv"), ("All files", "*.*")]
         
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        project_root = os.path.abspath(os.path.join(script_dir, '..', '..'))
+        # ユーザーの実際の構造に合わせて、親ディレクトリを2つ遡る
+        project_root = os.path.abspath(os.path.join(script_dir, '..', '..', '..')) # <-- 修正点
         default_data_dir = os.path.join(project_root, 'data') 
 
         initial_dir = os.path.dirname(var.get()) if var.get() and os.path.exists(os.path.dirname(var.get())) else default_data_dir
@@ -1312,7 +1316,8 @@ if __name__ == "__main__":
     # デバッグモードとログ出力のGUI設定は、GUIがロードされる前にconfig.jsonから読み込まれる
     # config.jsonのパスを解決
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.abspath(os.path.join(script_dir, '..', '..'))
+    # ユーザーの実際の構造に合わせて、親ディレクトリを2つ遡る
+    project_root = os.path.abspath(os.path.join(script_dir, '..', '..', '..')) # <-- 修正点
     config_file_path = os.path.join(project_root, 'config', 'config.json')
     
     initial_config = {}

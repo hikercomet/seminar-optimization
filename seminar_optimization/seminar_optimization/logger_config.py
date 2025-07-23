@@ -1,4 +1,3 @@
-# seminar_optimization/logger_config.py
 import logging
 import os
 from typing import Optional

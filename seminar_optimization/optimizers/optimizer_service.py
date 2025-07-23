@@ -12,14 +12,14 @@ import jsonschema # データスキーマ検証用
 # 新しく作成したutilsモジュールから共通関数をインポート
 # optimizer_service.py が optimizers/ に移動したため、
 # seminar_optimization パッケージ内のモジュールは絶対パスでインポートします。
-from seminar_optimization.utils import (
+from seminar_optimization.seminar_optimization.utils import (
     BaseOptimizer,
     OptimizationResult
 )
 # ロギングは logger_config.py で一元的に設定されるため、ここではロガーの取得のみ
-from seminar_optimization.logger_config import logger
+from seminar_optimization.seminar_optimization.logger_config import logger # <-- 修正: 相対インポート
 # スキーマ定義は schemas.py からインポート
-from seminar_optimization.schemas import SEMINARS_SCHEMA, STUDENTS_SCHEMA, CONFIG_SCHEMA
+from seminar_optimization.seminar_optimization.schemas import SEMINARS_SCHEMA, STUDENTS_SCHEMA, CONFIG_SCHEMA
 
 # 各最適化アルゴリズムをインポート（同じ optimizers パッケージ内なので相対インポートも可能ですが、
 # 明示的に絶対インポートを維持します。これは好みによります。）
