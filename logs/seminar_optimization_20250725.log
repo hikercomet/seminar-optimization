@@ -1,0 +1,907 @@
+2025-07-25 00:08:11,843 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250725.log' に出力します。
+2025-07-25 00:08:11,844 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-25 00:08:11,844 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 00:08:11,910 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 00:08:11,912 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-25 00:08:11,913 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:08:11,914 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:08:12,053 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィンドウの初期表示設定を適用しました。
+2025-07-25 00:08:12,053 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 00:08:12,073 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-25 00:08:12,098 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-25 00:08:12,100 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成を開始します。
+2025-07-25 00:08:12,104 - gui_tabs.data_input_tab - DEBUG - DataInputTab: データ入力方法の選択が完了しました。
+2025-07-25 00:08:12,105 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成を開始します。
+2025-07-25 00:08:12,122 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 倍率エントリーの更新を開始します。
+2025-07-25 00:08:12,123 - gui_tabs.data_input_tab - DEBUG - DataInputTab: セミナーIDが空のため、倍率エントリーを更新しませんでした。
+2025-07-25 00:08:12,123 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成が完了しました。
+2025-07-25 00:08:12,123 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成設定フレームの作成が完了しました。
+2025-07-25 00:08:12,124 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成を開始します。
+2025-07-25 00:08:12,131 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-25 00:08:12,132 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力設定フレームの作成が完了しました。
+2025-07-25 00:08:12,133 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-25 00:08:12,184 - gui_tabs.data_input_tab - DEBUG - DataInputTab: アルゴリズムフィールドの更新を開始します。
+2025-07-25 00:08:12,185 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 選択された戦略 '' に基づいてフィールドを更新しました。
+2025-07-25 00:08:12,185 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-25 00:08:12,185 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-25 00:08:12,186 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成を開始します。
+2025-07-25 00:08:12,198 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-25 00:08:12,198 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ設定フレームの作成が完了しました。
+2025-07-25 00:08:12,198 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成が完了しました。
+2025-07-25 00:08:12,200 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成を開始します。
+2025-07-25 00:08:12,202 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成が完了しました。
+2025-07-25 00:08:12,203 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成を開始します。
+2025-07-25 00:08:12,203 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成が完了しました。
+2025-07-25 00:08:12,204 - seminar_optimization.logger_config - DEBUG - MainApplication: _create_main_buttons: 開始。
+2025-07-25 00:18:25,099 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250725.log' に出力します。
+2025-07-25 00:18:25,099 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-25 00:18:25,099 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 00:18:25,193 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 00:18:25,194 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-25 00:18:25,194 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:18:25,195 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:18:25,196 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 00:18:25,208 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-25 00:18:25,237 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-25 00:18:25,238 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成を開始します。
+2025-07-25 00:18:25,246 - gui_tabs.data_input_tab - DEBUG - DataInputTab: データ入力方法の選択が完了しました。
+2025-07-25 00:18:25,247 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成を開始します。
+2025-07-25 00:18:25,277 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 倍率エントリーの更新を開始します。
+2025-07-25 00:18:25,278 - gui_tabs.data_input_tab - DEBUG - DataInputTab: セミナーIDが空のため、倍率エントリーを更新しませんでした。
+2025-07-25 00:18:25,278 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成が完了しました。
+2025-07-25 00:18:25,279 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成設定フレームの作成が完了しました。
+2025-07-25 00:18:25,281 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成を開始します。
+2025-07-25 00:18:25,294 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-25 00:18:25,294 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力設定フレームの作成が完了しました。
+2025-07-25 00:18:25,295 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-25 00:18:25,351 - gui_tabs.data_input_tab - DEBUG - DataInputTab: アルゴリズムフィールドの更新を開始します。
+2025-07-25 00:18:25,351 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 選択された戦略 '' に基づいてフィールドを更新しました。
+2025-07-25 00:18:25,351 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-25 00:18:25,352 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-25 00:18:25,354 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成を開始します。
+2025-07-25 00:18:25,370 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-25 00:18:25,370 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ設定フレームの作成が完了しました。
+2025-07-25 00:18:25,370 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成が完了しました。
+2025-07-25 00:18:25,371 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成を開始します。
+2025-07-25 00:18:25,374 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成が完了しました。
+2025-07-25 00:18:25,375 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成を開始します。
+2025-07-25 00:18:25,376 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成が完了しました。
+2025-07-25 00:18:25,474 - seminar_optimization.logger_config - DEBUG - MainApplication: _create_main_buttons: 開始。
+2025-07-25 00:21:59,935 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250725.log' に出力します。
+2025-07-25 00:21:59,936 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-25 00:21:59,936 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 00:22:00,009 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 00:22:00,011 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-25 00:22:00,012 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:22:00,015 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:22:00,016 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 00:22:00,027 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-25 00:22:00,066 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-25 00:22:00,068 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成を開始します。
+2025-07-25 00:22:00,077 - gui_tabs.data_input_tab - DEBUG - DataInputTab: データ入力方法の選択が完了しました。
+2025-07-25 00:22:00,079 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成を開始します。
+2025-07-25 00:22:00,160 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 倍率エントリーの更新を開始します。
+2025-07-25 00:22:00,167 - gui_tabs.data_input_tab - DEBUG - DataInputTab: セミナーIDが空のため、倍率エントリーを更新しませんでした。
+2025-07-25 00:22:00,168 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成が完了しました。
+2025-07-25 00:22:00,168 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成設定フレームの作成が完了しました。
+2025-07-25 00:22:00,176 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成を開始します。
+2025-07-25 00:22:00,197 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-25 00:22:00,198 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力設定フレームの作成が完了しました。
+2025-07-25 00:22:00,199 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-25 00:22:00,267 - gui_tabs.data_input_tab - DEBUG - DataInputTab: アルゴリズムフィールドの更新を開始します。
+2025-07-25 00:22:00,268 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 選択された戦略 '' に基づいてフィールドを更新しました。
+2025-07-25 00:22:00,268 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-25 00:22:00,268 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-25 00:22:00,271 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成を開始します。
+2025-07-25 00:22:00,282 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-25 00:22:00,283 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ設定フレームの作成が完了しました。
+2025-07-25 00:22:00,283 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成が完了しました。
+2025-07-25 00:22:00,284 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成を開始します。
+2025-07-25 00:22:00,286 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成が完了しました。
+2025-07-25 00:22:00,286 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成を開始します。
+2025-07-25 00:22:00,287 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成が完了しました。
+2025-07-25 00:22:00,358 - seminar_optimization.logger_config - DEBUG - MainApplication: _create_main_buttons: 開始。
+2025-07-25 00:23:47,022 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250725.log' に出力します。
+2025-07-25 00:23:47,023 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-25 00:23:47,023 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 00:23:47,094 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 00:23:47,095 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-25 00:23:47,095 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:23:47,096 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:23:47,097 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 00:23:47,102 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-25 00:23:47,115 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-25 00:23:47,116 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成を開始します。
+2025-07-25 00:23:47,119 - gui_tabs.data_input_tab - DEBUG - DataInputTab: データ入力方法の選択が完了しました。
+2025-07-25 00:23:47,121 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成を開始します。
+2025-07-25 00:23:47,135 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 倍率エントリーの更新を開始します。
+2025-07-25 00:23:47,136 - gui_tabs.data_input_tab - DEBUG - DataInputTab: セミナーIDが空のため、倍率エントリーを更新しませんでした。
+2025-07-25 00:23:47,136 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成が完了しました。
+2025-07-25 00:23:47,137 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成設定フレームの作成が完了しました。
+2025-07-25 00:23:47,138 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成を開始します。
+2025-07-25 00:23:47,145 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-25 00:23:47,145 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力設定フレームの作成が完了しました。
+2025-07-25 00:23:47,146 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-25 00:23:47,191 - gui_tabs.data_input_tab - DEBUG - DataInputTab: アルゴリズムフィールドの更新を開始します。
+2025-07-25 00:23:47,192 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 選択された戦略 '' に基づいてフィールドを更新しました。
+2025-07-25 00:23:47,192 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-25 00:23:47,192 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-25 00:23:47,193 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成を開始します。
+2025-07-25 00:23:47,206 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-25 00:23:47,206 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ設定フレームの作成が完了しました。
+2025-07-25 00:23:47,206 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成が完了しました。
+2025-07-25 00:23:47,207 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成を開始します。
+2025-07-25 00:23:47,208 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成が完了しました。
+2025-07-25 00:23:47,209 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成を開始します。
+2025-07-25 00:23:47,210 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成が完了しました。
+2025-07-25 00:23:47,282 - seminar_optimization.logger_config - DEBUG - MainApplication: _create_main_buttons: 開始。
+2025-07-25 00:26:29,047 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250725.log' に出力します。
+2025-07-25 00:26:29,047 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-25 00:26:29,048 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 00:26:29,298 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 00:26:29,299 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-25 00:26:29,299 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:26:29,301 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:26:29,302 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 00:26:29,309 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-25 00:26:29,325 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-25 00:26:29,327 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成を開始します。
+2025-07-25 00:26:29,330 - gui_tabs.data_input_tab - DEBUG - DataInputTab: データ入力方法の選択が完了しました。
+2025-07-25 00:26:29,331 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成を開始します。
+2025-07-25 00:26:29,345 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 倍率エントリーの更新を開始します。
+2025-07-25 00:26:29,346 - gui_tabs.data_input_tab - DEBUG - DataInputTab: セミナーIDが空のため、倍率エントリーを更新しませんでした。
+2025-07-25 00:26:29,347 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成が完了しました。
+2025-07-25 00:26:29,347 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成設定フレームの作成が完了しました。
+2025-07-25 00:26:29,348 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成を開始します。
+2025-07-25 00:26:29,355 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-25 00:26:29,356 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力設定フレームの作成が完了しました。
+2025-07-25 00:26:29,357 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-25 00:26:29,403 - gui_tabs.data_input_tab - DEBUG - DataInputTab: アルゴリズムフィールドの更新を開始します。
+2025-07-25 00:26:29,403 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 選択された戦略 '' に基づいてフィールドを更新しました。
+2025-07-25 00:26:29,403 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-25 00:26:29,403 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-25 00:26:29,404 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成を開始します。
+2025-07-25 00:26:29,417 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-25 00:26:29,418 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ設定フレームの作成が完了しました。
+2025-07-25 00:26:29,418 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成が完了しました。
+2025-07-25 00:26:29,419 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成を開始します。
+2025-07-25 00:26:29,421 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成が完了しました。
+2025-07-25 00:26:29,421 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成を開始します。
+2025-07-25 00:26:29,422 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成が完了しました。
+2025-07-25 00:26:29,474 - seminar_optimization.logger_config - DEBUG - MainApplication: _create_main_buttons: 開始。
+2025-07-25 00:31:38,670 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250725.log' に出力します。
+2025-07-25 00:31:38,672 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-25 00:31:38,672 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 00:31:38,904 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 00:31:38,906 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-25 00:31:38,908 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:31:38,911 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:31:38,913 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 00:31:38,927 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-25 00:31:38,952 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-25 00:31:38,955 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成を開始します。
+2025-07-25 00:31:38,962 - gui_tabs.data_input_tab - DEBUG - DataInputTab: データ入力方法の選択が完了しました。
+2025-07-25 00:31:38,964 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成を開始します。
+2025-07-25 00:31:38,993 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 倍率エントリーの更新を開始します。
+2025-07-25 00:31:38,994 - gui_tabs.data_input_tab - DEBUG - DataInputTab: セミナーIDが空のため、倍率エントリーを更新しませんでした。
+2025-07-25 00:31:38,995 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成が完了しました。
+2025-07-25 00:31:38,995 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成設定フレームの作成が完了しました。
+2025-07-25 00:31:38,996 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成を開始します。
+2025-07-25 00:31:39,009 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-25 00:31:39,009 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力設定フレームの作成が完了しました。
+2025-07-25 00:31:39,013 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-25 00:31:39,082 - gui_tabs.data_input_tab - DEBUG - DataInputTab: アルゴリズムフィールドの更新を開始します。
+2025-07-25 00:31:39,083 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 選択された戦略 '' に基づいてフィールドを更新しました。
+2025-07-25 00:31:39,083 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-25 00:31:39,083 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-25 00:31:39,084 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成を開始します。
+2025-07-25 00:31:39,096 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-25 00:31:39,096 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ設定フレームの作成が完了しました。
+2025-07-25 00:31:39,096 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成が完了しました。
+2025-07-25 00:31:39,097 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成を開始します。
+2025-07-25 00:31:39,098 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成が完了しました。
+2025-07-25 00:31:39,099 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成を開始します。
+2025-07-25 00:31:39,100 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成が完了しました。
+2025-07-25 00:31:39,152 - seminar_optimization.logger_config - DEBUG - MainApplication: _create_widgets: テストフレーム作成前。
+2025-07-25 00:37:27,148 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250725.log' に出力します。
+2025-07-25 00:37:27,148 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-25 00:37:27,148 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 00:37:27,218 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 00:37:27,219 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-25 00:37:27,219 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:37:27,221 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:37:27,221 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 00:37:27,225 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-25 00:37:27,238 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-25 00:37:27,239 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成を開始します。
+2025-07-25 00:37:27,242 - gui_tabs.data_input_tab - DEBUG - DataInputTab: データ入力方法の選択が完了しました。
+2025-07-25 00:37:27,244 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成を開始します。
+2025-07-25 00:37:27,258 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 倍率エントリーの更新を開始します。
+2025-07-25 00:37:27,259 - gui_tabs.data_input_tab - DEBUG - DataInputTab: セミナーIDが空のため、倍率エントリーを更新しませんでした。
+2025-07-25 00:37:27,259 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成が完了しました。
+2025-07-25 00:37:27,259 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成設定フレームの作成が完了しました。
+2025-07-25 00:37:27,262 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成を開始します。
+2025-07-25 00:37:27,270 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-25 00:37:27,270 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力設定フレームの作成が完了しました。
+2025-07-25 00:37:27,271 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-25 00:37:27,321 - gui_tabs.data_input_tab - DEBUG - DataInputTab: アルゴリズムフィールドの更新を開始します。
+2025-07-25 00:37:27,322 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 選択された戦略 '' に基づいてフィールドを更新しました。
+2025-07-25 00:37:27,322 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-25 00:37:27,322 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-25 00:37:27,324 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成を開始します。
+2025-07-25 00:37:27,334 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-25 00:37:27,335 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ設定フレームの作成が完了しました。
+2025-07-25 00:37:27,335 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成が完了しました。
+2025-07-25 00:37:27,336 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成を開始します。
+2025-07-25 00:37:27,338 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成が完了しました。
+2025-07-25 00:37:27,338 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成を開始します。
+2025-07-25 00:37:27,339 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成が完了しました。
+2025-07-25 00:37:27,391 - seminar_optimization.logger_config - DEBUG - MainApplication: _create_main_buttonsの呼び出しをスケジュール中。
+2025-07-25 00:39:47,110 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250725.log' に出力します。
+2025-07-25 00:39:47,110 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-25 00:39:47,110 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 00:39:47,229 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 00:39:47,230 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-25 00:39:47,231 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:39:47,232 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:39:47,233 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 00:39:47,243 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-25 00:39:47,257 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-25 00:39:47,259 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成を開始します。
+2025-07-25 00:39:47,263 - gui_tabs.data_input_tab - DEBUG - DataInputTab: データ入力方法の選択が完了しました。
+2025-07-25 00:39:47,264 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成を開始します。
+2025-07-25 00:39:47,278 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 倍率エントリーの更新を開始します。
+2025-07-25 00:39:47,279 - gui_tabs.data_input_tab - DEBUG - DataInputTab: セミナーIDが空のため、倍率エントリーを更新しませんでした。
+2025-07-25 00:39:47,279 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成が完了しました。
+2025-07-25 00:39:47,279 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成設定フレームの作成が完了しました。
+2025-07-25 00:39:47,282 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成を開始します。
+2025-07-25 00:39:47,292 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-25 00:39:47,292 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力設定フレームの作成が完了しました。
+2025-07-25 00:39:47,294 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-25 00:39:47,356 - gui_tabs.data_input_tab - DEBUG - DataInputTab: アルゴリズムフィールドの更新を開始します。
+2025-07-25 00:39:47,357 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 選択された戦略 '' に基づいてフィールドを更新しました。
+2025-07-25 00:39:47,357 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-25 00:39:47,357 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-25 00:39:47,358 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成を開始します。
+2025-07-25 00:39:47,389 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-25 00:39:47,392 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ設定フレームの作成が完了しました。
+2025-07-25 00:39:47,393 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成が完了しました。
+2025-07-25 00:39:47,398 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成を開始します。
+2025-07-25 00:39:47,410 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成が完了しました。
+2025-07-25 00:39:47,418 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成を開始します。
+2025-07-25 00:39:47,422 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成が完了しました。
+2025-07-25 00:39:47,776 - seminar_optimization.logger_config - DEBUG - MainApplication: _create_main_buttonsを直接呼び出し中。
+2025-07-25 00:42:53,361 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250725.log' に出力します。
+2025-07-25 00:42:53,361 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-25 00:42:53,361 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 00:42:53,430 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 00:42:53,430 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-25 00:42:53,431 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:42:53,432 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:42:53,432 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 00:42:53,443 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-25 00:42:53,456 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-25 00:42:53,457 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成を開始します。
+2025-07-25 00:42:53,462 - gui_tabs.data_input_tab - DEBUG - DataInputTab: データ入力方法の選択が完了しました。
+2025-07-25 00:42:53,464 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成を開始します。
+2025-07-25 00:42:53,479 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 倍率エントリーの更新を開始します。
+2025-07-25 00:42:53,480 - gui_tabs.data_input_tab - DEBUG - DataInputTab: セミナーIDが空のため、倍率エントリーを更新しませんでした。
+2025-07-25 00:42:53,480 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成が完了しました。
+2025-07-25 00:42:53,481 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成設定フレームの作成が完了しました。
+2025-07-25 00:42:53,482 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成を開始します。
+2025-07-25 00:42:53,488 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-25 00:42:53,488 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力設定フレームの作成が完了しました。
+2025-07-25 00:42:53,489 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-25 00:42:53,532 - gui_tabs.data_input_tab - DEBUG - DataInputTab: アルゴリズムフィールドの更新を開始します。
+2025-07-25 00:42:53,532 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 選択された戦略 '' に基づいてフィールドを更新しました。
+2025-07-25 00:42:53,532 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-25 00:42:53,532 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-25 00:42:53,533 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成を開始します。
+2025-07-25 00:42:53,547 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-25 00:42:53,547 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ設定フレームの作成が完了しました。
+2025-07-25 00:42:53,547 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成が完了しました。
+2025-07-25 00:42:53,548 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成を開始します。
+2025-07-25 00:42:53,550 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成が完了しました。
+2025-07-25 00:42:53,552 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成を開始します。
+2025-07-25 00:42:53,552 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成が完了しました。
+2025-07-25 00:42:53,603 - seminar_optimization.logger_config - DEBUG - MainApplication: _create_main_buttonsを直接呼び出し中。
+2025-07-25 00:45:08,504 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250725.log' に出力します。
+2025-07-25 00:45:08,505 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-25 00:45:08,506 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 00:45:08,747 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 00:45:08,748 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-25 00:45:08,748 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:45:08,749 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:45:08,750 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 00:45:08,756 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-25 00:45:08,768 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-25 00:45:08,769 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成を開始します。
+2025-07-25 00:45:08,776 - gui_tabs.data_input_tab - DEBUG - DataInputTab: データ入力方法の選択が完了しました。
+2025-07-25 00:45:08,780 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成を開始します。
+2025-07-25 00:45:08,796 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 倍率エントリーの更新を開始します。
+2025-07-25 00:45:08,797 - gui_tabs.data_input_tab - DEBUG - DataInputTab: セミナーIDが空のため、倍率エントリーを更新しませんでした。
+2025-07-25 00:45:08,798 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成が完了しました。
+2025-07-25 00:45:08,798 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成設定フレームの作成が完了しました。
+2025-07-25 00:45:08,799 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成を開始します。
+2025-07-25 00:45:08,815 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-25 00:45:08,815 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力設定フレームの作成が完了しました。
+2025-07-25 00:45:08,817 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-25 00:45:08,870 - gui_tabs.data_input_tab - DEBUG - DataInputTab: アルゴリズムフィールドの更新を開始します。
+2025-07-25 00:45:08,870 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 選択された戦略 '' に基づいてフィールドを更新しました。
+2025-07-25 00:45:08,870 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-25 00:45:08,870 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-25 00:45:08,872 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成を開始します。
+2025-07-25 00:45:08,889 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-25 00:45:08,890 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ設定フレームの作成が完了しました。
+2025-07-25 00:45:08,890 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成が完了しました。
+2025-07-25 00:45:08,892 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成を開始します。
+2025-07-25 00:45:08,895 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成が完了しました。
+2025-07-25 00:45:08,896 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成を開始します。
+2025-07-25 00:45:08,897 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成が完了しました。
+2025-07-25 00:45:08,968 - seminar_optimization.logger_config - DEBUG - MainApplication: _create_main_buttonsを直接呼び出し中。
+2025-07-25 00:47:56,224 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250725.log' に出力します。
+2025-07-25 00:47:56,224 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-25 00:47:56,224 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 00:47:56,313 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 00:47:56,314 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-25 00:47:56,314 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:47:56,315 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:47:56,316 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 00:47:56,321 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-25 00:47:56,338 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-25 00:47:56,340 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成を開始します。
+2025-07-25 00:47:56,345 - gui_tabs.data_input_tab - DEBUG - DataInputTab: データ入力方法の選択が完了しました。
+2025-07-25 00:47:56,347 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成を開始します。
+2025-07-25 00:47:56,368 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 倍率エントリーの更新を開始します。
+2025-07-25 00:47:56,369 - gui_tabs.data_input_tab - DEBUG - DataInputTab: セミナーIDが空のため、倍率エントリーを更新しませんでした。
+2025-07-25 00:47:56,369 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成が完了しました。
+2025-07-25 00:47:56,370 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成設定フレームの作成が完了しました。
+2025-07-25 00:47:56,372 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成を開始します。
+2025-07-25 00:47:56,380 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-25 00:47:56,380 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力設定フレームの作成が完了しました。
+2025-07-25 00:47:56,383 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-25 00:47:56,438 - gui_tabs.data_input_tab - DEBUG - DataInputTab: アルゴリズムフィールドの更新を開始します。
+2025-07-25 00:47:56,438 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 選択された戦略 '' に基づいてフィールドを更新しました。
+2025-07-25 00:47:56,438 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-25 00:47:56,438 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-25 00:47:56,442 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成を開始します。
+2025-07-25 00:47:56,454 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-25 00:47:56,455 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ設定フレームの作成が完了しました。
+2025-07-25 00:47:56,455 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成が完了しました。
+2025-07-25 00:47:56,455 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成を開始します。
+2025-07-25 00:47:56,457 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成が完了しました。
+2025-07-25 00:47:56,458 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成を開始します。
+2025-07-25 00:47:56,458 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成が完了しました。
+2025-07-25 00:47:56,588 - seminar_optimization.logger_config - DEBUG - MainApplication: _create_main_buttonsを直接呼び出し中。
+2025-07-25 00:49:39,960 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250725.log' に出力します。
+2025-07-25 00:49:39,960 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-25 00:49:39,961 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 00:49:40,130 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 00:49:40,131 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-25 00:49:40,131 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:49:40,132 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:49:40,133 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 00:49:40,159 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-25 00:49:40,177 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-25 00:49:40,180 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成を開始します。
+2025-07-25 00:49:40,187 - gui_tabs.data_input_tab - DEBUG - DataInputTab: データ入力方法の選択が完了しました。
+2025-07-25 00:49:40,189 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成を開始します。
+2025-07-25 00:49:40,303 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 倍率エントリーの更新を開始します。
+2025-07-25 00:49:40,309 - gui_tabs.data_input_tab - DEBUG - DataInputTab: セミナーIDが空のため、倍率エントリーを更新しませんでした。
+2025-07-25 00:49:40,310 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成が完了しました。
+2025-07-25 00:49:40,311 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成設定フレームの作成が完了しました。
+2025-07-25 00:49:40,316 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成を開始します。
+2025-07-25 00:49:40,342 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-25 00:49:40,343 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力設定フレームの作成が完了しました。
+2025-07-25 00:49:40,345 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-25 00:49:40,407 - gui_tabs.data_input_tab - DEBUG - DataInputTab: アルゴリズムフィールドの更新を開始します。
+2025-07-25 00:49:40,408 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 選択された戦略 '' に基づいてフィールドを更新しました。
+2025-07-25 00:49:40,408 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-25 00:49:40,408 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-25 00:49:40,409 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成を開始します。
+2025-07-25 00:49:40,426 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-25 00:49:40,427 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ設定フレームの作成が完了しました。
+2025-07-25 00:49:40,427 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成が完了しました。
+2025-07-25 00:49:40,428 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成を開始します。
+2025-07-25 00:49:40,430 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成が完了しました。
+2025-07-25 00:49:40,432 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成を開始します。
+2025-07-25 00:49:40,433 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成が完了しました。
+2025-07-25 00:49:40,497 - seminar_optimization.logger_config - DEBUG - MainApplication: _create_main_buttonsを直接呼び出し中。
+2025-07-25 00:53:50,586 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250725.log' に出力します。
+2025-07-25 00:53:50,587 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-25 00:53:50,587 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 00:53:50,695 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 00:53:50,696 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-25 00:53:50,696 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:53:50,697 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:53:50,698 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 00:53:50,709 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-25 00:53:50,729 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-25 00:53:50,733 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成を開始します。
+2025-07-25 00:53:50,739 - gui_tabs.data_input_tab - DEBUG - DataInputTab: データ入力方法の選択が完了しました。
+2025-07-25 00:53:50,741 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成を開始します。
+2025-07-25 00:53:50,765 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 倍率エントリーの更新を開始します。
+2025-07-25 00:53:50,766 - gui_tabs.data_input_tab - DEBUG - DataInputTab: セミナーIDが空のため、倍率エントリーを更新しませんでした。
+2025-07-25 00:53:50,767 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成が完了しました。
+2025-07-25 00:53:50,767 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成設定フレームの作成が完了しました。
+2025-07-25 00:53:50,769 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成を開始します。
+2025-07-25 00:53:50,784 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-25 00:53:50,784 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力設定フレームの作成が完了しました。
+2025-07-25 00:53:50,786 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-25 00:53:50,854 - gui_tabs.data_input_tab - DEBUG - DataInputTab: アルゴリズムフィールドの更新を開始します。
+2025-07-25 00:53:50,855 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 選択された戦略 '' に基づいてフィールドを更新しました。
+2025-07-25 00:53:50,855 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-25 00:53:50,855 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-25 00:53:50,856 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成を開始します。
+2025-07-25 00:53:50,874 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-25 00:53:50,874 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ設定フレームの作成が完了しました。
+2025-07-25 00:53:50,874 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成が完了しました。
+2025-07-25 00:53:50,875 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成を開始します。
+2025-07-25 00:53:50,877 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成が完了しました。
+2025-07-25 00:53:50,877 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成を開始します。
+2025-07-25 00:53:50,878 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成が完了しました。
+2025-07-25 00:53:50,941 - seminar_optimization.logger_config - DEBUG - MainApplication: _create_main_buttonsの呼び出しをスケジュール中。
+2025-07-25 00:55:53,927 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250725.log' に出力します。
+2025-07-25 00:55:53,928 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-25 00:55:53,928 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 00:55:54,013 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 00:55:54,014 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-25 00:55:54,015 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:55:54,016 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:55:54,016 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 00:55:54,020 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-25 00:55:54,033 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-25 00:55:54,035 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成を開始します。
+2025-07-25 00:55:54,037 - gui_tabs.data_input_tab - DEBUG - DataInputTab: データ入力方法の選択が完了しました。
+2025-07-25 00:55:54,038 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成を開始します。
+2025-07-25 00:55:54,055 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 倍率エントリーの更新を開始します。
+2025-07-25 00:55:54,056 - gui_tabs.data_input_tab - DEBUG - DataInputTab: セミナーIDが空のため、倍率エントリーを更新しませんでした。
+2025-07-25 00:55:54,057 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成が完了しました。
+2025-07-25 00:55:54,057 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成設定フレームの作成が完了しました。
+2025-07-25 00:55:54,057 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成を開始します。
+2025-07-25 00:55:54,066 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-25 00:55:54,067 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力設定フレームの作成が完了しました。
+2025-07-25 00:55:54,068 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-25 00:55:54,155 - gui_tabs.data_input_tab - DEBUG - DataInputTab: アルゴリズムフィールドの更新を開始します。
+2025-07-25 00:55:54,156 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 選択された戦略 '' に基づいてフィールドを更新しました。
+2025-07-25 00:55:54,156 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-25 00:55:54,156 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-25 00:55:54,158 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成を開始します。
+2025-07-25 00:55:54,174 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-25 00:55:54,174 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ設定フレームの作成が完了しました。
+2025-07-25 00:55:54,175 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成が完了しました。
+2025-07-25 00:55:54,175 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成を開始します。
+2025-07-25 00:55:54,177 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成が完了しました。
+2025-07-25 00:55:54,178 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成を開始します。
+2025-07-25 00:55:54,178 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成が完了しました。
+2025-07-25 00:55:54,247 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成が完了しました。
+2025-07-25 00:58:36,465 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250725.log' に出力します。
+2025-07-25 00:58:36,465 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-25 00:58:36,465 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 00:58:36,531 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 00:58:36,532 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-25 00:58:36,533 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:58:36,534 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 00:58:36,534 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 00:58:36,537 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-25 00:58:36,549 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-25 00:58:36,552 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成を開始します。
+2025-07-25 00:58:36,555 - gui_tabs.data_input_tab - DEBUG - DataInputTab: データ入力方法の選択が完了しました。
+2025-07-25 00:58:36,555 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成を開始します。
+2025-07-25 00:58:36,576 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 倍率エントリーの更新を開始します。
+2025-07-25 00:58:36,577 - gui_tabs.data_input_tab - DEBUG - DataInputTab: セミナーIDが空のため、倍率エントリーを更新しませんでした。
+2025-07-25 00:58:36,577 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成が完了しました。
+2025-07-25 00:58:36,577 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成設定フレームの作成が完了しました。
+2025-07-25 00:58:36,578 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成を開始します。
+2025-07-25 00:58:36,585 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-25 00:58:36,585 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力設定フレームの作成が完了しました。
+2025-07-25 00:58:36,586 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-25 00:58:36,639 - gui_tabs.data_input_tab - DEBUG - DataInputTab: アルゴリズムフィールドの更新を開始します。
+2025-07-25 00:58:36,639 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 選択された戦略 '' に基づいてフィールドを更新しました。
+2025-07-25 00:58:36,640 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-25 00:58:36,640 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-25 00:58:36,641 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成を開始します。
+2025-07-25 00:58:36,658 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-25 00:58:36,658 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ設定フレームの作成が完了しました。
+2025-07-25 00:58:36,658 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成が完了しました。
+2025-07-25 00:58:36,660 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成を開始します。
+2025-07-25 00:58:36,662 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成が完了しました。
+2025-07-25 00:58:36,663 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成を開始します。
+2025-07-25 00:58:36,664 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成が完了しました。
+2025-07-25 00:58:36,715 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成が完了しました。
+2025-07-25 01:01:00,808 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250725.log' に出力します。
+2025-07-25 01:01:00,809 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-25 01:01:00,809 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 01:01:00,900 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 01:01:00,914 - seminar_optimization.logger_config - DEBUG - MainApplication: ステータスバーを初期化しました。
+2025-07-25 01:01:00,915 - seminar_optimization.logger_config - DEBUG - ステータスバー更新: タイプ=info, メッセージ='アプリケーションを初期化中...'
+2025-07-25 01:01:01,050 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-25 01:01:01,051 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 01:01:01,054 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 01:01:01,056 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 01:01:01,060 - seminar_optimization.logger_config - DEBUG - MainApplication: main_frame 作成完了。
+2025-07-25 01:01:01,064 - seminar_optimization.logger_config - DEBUG - MainApplication: main_pane 作成完了。
+2025-07-25 01:01:01,066 - seminar_optimization.logger_config - DEBUG - MainApplication: nav_frame 作成完了。
+2025-07-25 01:01:01,070 - seminar_optimization.logger_config - DEBUG - MainApplication: content_frame 作成完了。
+2025-07-25 01:01:01,070 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-25 01:01:01,085 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-25 01:01:01,085 - seminar_optimization.logger_config - DEBUG - MainApplication: _create_navigation_buttons 呼び出し完了。
+2025-07-25 01:01:01,086 - seminar_optimization.logger_config - DEBUG - MainApplication: notebook 作成完了。
+2025-07-25 01:01:01,088 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成を開始します。
+2025-07-25 01:01:01,093 - gui_tabs.data_input_tab - DEBUG - DataInputTab: データ入力方法の選択が完了しました。
+2025-07-25 01:01:01,096 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成を開始します。
+2025-07-25 01:01:01,119 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 倍率エントリーの更新を開始します。
+2025-07-25 01:01:01,120 - gui_tabs.data_input_tab - DEBUG - DataInputTab: セミナーIDが空のため、倍率エントリーを更新しませんでした。
+2025-07-25 01:01:01,120 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成が完了しました。
+2025-07-25 01:01:01,120 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成設定フレームの作成が完了しました。
+2025-07-25 01:01:01,122 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成を開始します。
+2025-07-25 01:01:01,129 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-25 01:01:01,129 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力設定フレームの作成が完了しました。
+2025-07-25 01:01:01,132 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-25 01:01:01,199 - gui_tabs.data_input_tab - DEBUG - DataInputTab: アルゴリズムフィールドの更新を開始します。
+2025-07-25 01:01:01,199 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 選択された戦略 '' に基づいてフィールドを更新しました。
+2025-07-25 01:01:01,199 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-25 01:01:01,199 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-25 01:01:01,202 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成を開始します。
+2025-07-25 01:01:01,219 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-25 01:01:01,219 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ設定フレームの作成が完了しました。
+2025-07-25 01:01:01,219 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成が完了しました。
+2025-07-25 01:01:01,220 - seminar_optimization.logger_config - DEBUG - MainApplication: data_input_tab_handler 作成完了。
+2025-07-25 01:01:01,226 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成を開始します。
+2025-07-25 01:01:01,229 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成が完了しました。
+2025-07-25 01:01:01,229 - seminar_optimization.logger_config - DEBUG - MainApplication: results_tab_handler 作成完了。
+2025-07-25 01:01:01,234 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成を開始します。
+2025-07-25 01:01:01,235 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成が完了しました。
+2025-07-25 01:01:01,236 - seminar_optimization.logger_config - DEBUG - MainApplication: log_tab_handler 作成完了。
+2025-07-25 01:01:01,238 - seminar_optimization.logger_config - DEBUG - MainApplication: Notebookにタブを追加完了。
+2025-07-25 01:01:01,238 - seminar_optimization.logger_config - DEBUG - MainApplication: TextHandler 設定完了。
+2025-07-25 01:04:21,872 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250725.log' に出力します。
+2025-07-25 01:04:21,873 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-25 01:04:21,873 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 01:04:22,057 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 01:04:22,085 - seminar_optimization.logger_config - DEBUG - MainApplication: ステータスバーを初期化しました。
+2025-07-25 01:04:22,085 - seminar_optimization.logger_config - DEBUG - ステータスバー更新: タイプ=info, メッセージ='アプリケーションを初期化中...'
+2025-07-25 01:04:22,118 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-25 01:04:22,119 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 01:04:22,120 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 01:04:22,121 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 01:04:22,123 - seminar_optimization.logger_config - DEBUG - MainApplication: main_frame 作成完了。
+2025-07-25 01:04:22,127 - seminar_optimization.logger_config - DEBUG - MainApplication: main_pane 作成完了。
+2025-07-25 01:04:22,132 - seminar_optimization.logger_config - DEBUG - MainApplication: nav_frame 作成完了。
+2025-07-25 01:04:22,135 - seminar_optimization.logger_config - DEBUG - MainApplication: content_frame 作成完了。
+2025-07-25 01:04:22,136 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-25 01:04:22,144 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-25 01:04:22,144 - seminar_optimization.logger_config - DEBUG - MainApplication: _create_navigation_buttons 呼び出し完了。
+2025-07-25 01:04:22,146 - seminar_optimization.logger_config - DEBUG - MainApplication: notebook 作成完了。
+2025-07-25 01:04:22,147 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成を開始します。
+2025-07-25 01:04:22,153 - gui_tabs.data_input_tab - DEBUG - DataInputTab: データ入力方法の選択が完了しました。
+2025-07-25 01:04:22,157 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成を開始します。
+2025-07-25 01:04:22,176 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 倍率エントリーの更新を開始します。
+2025-07-25 01:04:22,177 - gui_tabs.data_input_tab - DEBUG - DataInputTab: セミナーIDが空のため、倍率エントリーを更新しませんでした。
+2025-07-25 01:04:22,177 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成が完了しました。
+2025-07-25 01:04:22,178 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成設定フレームの作成が完了しました。
+2025-07-25 01:04:22,178 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成を開始します。
+2025-07-25 01:04:22,186 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-25 01:04:22,186 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力設定フレームの作成が完了しました。
+2025-07-25 01:04:22,187 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-25 01:04:22,236 - gui_tabs.data_input_tab - DEBUG - DataInputTab: アルゴリズムフィールドの更新を開始します。
+2025-07-25 01:04:22,236 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 選択された戦略 '' に基づいてフィールドを更新しました。
+2025-07-25 01:04:22,236 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-25 01:04:22,236 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-25 01:04:22,237 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成を開始します。
+2025-07-25 01:04:22,252 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-25 01:04:22,253 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ設定フレームの作成が完了しました。
+2025-07-25 01:04:22,253 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成が完了しました。
+2025-07-25 01:04:22,253 - seminar_optimization.logger_config - DEBUG - MainApplication: data_input_tab_handler 作成完了。
+2025-07-25 01:04:22,254 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成を開始します。
+2025-07-25 01:04:22,256 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成が完了しました。
+2025-07-25 01:04:22,256 - seminar_optimization.logger_config - DEBUG - MainApplication: results_tab_handler 作成完了。
+2025-07-25 01:04:22,257 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成を開始します。
+2025-07-25 01:04:22,258 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成が完了しました。
+2025-07-25 01:04:22,258 - seminar_optimization.logger_config - DEBUG - MainApplication: log_tab_handler 作成完了。
+2025-07-25 01:04:22,258 - seminar_optimization.logger_config - DEBUG - MainApplication: Notebookにタブを追加完了。
+2025-07-25 01:04:22,258 - seminar_optimization.logger_config - DEBUG - MainApplication: TextHandler 設定完了。
+2025-07-25 01:07:54,438 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250725.log' に出力します。
+2025-07-25 01:07:54,440 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-25 01:07:54,442 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 01:07:54,599 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 01:07:54,608 - seminar_optimization.logger_config - DEBUG - MainApplication: ステータスバーを初期化しました。
+2025-07-25 01:07:54,608 - seminar_optimization.logger_config - DEBUG - ステータスバー更新: タイプ=info, メッセージ='アプリケーションを初期化中...'
+2025-07-25 01:07:54,645 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-25 01:07:54,646 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 01:07:54,647 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 01:07:54,647 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 01:07:54,648 - seminar_optimization.logger_config - DEBUG - MainApplication: main_frame 作成完了。
+2025-07-25 01:07:54,653 - seminar_optimization.logger_config - DEBUG - MainApplication: main_pane 作成完了。
+2025-07-25 01:07:54,656 - seminar_optimization.logger_config - DEBUG - MainApplication: nav_frame 作成完了。
+2025-07-25 01:07:54,658 - seminar_optimization.logger_config - DEBUG - MainApplication: content_frame 作成完了。
+2025-07-25 01:07:54,659 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-25 01:07:54,668 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-25 01:07:54,669 - seminar_optimization.logger_config - DEBUG - MainApplication: _create_navigation_buttons 呼び出し完了。
+2025-07-25 01:07:54,669 - seminar_optimization.logger_config - DEBUG - MainApplication: notebook 作成完了。
+2025-07-25 01:07:54,671 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成を開始します。
+2025-07-25 01:07:54,675 - gui_tabs.data_input_tab - DEBUG - DataInputTab: データ入力方法の選択が完了しました。
+2025-07-25 01:07:54,676 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成を開始します。
+2025-07-25 01:07:54,694 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 倍率エントリーの更新を開始します。
+2025-07-25 01:07:54,694 - gui_tabs.data_input_tab - DEBUG - DataInputTab: セミナーIDが空のため、倍率エントリーを更新しませんでした。
+2025-07-25 01:07:54,695 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成が完了しました。
+2025-07-25 01:07:54,695 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成設定フレームの作成が完了しました。
+2025-07-25 01:07:54,697 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成を開始します。
+2025-07-25 01:07:54,705 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-25 01:07:54,705 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力設定フレームの作成が完了しました。
+2025-07-25 01:07:54,706 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-25 01:07:54,763 - gui_tabs.data_input_tab - DEBUG - DataInputTab: アルゴリズムフィールドの更新を開始します。
+2025-07-25 01:07:54,763 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 選択された戦略 '' に基づいてフィールドを更新しました。
+2025-07-25 01:07:54,763 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-25 01:07:54,764 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-25 01:07:54,764 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成を開始します。
+2025-07-25 01:07:54,779 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-25 01:07:54,779 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ設定フレームの作成が完了しました。
+2025-07-25 01:07:54,780 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成が完了しました。
+2025-07-25 01:07:54,780 - seminar_optimization.logger_config - DEBUG - MainApplication: data_input_tab_handler 作成完了。
+2025-07-25 01:07:54,782 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成を開始します。
+2025-07-25 01:07:54,784 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成が完了しました。
+2025-07-25 01:07:54,784 - seminar_optimization.logger_config - DEBUG - MainApplication: results_tab_handler 作成完了。
+2025-07-25 01:07:54,785 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成を開始します。
+2025-07-25 01:07:54,786 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成が完了しました。
+2025-07-25 01:07:54,786 - seminar_optimization.logger_config - DEBUG - MainApplication: log_tab_handler 作成完了。
+2025-07-25 01:07:54,786 - seminar_optimization.logger_config - DEBUG - MainApplication: Notebookにタブを追加完了。
+2025-07-25 01:07:54,786 - seminar_optimization.logger_config - DEBUG - MainApplication: TextHandler 設定完了。
+2025-07-25 01:11:19,095 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250725.log' に出力します。
+2025-07-25 01:11:19,095 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-25 01:11:19,095 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 01:11:19,195 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 01:11:19,205 - seminar_optimization.logger_config - DEBUG - MainApplication: ステータスバーを初期化しました。
+2025-07-25 01:11:19,205 - seminar_optimization.logger_config - DEBUG - ステータスバー更新: タイプ=info, メッセージ='アプリケーションを初期化中...'
+2025-07-25 01:11:19,265 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-25 01:11:19,266 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 01:11:19,268 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 01:11:19,269 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 01:11:19,283 - seminar_optimization.logger_config - DEBUG - MainApplication: main_frame 作成完了。
+2025-07-25 01:11:19,299 - seminar_optimization.logger_config - DEBUG - MainApplication: main_pane 作成完了。
+2025-07-25 01:11:19,323 - seminar_optimization.logger_config - DEBUG - MainApplication: nav_frame 作成完了。
+2025-07-25 01:11:19,349 - seminar_optimization.logger_config - DEBUG - MainApplication: content_frame 作成完了。
+2025-07-25 01:11:19,351 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-25 01:11:19,481 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-25 01:11:19,483 - seminar_optimization.logger_config - DEBUG - MainApplication: _create_navigation_buttons 呼び出し完了。
+2025-07-25 01:11:19,496 - seminar_optimization.logger_config - DEBUG - MainApplication: notebook 作成完了。
+2025-07-25 01:11:19,519 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成を開始します。
+2025-07-25 01:11:19,558 - gui_tabs.data_input_tab - DEBUG - DataInputTab: データ入力方法の選択が完了しました。
+2025-07-25 01:11:19,569 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成を開始します。
+2025-07-25 01:11:19,630 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 倍率エントリーの更新を開始します。
+2025-07-25 01:11:19,637 - gui_tabs.data_input_tab - DEBUG - DataInputTab: セミナーIDが空のため、倍率エントリーを更新しませんでした。
+2025-07-25 01:11:19,638 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成が完了しました。
+2025-07-25 01:11:19,638 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成設定フレームの作成が完了しました。
+2025-07-25 01:11:19,639 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成を開始します。
+2025-07-25 01:11:19,657 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-25 01:11:19,657 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力設定フレームの作成が完了しました。
+2025-07-25 01:11:19,658 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-25 01:11:19,706 - gui_tabs.data_input_tab - DEBUG - DataInputTab: アルゴリズムフィールドの更新を開始します。
+2025-07-25 01:11:19,706 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 選択された戦略 '' に基づいてフィールドを更新しました。
+2025-07-25 01:11:19,706 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-25 01:11:19,706 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-25 01:11:19,707 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成を開始します。
+2025-07-25 01:11:19,719 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-25 01:11:19,719 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ設定フレームの作成が完了しました。
+2025-07-25 01:11:19,719 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成が完了しました。
+2025-07-25 01:11:19,720 - seminar_optimization.logger_config - DEBUG - MainApplication: data_input_tab_handler 作成完了。
+2025-07-25 01:11:19,724 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成を開始します。
+2025-07-25 01:11:19,730 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成が完了しました。
+2025-07-25 01:11:19,731 - seminar_optimization.logger_config - DEBUG - MainApplication: results_tab_handler 作成完了。
+2025-07-25 01:11:19,733 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成を開始します。
+2025-07-25 01:11:19,734 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成が完了しました。
+2025-07-25 01:11:19,734 - seminar_optimization.logger_config - DEBUG - MainApplication: log_tab_handler 作成完了。
+2025-07-25 01:11:19,734 - seminar_optimization.logger_config - DEBUG - MainApplication: Notebookにタブを追加完了。
+2025-07-25 01:11:19,734 - seminar_optimization.logger_config - DEBUG - MainApplication: TextHandler 設定完了。
+2025-07-25 01:13:40,887 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250725.log' に出力します。
+2025-07-25 01:13:40,888 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-25 01:13:40,888 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 01:13:40,992 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 01:13:41,018 - seminar_optimization.logger_config - DEBUG - MainApplication: ステータスバーを初期化しました。
+2025-07-25 01:13:41,019 - seminar_optimization.logger_config - DEBUG - ステータスバー更新: タイプ=info, メッセージ='アプリケーションを初期化中...'
+2025-07-25 01:13:41,317 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-25 01:13:41,319 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 01:13:41,323 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 01:13:41,331 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 01:13:41,363 - seminar_optimization.logger_config - DEBUG - MainApplication: main_frame 作成完了。
+2025-07-25 01:13:41,391 - seminar_optimization.logger_config - CRITICAL - MainApplication: 初期化中に致命的なエラーが発生しました: unknown option "-sashwidth"
+Traceback (most recent call last):
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 176, in __init__
+    self._create_widgets()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 354, in _create_widgets
+    self.main_pane = ttk.PanedWindow(main_frame, orient=tk.HORIZONTAL, sashwidth=5)
+                     ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\AppData\Local\Programs\Python\Python313\Lib\tkinter\ttk.py", line 934, in __init__
+    Widget.__init__(self, master, "ttk::panedwindow", kw)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\AppData\Local\Programs\Python\Python313\Lib\tkinter\ttk.py", line 534, in __init__
+    tkinter.Widget.__init__(self, master, widgetname, kw=kw)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 2774, in __init__
+    self.tk.call(
+    ~~~~~~~~~~~~^
+        (widgetName, self._w) + extra + self._options(cnf))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_tkinter.TclError: unknown option "-sashwidth"
+2025-07-25 01:15:48,857 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250725.log' に出力します。
+2025-07-25 01:15:48,857 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-25 01:15:48,857 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 01:15:48,936 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 01:15:48,947 - seminar_optimization.logger_config - DEBUG - MainApplication: ステータスバーを初期化しました。
+2025-07-25 01:15:48,947 - seminar_optimization.logger_config - DEBUG - ステータスバー更新: タイプ=info, メッセージ='アプリケーションを初期化中...'
+2025-07-25 01:15:48,966 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-25 01:15:48,966 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 01:15:48,968 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 01:15:48,968 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 01:15:48,969 - seminar_optimization.logger_config - DEBUG - MainApplication: main_frame 作成完了。
+2025-07-25 01:15:48,970 - seminar_optimization.logger_config - DEBUG - MainApplication: main_pane 作成完了。
+2025-07-25 01:15:48,972 - seminar_optimization.logger_config - CRITICAL - MainApplication: 初期化中に致命的なエラーが発生しました: unknown option "-minwidth"
+Traceback (most recent call last):
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 176, in __init__
+    self._create_widgets()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 361, in _create_widgets
+    self.main_pane.add(self.nav_frame, weight=0, minwidth=150) # weight=0でサイズ固定
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4791, in add
+    self.tk.call((self._w, 'add', child) + self._options(kw))
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_tkinter.TclError: unknown option "-minwidth"
+2025-07-25 01:21:05,520 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250725.log' に出力します。
+2025-07-25 01:21:05,521 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-25 01:21:05,521 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 01:21:05,685 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 01:21:05,709 - seminar_optimization.logger_config - DEBUG - MainApplication: ステータスバーを初期化しました。
+2025-07-25 01:21:05,709 - seminar_optimization.logger_config - DEBUG - ステータスバー更新: タイプ=info, メッセージ='アプリケーションを初期化中...'
+2025-07-25 01:21:05,819 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-25 01:21:05,819 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 01:21:05,821 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 01:21:05,822 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 01:21:05,825 - seminar_optimization.logger_config - DEBUG - MainApplication: main_frame 作成完了。
+2025-07-25 01:21:05,826 - seminar_optimization.logger_config - DEBUG - MainApplication: main_pane 作成完了。
+2025-07-25 01:21:05,827 - seminar_optimization.logger_config - ERROR - MainApplication: _create_widgetsでエラーが発生しました: unknown option "-minsize"
+Traceback (most recent call last):
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 361, in _create_widgets
+    self.main_pane.add(self.nav_frame, weight=0, minsize=150) # minwidthをminsizeに修正
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4791, in add
+    self.tk.call((self._w, 'add', child) + self._options(kw))
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_tkinter.TclError: unknown option "-minsize"
+2025-07-25 01:21:05,830 - seminar_optimization.logger_config - DEBUG - ステータスバー更新: タイプ=error, メッセージ='エラー: ウィジェットの作成に失敗しました: unknown option "-minsize"'
+2025-07-25 07:24:36,224 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250725.log' に出力します。
+2025-07-25 07:24:36,226 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-25 07:24:36,226 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 07:24:36,649 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 07:24:36,754 - seminar_optimization.logger_config - DEBUG - MainApplication: ステータスバーを初期化しました。
+2025-07-25 07:24:36,755 - seminar_optimization.logger_config - DEBUG - ステータスバー更新: タイプ=info, メッセージ='アプリケーションを初期化中...'
+2025-07-25 07:24:36,831 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-25 07:24:36,832 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 07:24:36,837 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 07:24:36,840 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 07:24:36,843 - seminar_optimization.logger_config - DEBUG - MainApplication: main_frame 作成完了。
+2025-07-25 07:24:36,851 - seminar_optimization.logger_config - DEBUG - MainApplication: main_pane 作成完了。
+2025-07-25 07:24:36,858 - seminar_optimization.logger_config - ERROR - MainApplication: _create_widgetsでエラーが発生しました: unknown option "-minsize"
+Traceback (most recent call last):
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 361, in _create_widgets
+    self.main_pane.add(self.nav_frame, weight=0, minsize=150) # minwidthをminsizeに修正
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4791, in add
+    self.tk.call((self._w, 'add', child) + self._options(kw))
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_tkinter.TclError: unknown option "-minsize"
+2025-07-25 07:24:36,907 - seminar_optimization.logger_config - DEBUG - ステータスバー更新: タイプ=error, メッセージ='エラー: ウィジェットの作成に失敗しました: unknown option "-minsize"'
+2025-07-25 07:32:26,434 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250725.log' に出力します。
+2025-07-25 07:32:26,435 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-25 07:32:26,435 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 07:32:26,633 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 07:32:26,647 - seminar_optimization.logger_config - DEBUG - MainApplication: ステータスバーを初期化しました。
+2025-07-25 07:32:26,648 - seminar_optimization.logger_config - DEBUG - ステータスバー更新: タイプ=info, メッセージ='アプリケーションを初期化中...'
+2025-07-25 07:32:26,713 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-25 07:32:26,714 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 07:32:26,716 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 07:32:26,717 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 07:32:26,719 - seminar_optimization.logger_config - DEBUG - MainApplication: main_frame 作成完了。
+2025-07-25 07:32:26,720 - seminar_optimization.logger_config - DEBUG - MainApplication: main_pane 作成完了。
+2025-07-25 07:32:26,725 - seminar_optimization.logger_config - ERROR - MainApplication: _create_widgetsでエラーが発生しました: unknown option "-minwidth"
+Traceback (most recent call last):
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 361, in _create_widgets
+    self.main_pane.add(self.nav_frame, weight=0, minwidth=150)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4791, in add
+    self.tk.call((self._w, 'add', child) + self._options(kw))
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_tkinter.TclError: unknown option "-minwidth"
+2025-07-25 07:32:26,730 - seminar_optimization.logger_config - DEBUG - ステータスバー更新: タイプ=error, メッセージ='エラー: ウィジェットの作成に失敗しました: unknown option "-minwidth"'
+2025-07-25 07:35:55,668 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250725.log' に出力します。
+2025-07-25 07:35:55,668 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-25 07:35:55,669 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 07:35:55,760 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 07:35:55,778 - seminar_optimization.logger_config - DEBUG - MainApplication: ステータスバーを初期化しました。
+2025-07-25 07:35:55,779 - seminar_optimization.logger_config - DEBUG - ステータスバー更新: タイプ=info, メッセージ='アプリケーションを初期化中...'
+2025-07-25 07:35:55,833 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-25 07:35:55,834 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 07:35:55,836 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 07:35:55,837 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 07:35:55,845 - seminar_optimization.logger_config - DEBUG - MainApplication: main_frame 作成完了。
+2025-07-25 07:35:55,849 - seminar_optimization.logger_config - DEBUG - MainApplication: main_pane 作成完了。
+2025-07-25 07:35:55,851 - seminar_optimization.logger_config - DEBUG - MainApplication: nav_frame 作成完了。
+2025-07-25 07:35:55,856 - seminar_optimization.logger_config - DEBUG - MainApplication: content_frame 作成完了。
+2025-07-25 07:35:55,857 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-25 07:35:55,926 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-25 07:35:55,927 - seminar_optimization.logger_config - DEBUG - MainApplication: _create_navigation_buttons 呼び出し完了。
+2025-07-25 07:35:55,928 - seminar_optimization.logger_config - DEBUG - MainApplication: notebook 作成完了。
+2025-07-25 07:35:55,930 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成を開始します。
+2025-07-25 07:35:55,957 - gui_tabs.data_input_tab - DEBUG - DataInputTab: データ入力方法の選択が完了しました。
+2025-07-25 07:35:55,976 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成を開始します。
+2025-07-25 07:35:56,190 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 倍率エントリーの更新を開始します。
+2025-07-25 07:35:56,204 - gui_tabs.data_input_tab - DEBUG - DataInputTab: セミナーIDが空のため、倍率エントリーを更新しませんでした。
+2025-07-25 07:35:56,204 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成が完了しました。
+2025-07-25 07:35:56,205 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成設定フレームの作成が完了しました。
+2025-07-25 07:35:56,208 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成を開始します。
+2025-07-25 07:35:56,279 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-25 07:35:56,280 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力設定フレームの作成が完了しました。
+2025-07-25 07:35:56,288 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-25 07:35:56,703 - gui_tabs.data_input_tab - DEBUG - DataInputTab: アルゴリズムフィールドの更新を開始します。
+2025-07-25 07:35:56,704 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 選択された戦略 '' に基づいてフィールドを更新しました。
+2025-07-25 07:35:56,704 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-25 07:35:56,705 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-25 07:35:56,707 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成を開始します。
+2025-07-25 07:35:56,740 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-25 07:35:56,740 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ設定フレームの作成が完了しました。
+2025-07-25 07:35:56,740 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成が完了しました。
+2025-07-25 07:35:56,740 - seminar_optimization.logger_config - DEBUG - MainApplication: data_input_tab_handler 作成完了。
+2025-07-25 07:35:56,741 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成を開始します。
+2025-07-25 07:35:56,758 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成が完了しました。
+2025-07-25 07:35:56,758 - seminar_optimization.logger_config - DEBUG - MainApplication: results_tab_handler 作成完了。
+2025-07-25 07:35:56,763 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成を開始します。
+2025-07-25 07:35:56,765 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成が完了しました。
+2025-07-25 07:35:56,766 - seminar_optimization.logger_config - DEBUG - MainApplication: log_tab_handler 作成完了。
+2025-07-25 07:35:56,770 - seminar_optimization.logger_config - DEBUG - MainApplication: Notebookにタブを追加完了。
+2025-07-25 07:35:56,771 - seminar_optimization.logger_config - DEBUG - MainApplication: TextHandler 設定完了。
+2025-07-25 07:59:32,208 - __main__ - INFO - main: �A�v���P�[�V�����̃��M���O������������܂����B
+2025-07-25 07:59:32,316 - __main__ - DEBUG - MainApplication: ���������J�n���܂��B
+2025-07-25 07:59:32,332 - __main__ - DEBUG - MainApplication: �X�e�[�^�X�o�[�����������܂����B
+2025-07-25 07:59:32,332 - __main__ - DEBUG - �X�e�[�^�X�o�[�X�V: �^�C�v=info, ���b�Z�[�W='�A�v���P�[�V��������������...'
+2025-07-25 07:59:32,399 - __main__ - DEBUG - DPI�F�����ݒ肳��܂����B
+2025-07-25 07:59:32,400 - settings_manager - DEBUG - SettingsManager: gui_settings.ini�̃��[�h���J�n���܂�: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 07:59:32,402 - settings_manager - INFO - SettingsManager: gui_settings.ini�����[�h���܂���: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 07:59:32,402 - __main__ - DEBUG - MainApplication: GUI�E�B�W�F�b�g�̍쐬���J�n���܂��B
+2025-07-25 07:59:32,414 - __main__ - DEBUG - MainApplication: �i�r�Q�[�V�����{�^�����쐬��...
+2025-07-25 07:59:32,454 - __main__ - DEBUG - MainApplication: �i�r�Q�[�V�����{�^���̍쐬���������܂����B
+2025-07-25 07:59:32,478 - __main__ - DEBUG - MainApplication: �^�u�̍쐬���������܂����B
+2025-07-25 07:59:32,478 - __main__ - DEBUG - MainApplication: GUI�E�B�W�F�b�g�̍쐬���������܂����B
+2025-07-25 07:59:32,479 - __main__ - DEBUG - MainApplication: _create_widgets() �Ăяo�������B
+2025-07-25 07:59:32,479 - __main__ - DEBUG - MainApplication: �f�t�H���g�̍œK���ݒ�𐶐����܂��B
+2025-07-25 07:59:32,480 - __main__ - DEBUG - MainApplication: �f�t�H���g�̍œK���ݒ胍�[�h�����B
+2025-07-25 07:59:32,480 - __main__ - DEBUG - MainApplication: UI�v�f�̏��������J�n���܂��B
+2025-07-25 07:59:32,480 - __main__ - DEBUG - MainApplication: UI�v�f�̏��������������܂����B
+2025-07-25 07:59:32,481 - __main__ - DEBUG - MainApplication: UI�v�f�̏����������B
+2025-07-25 07:59:32,481 - __main__ - DEBUG - MainApplication: _create_main_buttons: �J�n�B
+2025-07-25 07:59:32,688 - __main__ - DEBUG - MainApplication: ���C���{�^���̍쐬���������܂����B
+2025-07-25 07:59:32,690 - __main__ - DEBUG - MainApplication: GUI�E�B���h�E�̏����\���ݒ��K�p���܂����B
+2025-07-25 07:59:32,691 - __main__ - INFO - MainApplication: ���������������܂����B
+2025-07-25 08:13:15,865 - __main__ - DEBUG - �X�e�[�^�X�o�[�X�V: �^�C�v=info, ���b�Z�[�W='�u�C���t�H���[�V�����v�{�^�����N���b�N����܂����B'
+2025-07-25 08:13:15,869 - __main__ - INFO - MainApplication: �i�r�Q�[�V�����{�^���N���b�N: �C���t�H���[�V����
+2025-07-25 08:13:17,273 - __main__ - DEBUG - �X�e�[�^�X�o�[�X�V: �^�C�v=info, ���b�Z�[�W='�u�o�^�v�{�^�����N���b�N����܂����B'
+2025-07-25 08:13:17,277 - __main__ - INFO - MainApplication: �i�r�Q�[�V�����{�^���N���b�N: �o�^
+2025-07-25 08:13:20,146 - __main__ - DEBUG - �X�e�[�^�X�o�[�X�V: �^�C�v=info, ���b�Z�[�W='�u�Ɖ�v�{�^�����N���b�N����܂����B'
+2025-07-25 08:13:20,148 - __main__ - INFO - MainApplication: �i�r�Q�[�V�����{�^���N���b�N: �Ɖ�
+2025-07-25 08:13:20,817 - __main__ - DEBUG - �X�e�[�^�X�o�[�X�V: �^�C�v=info, ���b�Z�[�W='�u���N�G�X�g�v�{�^�����N���b�N����܂����B'
+2025-07-25 08:13:20,820 - __main__ - INFO - MainApplication: �i�r�Q�[�V�����{�^���N���b�N: ���N�G�X�g
+2025-07-25 08:13:26,689 - __main__ - INFO - �œK���J�n�{�^����������܂����B
+2025-07-25 08:13:26,690 - __main__ - DEBUG - �X�e�[�^�X�o�[�X�V: �^�C�v=error, ���b�Z�[�W='�œK���T�[�r�X�����p�ł��܂���B'
+2025-07-25 08:13:30,577 - __main__ - DEBUG - �X�e�[�^�X�o�[�X�V: �^�C�v=info, ���b�Z�[�W='�u�o�^�v�{�^�����N���b�N����܂����B'
+2025-07-25 08:13:30,579 - __main__ - INFO - MainApplication: �i�r�Q�[�V�����{�^���N���b�N: �o�^
+2025-07-25 08:13:31,273 - __main__ - DEBUG - �X�e�[�^�X�o�[�X�V: �^�C�v=info, ���b�Z�[�W='�u�Ɖ�v�{�^�����N���b�N����܂����B'
+2025-07-25 08:13:31,277 - __main__ - INFO - MainApplication: �i�r�Q�[�V�����{�^���N���b�N: �Ɖ�
+2025-07-25 08:13:31,946 - __main__ - DEBUG - �X�e�[�^�X�o�[�X�V: �^�C�v=info, ���b�Z�[�W='�u���N�G�X�g�v�{�^�����N���b�N����܂����B'
+2025-07-25 08:13:31,950 - __main__ - INFO - MainApplication: �i�r�Q�[�V�����{�^���N���b�N: ���N�G�X�g
+2025-07-25 08:13:34,572 - __main__ - INFO - �A�v���P�[�V�����I���������J�n���܂��B
+2025-07-25 08:13:34,572 - __main__ - INFO - �ݒ�ۑ��{�^����������܂����B
+2025-07-25 08:13:34,573 - settings_manager - INFO - SettingsManager: GUI�ݒ�̕ۑ����J�n���܂��B
+2025-07-25 08:13:34,574 - settings_manager - INFO - SettingsManager: GUI�ݒ�� 'C:\Users\hiker\seminar_optimization\gui_settings.ini' �ɕۑ����܂����B
+2025-07-25 08:13:34,575 - __main__ - DEBUG - �X�e�[�^�X�o�[�X�V: �^�C�v=info, ���b�Z�[�W='GUI�ݒ��ۑ����܂����B'
+2025-07-25 08:13:34,973 - __main__ - INFO - �A�v���P�[�V����������ɏI�����܂����B
+2025-07-25 08:13:34,974 - __main__ - INFO - Main loop exited.

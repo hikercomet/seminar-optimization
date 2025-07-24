@@ -57,7 +57,8 @@ class SettingsManager:
                                       'preference_weights_1st', 'preference_weights_2nd', 'preference_weights_3rd',
                                       'preference_weights_other', 'early_stop_threshold', 'adaptive_exploration_epsilon',
                                       'adaptive_learning_rate', 'adaptive_score_weight', 'adaptive_unassigned_weight',
-                                      'adaptive_time_weight', 'max_time_for_normalization']:
+                                      'adaptive_time_weight', 'max_time_for_normalization',
+                                      'ga_crossover_rate', 'ga_mutation_rate']: # <--- ADDED HERE
                             try:
                                 loaded_settings[f'initial_{key}'] = float(value)
                             except ValueError:
