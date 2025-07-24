@@ -326,3 +326,796 @@ ValueError: could not convert string to float: ''
 2025-07-24 22:15:16,973 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力固有のフィールドの作成が完了しました。
 2025-07-24 22:15:16,974 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力設定フレームの作成が完了しました。
 2025-07-24 22:15:16,975 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-24 22:29:09,481 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250724.log' に出力します。
+2025-07-24 22:29:09,482 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-24 22:29:09,482 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-24 22:29:09,562 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 初期化を開始します。
+2025-07-24 22:29:09,563 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-24 22:29:09,564 - seminar_optimization.logger_config - DEBUG - SeminarGUI: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 22:29:09,565 - seminar_optimization.logger_config - INFO - SeminarGUI: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 22:29:09,566 - seminar_optimization.logger_config - WARNING - SeminarGUI: 'config_file_path' の値が空です。デフォルト値 '' を使用します。
+2025-07-24 22:29:09,567 - seminar_optimization.logger_config - WARNING - SeminarGUI: 'student_file_path' の値が空です。デフォルト値 '' を使用します。
+2025-07-24 22:29:09,568 - seminar_optimization.logger_config - WARNING - SeminarGUI: Failed to load 'ga_generations': No option 'ga_generations' in section: 'GUI'. Using current default.
+2025-07-24 22:29:09,568 - seminar_optimization.logger_config - WARNING - SeminarGUI: Failed to load 'ga_no_improvement_limit': No option 'ga_no_improvement_limit' in section: 'GUI'. Using current default.
+2025-07-24 22:29:09,571 - seminar_optimization.logger_config - WARNING - SeminarGUI: Failed to load 'output_directory': No option 'output_directory' in section: 'GUI'. Using current default.
+2025-07-24 22:29:09,572 - seminar_optimization.logger_config - DEBUG - SeminarGUI: GUIウィジェットの作成を開始します。
+2025-07-24 22:29:09,584 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ナビゲーションボタンを作成中...
+2025-07-24 22:29:09,612 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ナビゲーションボタンの作成が完了しました。
+2025-07-24 22:29:09,613 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「データ入力と設定」タブの作成を開始します。
+2025-07-24 22:29:09,616 - seminar_optimization.logger_config - DEBUG - SeminarGUI: データ入力方法の選択が完了しました。
+2025-07-24 22:29:09,617 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 自動生成固有のフィールドの作成を開始します。
+2025-07-24 22:29:09,632 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 倍率エントリーの更新を開始します。
+2025-07-24 22:29:09,636 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 倍率エントリーの更新が完了しました。
+2025-07-24 22:29:09,637 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 自動生成固有のフィールドの作成が完了しました。
+2025-07-24 22:29:09,637 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 自動生成設定フレームの作成が完了しました。
+2025-07-24 22:29:09,638 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力固有のフィールドの作成を開始します。
+2025-07-24 22:29:09,645 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-24 22:29:09,645 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力設定フレームの作成が完了しました。
+2025-07-24 22:29:09,646 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-24 22:29:09,795 - seminar_optimization.logger_config - DEBUG - SeminarGUI: アルゴリズムフィールドの更新を開始します。
+2025-07-24 22:29:09,795 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 選択された戦略 'Greedy_LS' に基づいてフィールドを更新しました。
+2025-07-24 22:29:09,795 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-24 22:29:09,795 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-24 22:29:09,796 - seminar_optimization.logger_config - DEBUG - SeminarGUI: レポートとログ固有のフィールドの作成を開始します。
+2025-07-24 22:29:09,812 - seminar_optimization.logger_config - DEBUG - SeminarGUI: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-24 22:29:09,813 - seminar_optimization.logger_config - DEBUG - SeminarGUI: レポートとログ設定フレームの作成が完了しました。
+2025-07-24 22:29:09,813 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「データ入力と設定」タブの作成が完了しました。
+2025-07-24 22:29:09,813 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「最適化結果」タブを作成中...
+2025-07-24 22:29:09,817 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「最適化結果」タブの作成が完了しました。
+2025-07-24 22:29:09,817 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「ログ」タブを作成中...
+2025-07-24 22:29:09,820 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「ログ」タブの作成が完了しました。
+2025-07-24 22:29:15,050 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250724.log' に出力します。
+2025-07-24 22:29:15,051 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-24 22:29:15,051 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-24 22:29:15,259 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 初期化を開始します。
+2025-07-24 22:29:15,262 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-24 22:29:15,263 - seminar_optimization.logger_config - DEBUG - SeminarGUI: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 22:29:15,268 - seminar_optimization.logger_config - INFO - SeminarGUI: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 22:29:15,270 - seminar_optimization.logger_config - WARNING - SeminarGUI: 'config_file_path' の値が空です。デフォルト値 '' を使用します。
+2025-07-24 22:29:15,271 - seminar_optimization.logger_config - WARNING - SeminarGUI: 'student_file_path' の値が空です。デフォルト値 '' を使用します。
+2025-07-24 22:29:15,274 - seminar_optimization.logger_config - WARNING - SeminarGUI: Failed to load 'ga_generations': No option 'ga_generations' in section: 'GUI'. Using current default.
+2025-07-24 22:29:15,276 - seminar_optimization.logger_config - WARNING - SeminarGUI: Failed to load 'ga_no_improvement_limit': No option 'ga_no_improvement_limit' in section: 'GUI'. Using current default.
+2025-07-24 22:29:15,277 - seminar_optimization.logger_config - WARNING - SeminarGUI: Failed to load 'output_directory': No option 'output_directory' in section: 'GUI'. Using current default.
+2025-07-24 22:29:15,280 - seminar_optimization.logger_config - DEBUG - SeminarGUI: GUIウィジェットの作成を開始します。
+2025-07-24 22:29:15,350 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ナビゲーションボタンを作成中...
+2025-07-24 22:29:15,413 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ナビゲーションボタンの作成が完了しました。
+2025-07-24 22:29:15,425 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「データ入力と設定」タブの作成を開始します。
+2025-07-24 22:29:15,491 - seminar_optimization.logger_config - DEBUG - SeminarGUI: データ入力方法の選択が完了しました。
+2025-07-24 22:29:15,507 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 自動生成固有のフィールドの作成を開始します。
+2025-07-24 22:29:15,729 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 倍率エントリーの更新を開始します。
+2025-07-24 22:29:15,836 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 倍率エントリーの更新が完了しました。
+2025-07-24 22:29:15,838 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 自動生成固有のフィールドの作成が完了しました。
+2025-07-24 22:29:15,839 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 自動生成設定フレームの作成が完了しました。
+2025-07-24 22:29:15,859 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力固有のフィールドの作成を開始します。
+2025-07-24 22:29:16,018 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-24 22:29:16,020 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力設定フレームの作成が完了しました。
+2025-07-24 22:29:16,037 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-24 22:29:16,164 - seminar_optimization.logger_config - DEBUG - SeminarGUI: アルゴリズムフィールドの更新を開始します。
+2025-07-24 22:29:16,165 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 選択された戦略 'Greedy_LS' に基づいてフィールドを更新しました。
+2025-07-24 22:29:16,165 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-24 22:29:16,165 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-24 22:29:16,167 - seminar_optimization.logger_config - DEBUG - SeminarGUI: レポートとログ固有のフィールドの作成を開始します。
+2025-07-24 22:29:16,181 - seminar_optimization.logger_config - DEBUG - SeminarGUI: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-24 22:29:16,181 - seminar_optimization.logger_config - DEBUG - SeminarGUI: レポートとログ設定フレームの作成が完了しました。
+2025-07-24 22:29:16,181 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「データ入力と設定」タブの作成が完了しました。
+2025-07-24 22:29:16,181 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「最適化結果」タブを作成中...
+2025-07-24 22:29:16,184 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「最適化結果」タブの作成が完了しました。
+2025-07-24 22:29:16,184 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「ログ」タブを作成中...
+2025-07-24 22:29:16,185 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「ログ」タブの作成が完了しました。
+2025-07-24 22:32:29,855 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250724.log' に出力します。
+2025-07-24 22:32:29,855 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-24 22:32:29,855 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-24 22:32:29,934 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 初期化を開始します。
+2025-07-24 22:32:29,935 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-24 22:32:29,935 - seminar_optimization.logger_config - DEBUG - SeminarGUI: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 22:32:29,936 - seminar_optimization.logger_config - INFO - SeminarGUI: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 22:32:29,936 - seminar_optimization.logger_config - WARNING - SeminarGUI: 'config_file_path' の値が空です。デフォルト値 '' を使用します。
+2025-07-24 22:32:29,937 - seminar_optimization.logger_config - WARNING - SeminarGUI: 'student_file_path' の値が空です。デフォルト値 '' を使用します。
+2025-07-24 22:32:29,937 - seminar_optimization.logger_config - WARNING - SeminarGUI: Failed to load 'ga_generations': No option 'ga_generations' in section: 'GUI'. Using current default.
+2025-07-24 22:32:29,937 - seminar_optimization.logger_config - WARNING - SeminarGUI: Failed to load 'ga_no_improvement_limit': No option 'ga_no_improvement_limit' in section: 'GUI'. Using current default.
+2025-07-24 22:32:29,937 - seminar_optimization.logger_config - WARNING - SeminarGUI: Failed to load 'output_directory': No option 'output_directory' in section: 'GUI'. Using current default.
+2025-07-24 22:32:29,937 - seminar_optimization.logger_config - DEBUG - SeminarGUI: GUIウィジェットの作成を開始します。
+2025-07-24 22:32:29,942 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ナビゲーションボタンを作成中...
+2025-07-24 22:32:29,958 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ナビゲーションボタンの作成が完了しました。
+2025-07-24 22:32:29,962 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「データ入力と設定」タブの作成を開始します。
+2025-07-24 22:32:29,968 - seminar_optimization.logger_config - DEBUG - SeminarGUI: データ入力方法の選択が完了しました。
+2025-07-24 22:32:29,970 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 自動生成固有のフィールドの作成を開始します。
+2025-07-24 22:32:29,988 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 倍率エントリーの更新を開始します。
+2025-07-24 22:32:29,994 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 倍率エントリーの更新が完了しました。
+2025-07-24 22:32:29,994 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 自動生成固有のフィールドの作成が完了しました。
+2025-07-24 22:32:29,994 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 自動生成設定フレームの作成が完了しました。
+2025-07-24 22:32:29,995 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力固有のフィールドの作成を開始します。
+2025-07-24 22:32:30,004 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-24 22:32:30,005 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力設定フレームの作成が完了しました。
+2025-07-24 22:32:30,006 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-24 22:32:30,065 - seminar_optimization.logger_config - DEBUG - SeminarGUI: アルゴリズムフィールドの更新を開始します。
+2025-07-24 22:32:30,065 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 選択された戦略 'Greedy_LS' に基づいてフィールドを更新しました。
+2025-07-24 22:32:30,066 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-24 22:32:30,066 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-24 22:32:30,067 - seminar_optimization.logger_config - DEBUG - SeminarGUI: レポートとログ固有のフィールドの作成を開始します。
+2025-07-24 22:32:30,093 - seminar_optimization.logger_config - DEBUG - SeminarGUI: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-24 22:32:30,093 - seminar_optimization.logger_config - DEBUG - SeminarGUI: レポートとログ設定フレームの作成が完了しました。
+2025-07-24 22:32:30,093 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「データ入力と設定」タブの作成が完了しました。
+2025-07-24 22:32:30,093 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「最適化結果」タブを作成中...
+2025-07-24 22:32:30,096 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「最適化結果」タブの作成が完了しました。
+2025-07-24 22:32:30,096 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「ログ」タブを作成中...
+2025-07-24 22:32:30,097 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「ログ」タブの作成が完了しました。
+2025-07-24 22:35:26,329 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250724.log' に出力します。
+2025-07-24 22:35:26,329 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-24 22:35:26,330 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-24 22:35:26,395 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 初期化を開始します。
+2025-07-24 22:35:26,396 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-24 22:35:26,396 - seminar_optimization.logger_config - DEBUG - SeminarGUI: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 22:35:26,397 - seminar_optimization.logger_config - INFO - SeminarGUI: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 22:35:26,398 - seminar_optimization.logger_config - WARNING - SeminarGUI: 'config_file_path' の値が空です。デフォルト値 '' を使用します。
+2025-07-24 22:35:26,398 - seminar_optimization.logger_config - WARNING - SeminarGUI: 'student_file_path' の値が空です。デフォルト値 '' を使用します。
+2025-07-24 22:35:26,398 - seminar_optimization.logger_config - WARNING - SeminarGUI: Failed to load 'ga_generations': No option 'ga_generations' in section: 'GUI'. Using current default.
+2025-07-24 22:35:26,399 - seminar_optimization.logger_config - WARNING - SeminarGUI: Failed to load 'ga_no_improvement_limit': No option 'ga_no_improvement_limit' in section: 'GUI'. Using current default.
+2025-07-24 22:35:26,399 - seminar_optimization.logger_config - DEBUG - SeminarGUI: GUIウィジェットの作成を開始します。
+2025-07-24 22:35:26,403 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ナビゲーションボタンを作成中...
+2025-07-24 22:35:26,416 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ナビゲーションボタンの作成が完了しました。
+2025-07-24 22:35:26,417 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「データ入力と設定」タブの作成を開始します。
+2025-07-24 22:35:26,422 - seminar_optimization.logger_config - DEBUG - SeminarGUI: データ入力方法の選択が完了しました。
+2025-07-24 22:35:26,423 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 自動生成固有のフィールドの作成を開始します。
+2025-07-24 22:35:26,439 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 倍率エントリーの更新を開始します。
+2025-07-24 22:35:26,446 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 倍率エントリーの更新が完了しました。
+2025-07-24 22:35:26,446 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 自動生成固有のフィールドの作成が完了しました。
+2025-07-24 22:35:26,446 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 自動生成設定フレームの作成が完了しました。
+2025-07-24 22:35:26,447 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力固有のフィールドの作成を開始します。
+2025-07-24 22:35:26,456 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-24 22:35:26,456 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力設定フレームの作成が完了しました。
+2025-07-24 22:35:26,457 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-24 22:35:26,510 - seminar_optimization.logger_config - DEBUG - SeminarGUI: アルゴリズムフィールドの更新を開始します。
+2025-07-24 22:35:26,510 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 選択された戦略 'Greedy_LS' に基づいてフィールドを更新しました。
+2025-07-24 22:35:26,510 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-24 22:35:26,510 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-24 22:35:26,512 - seminar_optimization.logger_config - DEBUG - SeminarGUI: レポートとログ固有のフィールドの作成を開始します。
+2025-07-24 22:35:26,523 - seminar_optimization.logger_config - DEBUG - SeminarGUI: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-24 22:35:26,524 - seminar_optimization.logger_config - DEBUG - SeminarGUI: レポートとログ設定フレームの作成が完了しました。
+2025-07-24 22:35:26,524 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「データ入力と設定」タブの作成が完了しました。
+2025-07-24 22:35:26,524 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「最適化結果」タブを作成中...
+2025-07-24 22:35:26,526 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「最適化結果」タブの作成が完了しました。
+2025-07-24 22:35:26,526 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「ログ」タブを作成中...
+2025-07-24 22:35:26,528 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「ログ」タブの作成が完了しました。
+2025-07-24 22:40:33,900 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250724.log' に出力します。
+2025-07-24 22:40:33,901 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-24 22:40:33,901 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-24 22:40:33,987 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 初期化を開始します。
+2025-07-24 22:40:33,988 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-24 22:40:33,989 - seminar_optimization.logger_config - DEBUG - SeminarGUI: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 22:40:33,993 - seminar_optimization.logger_config - INFO - SeminarGUI: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 22:40:33,993 - seminar_optimization.logger_config - DEBUG - --- ロードされたgui_settings.iniの内容 ---
+2025-07-24 22:40:33,994 - seminar_optimization.logger_config - DEBUG - [GUI]
+2025-07-24 22:40:33,994 - seminar_optimization.logger_config - DEBUG -   seminars = ["A", "B", "C"]
+2025-07-24 22:40:33,995 - seminar_optimization.logger_config - DEBUG -   num_students = 112
+2025-07-24 22:40:33,995 - seminar_optimization.logger_config - DEBUG -   magnification = {"A": 5.5, "B": 1.0, "C": 0.6}
+2025-07-24 22:40:33,995 - seminar_optimization.logger_config - DEBUG -   min_size = 5
+2025-07-24 22:40:33,996 - seminar_optimization.logger_config - DEBUG -   max_size = 15
+2025-07-24 22:40:33,996 - seminar_optimization.logger_config - DEBUG -   q_boost_probability = 0.2
+2025-07-24 22:40:33,996 - seminar_optimization.logger_config - DEBUG -   num_preferences_to_consider = 5
+2025-07-24 22:40:33,997 - seminar_optimization.logger_config - DEBUG -   num_patterns = 200000
+2025-07-24 22:40:33,997 - seminar_optimization.logger_config - DEBUG -   max_workers = 8
+2025-07-24 22:40:33,998 - seminar_optimization.logger_config - DEBUG -   local_search_iterations = 500
+2025-07-24 22:40:33,998 - seminar_optimization.logger_config - DEBUG -   initial_temperature = 1.0
+2025-07-24 22:40:33,998 - seminar_optimization.logger_config - DEBUG -   cooling_rate = 0.995
+2025-07-24 22:40:33,999 - seminar_optimization.logger_config - DEBUG -   preference_weights_1st = 5.0
+2025-07-24 22:40:34,000 - seminar_optimization.logger_config - DEBUG -   preference_weights_2nd = 2.0
+2025-07-24 22:40:34,001 - seminar_optimization.logger_config - DEBUG -   preference_weights_3rd = 1.0
+2025-07-24 22:40:34,002 - seminar_optimization.logger_config - DEBUG -   preference_weights_other = 0.5
+2025-07-24 22:40:34,003 - seminar_optimization.logger_config - DEBUG -   early_stop_threshold = 0.001
+2025-07-24 22:40:34,003 - seminar_optimization.logger_config - DEBUG -   no_improvement_limit = 1000
+2025-07-24 22:40:34,004 - seminar_optimization.logger_config - DEBUG -   data_source = auto
+2025-07-24 22:40:34,005 - seminar_optimization.logger_config - DEBUG -   log_enabled = True
+2025-07-24 22:40:34,006 - seminar_optimization.logger_config - DEBUG -   save_intermediate = False
+2025-07-24 22:40:34,006 - seminar_optimization.logger_config - DEBUG -   theme = "clam"
+2025-07-24 22:40:34,007 - seminar_optimization.logger_config - DEBUG -   config_file_path = 
+2025-07-24 22:40:34,007 - seminar_optimization.logger_config - DEBUG -   student_file_path = 
+2025-07-24 22:40:34,008 - seminar_optimization.logger_config - DEBUG -   ga_population_size = 100
+2025-07-24 22:40:34,011 - seminar_optimization.logger_config - DEBUG -   ga_crossover_rate = 0.8
+2025-07-24 22:40:34,012 - seminar_optimization.logger_config - DEBUG -   ga_mutation_rate = 0.05
+2025-07-24 22:40:34,013 - seminar_optimization.logger_config - DEBUG -   ga_generations = 200
+2025-07-24 22:40:34,014 - seminar_optimization.logger_config - DEBUG -   ga_no_improvement_limit = 10
+2025-07-24 22:40:34,016 - seminar_optimization.logger_config - DEBUG -   optimization_strategy = Greedy_LS
+2025-07-24 22:40:34,017 - seminar_optimization.logger_config - DEBUG -   seminars_file_path = c:\Users\hiker\seminar_optimization\seminar_optimization\data\seminars.json
+2025-07-24 22:40:34,018 - seminar_optimization.logger_config - DEBUG -   students_file_path = c:\Users\hiker\seminar_optimization\seminar_optimization\data\students.json
+2025-07-24 22:40:34,019 - seminar_optimization.logger_config - DEBUG -   data_input_method = json
+2025-07-24 22:40:34,019 - seminar_optimization.logger_config - DEBUG -   num_seminars = 10
+2025-07-24 22:40:34,020 - seminar_optimization.logger_config - DEBUG -   min_preferences = 3
+2025-07-24 22:40:34,020 - seminar_optimization.logger_config - DEBUG -   max_preferences = 5
+2025-07-24 22:40:34,022 - seminar_optimization.logger_config - DEBUG -   preference_distribution = random
+2025-07-24 22:40:34,024 - seminar_optimization.logger_config - DEBUG -   random_seed = 42
+2025-07-24 22:40:34,025 - seminar_optimization.logger_config - DEBUG -   ilp_time_limit = 300
+2025-07-24 22:40:34,026 - seminar_optimization.logger_config - DEBUG -   cp_time_limit = 300
+2025-07-24 22:40:34,028 - seminar_optimization.logger_config - DEBUG -   multilevel_clusters = 5
+2025-07-24 22:40:34,030 - seminar_optimization.logger_config - DEBUG -   generate_pdf_report = True
+2025-07-24 22:40:34,032 - seminar_optimization.logger_config - DEBUG -   generate_csv_report = True
+2025-07-24 22:40:34,033 - seminar_optimization.logger_config - DEBUG -   max_adaptive_iterations = 5
+2025-07-24 22:40:34,034 - seminar_optimization.logger_config - DEBUG -   strategy_time_limit = 60
+2025-07-24 22:40:34,035 - seminar_optimization.logger_config - DEBUG -   adaptive_history_size = 5
+2025-07-24 22:40:34,036 - seminar_optimization.logger_config - DEBUG -   adaptive_exploration_epsilon = 0.1
+2025-07-24 22:40:34,037 - seminar_optimization.logger_config - DEBUG -   adaptive_learning_rate = 0.5
+2025-07-24 22:40:34,037 - seminar_optimization.logger_config - DEBUG -   adaptive_score_weight = 0.6
+2025-07-24 22:40:34,038 - seminar_optimization.logger_config - DEBUG -   adaptive_unassigned_weight = 0.3
+2025-07-24 22:40:34,039 - seminar_optimization.logger_config - DEBUG -   adaptive_time_weight = 0.1
+2025-07-24 22:40:34,041 - seminar_optimization.logger_config - DEBUG -   max_time_for_normalization = 300.0
+2025-07-24 22:40:34,043 - seminar_optimization.logger_config - DEBUG -   greedy_ls_iterations = 200000
+2025-07-24 22:40:34,043 - seminar_optimization.logger_config - DEBUG -   output_directory = results
+2025-07-24 22:40:34,045 - seminar_optimization.logger_config - DEBUG - --- gui_settings.iniの内容出力終了 ---
+2025-07-24 22:40:34,046 - seminar_optimization.logger_config - WARNING - SeminarGUI: 'config_file_path' の値が空です。デフォルト値 '' を使用します。
+2025-07-24 22:40:34,048 - seminar_optimization.logger_config - WARNING - SeminarGUI: 'student_file_path' の値が空です。デフォルト値 '' を使用します。
+2025-07-24 22:40:34,050 - seminar_optimization.logger_config - DEBUG - SeminarGUI: GUIウィジェットの作成を開始します。
+2025-07-24 22:40:34,122 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ナビゲーションボタンを作成中...
+2025-07-24 22:40:34,158 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ナビゲーションボタンの作成が完了しました。
+2025-07-24 22:40:34,166 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「データ入力と設定」タブの作成を開始します。
+2025-07-24 22:40:34,196 - seminar_optimization.logger_config - DEBUG - SeminarGUI: データ入力方法の選択が完了しました。
+2025-07-24 22:40:34,206 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 自動生成固有のフィールドの作成を開始します。
+2025-07-24 22:40:34,296 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 倍率エントリーの更新を開始します。
+2025-07-24 22:40:34,327 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 倍率エントリーの更新が完了しました。
+2025-07-24 22:40:34,329 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 自動生成固有のフィールドの作成が完了しました。
+2025-07-24 22:40:34,329 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 自動生成設定フレームの作成が完了しました。
+2025-07-24 22:40:34,335 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力固有のフィールドの作成を開始します。
+2025-07-24 22:40:34,383 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-24 22:40:34,384 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力設定フレームの作成が完了しました。
+2025-07-24 22:40:34,389 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-24 22:40:34,572 - seminar_optimization.logger_config - DEBUG - SeminarGUI: アルゴリズムフィールドの更新を開始します。
+2025-07-24 22:40:34,572 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 選択された戦略 'Greedy_LS' に基づいてフィールドを更新しました。
+2025-07-24 22:40:34,573 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-24 22:40:34,573 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-24 22:40:34,574 - seminar_optimization.logger_config - DEBUG - SeminarGUI: レポートとログ固有のフィールドの作成を開始します。
+2025-07-24 22:40:34,589 - seminar_optimization.logger_config - DEBUG - SeminarGUI: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-24 22:40:34,589 - seminar_optimization.logger_config - DEBUG - SeminarGUI: レポートとログ設定フレームの作成が完了しました。
+2025-07-24 22:40:34,589 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「データ入力と設定」タブの作成が完了しました。
+2025-07-24 22:40:34,589 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「最適化結果」タブを作成中...
+2025-07-24 22:40:34,591 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「最適化結果」タブの作成が完了しました。
+2025-07-24 22:40:34,592 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「ログ」タブを作成中...
+2025-07-24 22:40:34,593 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「ログ」タブの作成が完了しました。
+2025-07-24 22:46:32,699 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250724.log' に出力します。
+2025-07-24 22:46:32,700 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-24 22:46:32,700 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-24 22:46:32,862 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 初期化を開始します。
+2025-07-24 22:46:32,863 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-24 22:46:32,863 - seminar_optimization.logger_config - DEBUG - SeminarGUI: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 22:46:32,864 - seminar_optimization.logger_config - INFO - SeminarGUI: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 22:46:32,864 - seminar_optimization.logger_config - DEBUG - --- ロードされたgui_settings.iniの内容 ---
+2025-07-24 22:46:32,864 - seminar_optimization.logger_config - DEBUG - [GUI]
+2025-07-24 22:46:32,864 - seminar_optimization.logger_config - DEBUG -   seminars = ["A", "B", "C"]
+2025-07-24 22:46:32,865 - seminar_optimization.logger_config - DEBUG -   num_students = 112
+2025-07-24 22:46:32,865 - seminar_optimization.logger_config - DEBUG -   magnification = {"A": 5.5, "B": 1.0, "C": 0.6}
+2025-07-24 22:46:32,865 - seminar_optimization.logger_config - DEBUG -   min_size = 5
+2025-07-24 22:46:32,865 - seminar_optimization.logger_config - DEBUG -   max_size = 15
+2025-07-24 22:46:32,865 - seminar_optimization.logger_config - DEBUG -   q_boost_probability = 0.2
+2025-07-24 22:46:32,865 - seminar_optimization.logger_config - DEBUG -   num_preferences_to_consider = 5
+2025-07-24 22:46:32,865 - seminar_optimization.logger_config - DEBUG -   num_patterns = 200000
+2025-07-24 22:46:32,866 - seminar_optimization.logger_config - DEBUG -   max_workers = 8
+2025-07-24 22:46:32,866 - seminar_optimization.logger_config - DEBUG -   local_search_iterations = 500
+2025-07-24 22:46:32,866 - seminar_optimization.logger_config - DEBUG -   initial_temperature = 1.0
+2025-07-24 22:46:32,867 - seminar_optimization.logger_config - DEBUG -   cooling_rate = 0.995
+2025-07-24 22:46:32,867 - seminar_optimization.logger_config - DEBUG -   preference_weights_1st = 5.0
+2025-07-24 22:46:32,867 - seminar_optimization.logger_config - DEBUG -   preference_weights_2nd = 2.0
+2025-07-24 22:46:32,868 - seminar_optimization.logger_config - DEBUG -   preference_weights_3rd = 1.0
+2025-07-24 22:46:32,868 - seminar_optimization.logger_config - DEBUG -   preference_weights_other = 0.5
+2025-07-24 22:46:32,868 - seminar_optimization.logger_config - DEBUG -   early_stop_threshold = 0.001
+2025-07-24 22:46:32,868 - seminar_optimization.logger_config - DEBUG -   no_improvement_limit = 1000
+2025-07-24 22:46:32,869 - seminar_optimization.logger_config - DEBUG -   data_source = auto
+2025-07-24 22:46:32,869 - seminar_optimization.logger_config - DEBUG -   log_enabled = True
+2025-07-24 22:46:32,869 - seminar_optimization.logger_config - DEBUG -   save_intermediate = False
+2025-07-24 22:46:32,869 - seminar_optimization.logger_config - DEBUG -   theme = "clam"
+2025-07-24 22:46:32,869 - seminar_optimization.logger_config - DEBUG -   config_file_path = 
+2025-07-24 22:46:32,870 - seminar_optimization.logger_config - DEBUG -   student_file_path = 
+2025-07-24 22:46:32,870 - seminar_optimization.logger_config - DEBUG -   ga_population_size = 100
+2025-07-24 22:46:32,870 - seminar_optimization.logger_config - DEBUG -   ga_crossover_rate = 0.8
+2025-07-24 22:46:32,870 - seminar_optimization.logger_config - DEBUG -   ga_mutation_rate = 0.05
+2025-07-24 22:46:32,871 - seminar_optimization.logger_config - DEBUG -   ga_generations = 200
+2025-07-24 22:46:32,871 - seminar_optimization.logger_config - DEBUG -   ga_no_improvement_limit = 10
+2025-07-24 22:46:32,871 - seminar_optimization.logger_config - DEBUG -   optimization_strategy = Greedy_LS
+2025-07-24 22:46:32,871 - seminar_optimization.logger_config - DEBUG -   seminars_file_path = c:\Users\hiker\seminar_optimization\seminar_optimization\data\seminars.json
+2025-07-24 22:46:32,871 - seminar_optimization.logger_config - DEBUG -   students_file_path = c:\Users\hiker\seminar_optimization\seminar_optimization\data\students.json
+2025-07-24 22:46:32,872 - seminar_optimization.logger_config - DEBUG -   data_input_method = json
+2025-07-24 22:46:32,872 - seminar_optimization.logger_config - DEBUG -   num_seminars = 10
+2025-07-24 22:46:32,872 - seminar_optimization.logger_config - DEBUG -   min_preferences = 3
+2025-07-24 22:46:32,872 - seminar_optimization.logger_config - DEBUG -   max_preferences = 5
+2025-07-24 22:46:32,872 - seminar_optimization.logger_config - DEBUG -   preference_distribution = random
+2025-07-24 22:46:32,872 - seminar_optimization.logger_config - DEBUG -   random_seed = 42
+2025-07-24 22:46:32,872 - seminar_optimization.logger_config - DEBUG -   ilp_time_limit = 300
+2025-07-24 22:46:32,872 - seminar_optimization.logger_config - DEBUG -   cp_time_limit = 300
+2025-07-24 22:46:32,873 - seminar_optimization.logger_config - DEBUG -   multilevel_clusters = 5
+2025-07-24 22:46:32,873 - seminar_optimization.logger_config - DEBUG -   generate_pdf_report = True
+2025-07-24 22:46:32,873 - seminar_optimization.logger_config - DEBUG -   generate_csv_report = True
+2025-07-24 22:46:32,873 - seminar_optimization.logger_config - DEBUG -   max_adaptive_iterations = 5
+2025-07-24 22:46:32,873 - seminar_optimization.logger_config - DEBUG -   strategy_time_limit = 60
+2025-07-24 22:46:32,873 - seminar_optimization.logger_config - DEBUG -   adaptive_history_size = 5
+2025-07-24 22:46:32,873 - seminar_optimization.logger_config - DEBUG -   adaptive_exploration_epsilon = 0.1
+2025-07-24 22:46:32,874 - seminar_optimization.logger_config - DEBUG -   adaptive_learning_rate = 0.5
+2025-07-24 22:46:32,874 - seminar_optimization.logger_config - DEBUG -   adaptive_score_weight = 0.6
+2025-07-24 22:46:32,874 - seminar_optimization.logger_config - DEBUG -   adaptive_unassigned_weight = 0.3
+2025-07-24 22:46:32,874 - seminar_optimization.logger_config - DEBUG -   adaptive_time_weight = 0.1
+2025-07-24 22:46:32,874 - seminar_optimization.logger_config - DEBUG -   max_time_for_normalization = 300.0
+2025-07-24 22:46:32,875 - seminar_optimization.logger_config - DEBUG -   greedy_ls_iterations = 200000
+2025-07-24 22:46:32,875 - seminar_optimization.logger_config - DEBUG -   output_directory = results
+2025-07-24 22:46:32,875 - seminar_optimization.logger_config - DEBUG - --- gui_settings.iniの内容出力終了 ---
+2025-07-24 22:46:32,875 - seminar_optimization.logger_config - WARNING - SeminarGUI: 'config_file_path' の値が空です。デフォルト値 '' を使用します。
+2025-07-24 22:46:32,876 - seminar_optimization.logger_config - WARNING - SeminarGUI: 'student_file_path' の値が空です。デフォルト値 '' を使用します。
+2025-07-24 22:46:32,876 - seminar_optimization.logger_config - DEBUG - SeminarGUI: GUIウィジェットの作成を開始します。
+2025-07-24 22:46:32,880 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ナビゲーションボタンを作成中...
+2025-07-24 22:46:32,896 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ナビゲーションボタンの作成が完了しました。
+2025-07-24 22:46:32,897 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「データ入力と設定」タブの作成を開始します。
+2025-07-24 22:46:32,905 - seminar_optimization.logger_config - DEBUG - SeminarGUI: データ入力方法の選択が完了しました。
+2025-07-24 22:46:32,907 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 自動生成固有のフィールドの作成を開始します。
+2025-07-24 22:46:32,929 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 倍率エントリーの更新を開始します。
+2025-07-24 22:46:32,943 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 倍率エントリーの更新が完了しました。
+2025-07-24 22:46:32,944 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 自動生成固有のフィールドの作成が完了しました。
+2025-07-24 22:46:32,944 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 自動生成設定フレームの作成が完了しました。
+2025-07-24 22:46:32,945 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力固有のフィールドの作成を開始します。
+2025-07-24 22:46:32,964 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-24 22:46:32,964 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力設定フレームの作成が完了しました。
+2025-07-24 22:46:32,967 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-24 22:46:33,055 - seminar_optimization.logger_config - DEBUG - SeminarGUI: アルゴリズムフィールドの更新を開始します。
+2025-07-24 22:46:33,056 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 選択された戦略 'Greedy_LS' に基づいてフィールドを更新しました。
+2025-07-24 22:46:33,056 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-24 22:46:33,056 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-24 22:46:33,057 - seminar_optimization.logger_config - DEBUG - SeminarGUI: レポートとログ固有のフィールドの作成を開始します。
+2025-07-24 22:46:33,095 - seminar_optimization.logger_config - DEBUG - SeminarGUI: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-24 22:46:33,095 - seminar_optimization.logger_config - DEBUG - SeminarGUI: レポートとログ設定フレームの作成が完了しました。
+2025-07-24 22:46:33,096 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「データ入力と設定」タブの作成が完了しました。
+2025-07-24 22:46:33,096 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「最適化結果」タブを作成中...
+2025-07-24 22:46:33,099 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「最適化結果」タブの作成が完了しました。
+2025-07-24 22:46:33,099 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「ログ」タブを作成中...
+2025-07-24 22:46:33,104 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「ログ」タブの作成が完了しました。
+2025-07-24 22:54:56,604 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250724.log' に出力します。
+2025-07-24 22:54:56,605 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-24 22:54:56,605 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-24 22:54:56,686 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 初期化を開始します。
+2025-07-24 22:54:56,686 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-24 22:54:56,687 - seminar_optimization.logger_config - DEBUG - SeminarGUI: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 22:54:56,688 - seminar_optimization.logger_config - INFO - SeminarGUI: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 22:54:56,688 - seminar_optimization.logger_config - DEBUG - --- ロードされたgui_settings.iniの内容 ---
+2025-07-24 22:54:56,688 - seminar_optimization.logger_config - DEBUG - [GUI]
+2025-07-24 22:54:56,689 - seminar_optimization.logger_config - DEBUG -   seminars = ["A", "B", "C"]
+2025-07-24 22:54:56,689 - seminar_optimization.logger_config - DEBUG -   num_students = 112
+2025-07-24 22:54:56,690 - seminar_optimization.logger_config - DEBUG -   magnification = {"A": 5.5, "B": 1.0, "C": 0.6}
+2025-07-24 22:54:56,690 - seminar_optimization.logger_config - DEBUG -   min_size = 5
+2025-07-24 22:54:56,690 - seminar_optimization.logger_config - DEBUG -   max_size = 15
+2025-07-24 22:54:56,690 - seminar_optimization.logger_config - DEBUG -   q_boost_probability = 0.2
+2025-07-24 22:54:56,691 - seminar_optimization.logger_config - DEBUG -   num_preferences_to_consider = 5
+2025-07-24 22:54:56,691 - seminar_optimization.logger_config - DEBUG -   num_patterns = 200000
+2025-07-24 22:54:56,691 - seminar_optimization.logger_config - DEBUG -   max_workers = 8
+2025-07-24 22:54:56,691 - seminar_optimization.logger_config - DEBUG -   local_search_iterations = 500
+2025-07-24 22:54:56,691 - seminar_optimization.logger_config - DEBUG -   initial_temperature = 1.0
+2025-07-24 22:54:56,691 - seminar_optimization.logger_config - DEBUG -   cooling_rate = 0.995
+2025-07-24 22:54:56,692 - seminar_optimization.logger_config - DEBUG -   preference_weights_1st = 5.0
+2025-07-24 22:54:56,692 - seminar_optimization.logger_config - DEBUG -   preference_weights_2nd = 2.0
+2025-07-24 22:54:56,692 - seminar_optimization.logger_config - DEBUG -   preference_weights_3rd = 1.0
+2025-07-24 22:54:56,692 - seminar_optimization.logger_config - DEBUG -   preference_weights_other = 0.5
+2025-07-24 22:54:56,692 - seminar_optimization.logger_config - DEBUG -   early_stop_threshold = 0.001
+2025-07-24 22:54:56,692 - seminar_optimization.logger_config - DEBUG -   no_improvement_limit = 1000
+2025-07-24 22:54:56,692 - seminar_optimization.logger_config - DEBUG -   data_source = auto
+2025-07-24 22:54:56,692 - seminar_optimization.logger_config - DEBUG -   log_enabled = True
+2025-07-24 22:54:56,693 - seminar_optimization.logger_config - DEBUG -   save_intermediate = False
+2025-07-24 22:54:56,693 - seminar_optimization.logger_config - DEBUG -   theme = "clam"
+2025-07-24 22:54:56,693 - seminar_optimization.logger_config - DEBUG -   config_file_path = 
+2025-07-24 22:54:56,693 - seminar_optimization.logger_config - DEBUG -   student_file_path = 
+2025-07-24 22:54:56,693 - seminar_optimization.logger_config - DEBUG -   ga_population_size = 100
+2025-07-24 22:54:56,693 - seminar_optimization.logger_config - DEBUG -   ga_crossover_rate = 0.8
+2025-07-24 22:54:56,693 - seminar_optimization.logger_config - DEBUG -   ga_mutation_rate = 0.05
+2025-07-24 22:54:56,694 - seminar_optimization.logger_config - DEBUG -   ga_generations = 200
+2025-07-24 22:54:56,694 - seminar_optimization.logger_config - DEBUG -   ga_no_improvement_limit = 10
+2025-07-24 22:54:56,694 - seminar_optimization.logger_config - DEBUG -   optimization_strategy = Greedy_LS
+2025-07-24 22:54:56,694 - seminar_optimization.logger_config - DEBUG -   seminars_file_path = c:\Users\hiker\seminar_optimization\seminar_optimization\data\seminars.json
+2025-07-24 22:54:56,694 - seminar_optimization.logger_config - DEBUG -   students_file_path = c:\Users\hiker\seminar_optimization\seminar_optimization\data\students.json
+2025-07-24 22:54:56,694 - seminar_optimization.logger_config - DEBUG -   data_input_method = json
+2025-07-24 22:54:56,694 - seminar_optimization.logger_config - DEBUG -   num_seminars = 10
+2025-07-24 22:54:56,694 - seminar_optimization.logger_config - DEBUG -   min_preferences = 3
+2025-07-24 22:54:56,695 - seminar_optimization.logger_config - DEBUG -   max_preferences = 5
+2025-07-24 22:54:56,695 - seminar_optimization.logger_config - DEBUG -   preference_distribution = random
+2025-07-24 22:54:56,695 - seminar_optimization.logger_config - DEBUG -   random_seed = 42
+2025-07-24 22:54:56,695 - seminar_optimization.logger_config - DEBUG -   ilp_time_limit = 300
+2025-07-24 22:54:56,695 - seminar_optimization.logger_config - DEBUG -   cp_time_limit = 300
+2025-07-24 22:54:56,695 - seminar_optimization.logger_config - DEBUG -   multilevel_clusters = 5
+2025-07-24 22:54:56,695 - seminar_optimization.logger_config - DEBUG -   generate_pdf_report = True
+2025-07-24 22:54:56,695 - seminar_optimization.logger_config - DEBUG -   generate_csv_report = True
+2025-07-24 22:54:56,695 - seminar_optimization.logger_config - DEBUG -   max_adaptive_iterations = 5
+2025-07-24 22:54:56,695 - seminar_optimization.logger_config - DEBUG -   strategy_time_limit = 60
+2025-07-24 22:54:56,696 - seminar_optimization.logger_config - DEBUG -   adaptive_history_size = 5
+2025-07-24 22:54:56,696 - seminar_optimization.logger_config - DEBUG -   adaptive_exploration_epsilon = 0.1
+2025-07-24 22:54:56,696 - seminar_optimization.logger_config - DEBUG -   adaptive_learning_rate = 0.5
+2025-07-24 22:54:56,696 - seminar_optimization.logger_config - DEBUG -   adaptive_score_weight = 0.6
+2025-07-24 22:54:56,696 - seminar_optimization.logger_config - DEBUG -   adaptive_unassigned_weight = 0.3
+2025-07-24 22:54:56,696 - seminar_optimization.logger_config - DEBUG -   adaptive_time_weight = 0.1
+2025-07-24 22:54:56,696 - seminar_optimization.logger_config - DEBUG -   max_time_for_normalization = 300.0
+2025-07-24 22:54:56,696 - seminar_optimization.logger_config - DEBUG -   greedy_ls_iterations = 200000
+2025-07-24 22:54:56,697 - seminar_optimization.logger_config - DEBUG -   output_directory = results
+2025-07-24 22:54:56,697 - seminar_optimization.logger_config - DEBUG - --- gui_settings.iniの内容出力終了 ---
+2025-07-24 22:54:56,697 - seminar_optimization.logger_config - ERROR - SeminarGUI: gui_settings.iniの読み込み中に予期せぬエラーが発生しました: 'SeminarGUI' object has no attribute 'initial_seminars_str'
+Traceback (most recent call last):
+  File "c:\Users\hiker\seminar_optimization\seminar_optimization\seminar_gui.py", line 196, in _load_gui_settings
+    self.initial_seminars_str = self._get_setting('GUI', 'seminars', self.initial_seminars_str, str)
+                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SeminarGUI' object has no attribute 'initial_seminars_str'
+2025-07-24 22:54:56,701 - seminar_optimization.logger_config - DEBUG - ステータスバー更新: タイプ=error, メッセージ='エラー: GUI設定ファイルの読み込み中にエラーが発生しました。
+'SeminarGUI' object has no attribute 'initial_seminars_str''
+2025-07-24 22:55:04,104 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250724.log' に出力します。
+2025-07-24 22:55:04,105 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-24 22:55:04,105 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-24 22:55:04,190 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 初期化を開始します。
+2025-07-24 22:55:04,190 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-24 22:55:04,191 - seminar_optimization.logger_config - DEBUG - SeminarGUI: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 22:55:04,192 - seminar_optimization.logger_config - INFO - SeminarGUI: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 22:55:04,193 - seminar_optimization.logger_config - DEBUG - --- ロードされたgui_settings.iniの内容 ---
+2025-07-24 22:55:04,193 - seminar_optimization.logger_config - DEBUG - [GUI]
+2025-07-24 22:55:04,193 - seminar_optimization.logger_config - DEBUG -   seminars = ["A", "B", "C"]
+2025-07-24 22:55:04,193 - seminar_optimization.logger_config - DEBUG -   num_students = 112
+2025-07-24 22:55:04,194 - seminar_optimization.logger_config - DEBUG -   magnification = {"A": 5.5, "B": 1.0, "C": 0.6}
+2025-07-24 22:55:04,194 - seminar_optimization.logger_config - DEBUG -   min_size = 5
+2025-07-24 22:55:04,194 - seminar_optimization.logger_config - DEBUG -   max_size = 15
+2025-07-24 22:55:04,195 - seminar_optimization.logger_config - DEBUG -   q_boost_probability = 0.2
+2025-07-24 22:55:04,195 - seminar_optimization.logger_config - DEBUG -   num_preferences_to_consider = 5
+2025-07-24 22:55:04,195 - seminar_optimization.logger_config - DEBUG -   num_patterns = 200000
+2025-07-24 22:55:04,196 - seminar_optimization.logger_config - DEBUG -   max_workers = 8
+2025-07-24 22:55:04,196 - seminar_optimization.logger_config - DEBUG -   local_search_iterations = 500
+2025-07-24 22:55:04,196 - seminar_optimization.logger_config - DEBUG -   initial_temperature = 1.0
+2025-07-24 22:55:04,196 - seminar_optimization.logger_config - DEBUG -   cooling_rate = 0.995
+2025-07-24 22:55:04,197 - seminar_optimization.logger_config - DEBUG -   preference_weights_1st = 5.0
+2025-07-24 22:55:04,197 - seminar_optimization.logger_config - DEBUG -   preference_weights_2nd = 2.0
+2025-07-24 22:55:04,197 - seminar_optimization.logger_config - DEBUG -   preference_weights_3rd = 1.0
+2025-07-24 22:55:04,197 - seminar_optimization.logger_config - DEBUG -   preference_weights_other = 0.5
+2025-07-24 22:55:04,197 - seminar_optimization.logger_config - DEBUG -   early_stop_threshold = 0.001
+2025-07-24 22:55:04,198 - seminar_optimization.logger_config - DEBUG -   no_improvement_limit = 1000
+2025-07-24 22:55:04,198 - seminar_optimization.logger_config - DEBUG -   data_source = auto
+2025-07-24 22:55:04,198 - seminar_optimization.logger_config - DEBUG -   log_enabled = True
+2025-07-24 22:55:04,199 - seminar_optimization.logger_config - DEBUG -   save_intermediate = False
+2025-07-24 22:55:04,200 - seminar_optimization.logger_config - DEBUG -   theme = "clam"
+2025-07-24 22:55:04,200 - seminar_optimization.logger_config - DEBUG -   config_file_path = 
+2025-07-24 22:55:04,201 - seminar_optimization.logger_config - DEBUG -   student_file_path = 
+2025-07-24 22:55:04,201 - seminar_optimization.logger_config - DEBUG -   ga_population_size = 100
+2025-07-24 22:55:04,202 - seminar_optimization.logger_config - DEBUG -   ga_crossover_rate = 0.8
+2025-07-24 22:55:04,202 - seminar_optimization.logger_config - DEBUG -   ga_mutation_rate = 0.05
+2025-07-24 22:55:04,202 - seminar_optimization.logger_config - DEBUG -   ga_generations = 200
+2025-07-24 22:55:04,203 - seminar_optimization.logger_config - DEBUG -   ga_no_improvement_limit = 10
+2025-07-24 22:55:04,203 - seminar_optimization.logger_config - DEBUG -   optimization_strategy = Greedy_LS
+2025-07-24 22:55:04,203 - seminar_optimization.logger_config - DEBUG -   seminars_file_path = c:\Users\hiker\seminar_optimization\seminar_optimization\data\seminars.json
+2025-07-24 22:55:04,204 - seminar_optimization.logger_config - DEBUG -   students_file_path = c:\Users\hiker\seminar_optimization\seminar_optimization\data\students.json
+2025-07-24 22:55:04,204 - seminar_optimization.logger_config - DEBUG -   data_input_method = json
+2025-07-24 22:55:04,204 - seminar_optimization.logger_config - DEBUG -   num_seminars = 10
+2025-07-24 22:55:04,205 - seminar_optimization.logger_config - DEBUG -   min_preferences = 3
+2025-07-24 22:55:04,205 - seminar_optimization.logger_config - DEBUG -   max_preferences = 5
+2025-07-24 22:55:04,205 - seminar_optimization.logger_config - DEBUG -   preference_distribution = random
+2025-07-24 22:55:04,206 - seminar_optimization.logger_config - DEBUG -   random_seed = 42
+2025-07-24 22:55:04,206 - seminar_optimization.logger_config - DEBUG -   ilp_time_limit = 300
+2025-07-24 22:55:04,206 - seminar_optimization.logger_config - DEBUG -   cp_time_limit = 300
+2025-07-24 22:55:04,206 - seminar_optimization.logger_config - DEBUG -   multilevel_clusters = 5
+2025-07-24 22:55:04,207 - seminar_optimization.logger_config - DEBUG -   generate_pdf_report = True
+2025-07-24 22:55:04,207 - seminar_optimization.logger_config - DEBUG -   generate_csv_report = True
+2025-07-24 22:55:04,207 - seminar_optimization.logger_config - DEBUG -   max_adaptive_iterations = 5
+2025-07-24 22:55:04,208 - seminar_optimization.logger_config - DEBUG -   strategy_time_limit = 60
+2025-07-24 22:55:04,209 - seminar_optimization.logger_config - DEBUG -   adaptive_history_size = 5
+2025-07-24 22:55:04,210 - seminar_optimization.logger_config - DEBUG -   adaptive_exploration_epsilon = 0.1
+2025-07-24 22:55:04,211 - seminar_optimization.logger_config - DEBUG -   adaptive_learning_rate = 0.5
+2025-07-24 22:55:04,211 - seminar_optimization.logger_config - DEBUG -   adaptive_score_weight = 0.6
+2025-07-24 22:55:04,212 - seminar_optimization.logger_config - DEBUG -   adaptive_unassigned_weight = 0.3
+2025-07-24 22:55:04,212 - seminar_optimization.logger_config - DEBUG -   adaptive_time_weight = 0.1
+2025-07-24 22:55:04,212 - seminar_optimization.logger_config - DEBUG -   max_time_for_normalization = 300.0
+2025-07-24 22:55:04,213 - seminar_optimization.logger_config - DEBUG -   greedy_ls_iterations = 200000
+2025-07-24 22:55:04,213 - seminar_optimization.logger_config - DEBUG -   output_directory = results
+2025-07-24 22:55:04,213 - seminar_optimization.logger_config - DEBUG - --- gui_settings.iniの内容出力終了 ---
+2025-07-24 22:55:04,214 - seminar_optimization.logger_config - ERROR - SeminarGUI: gui_settings.iniの読み込み中に予期せぬエラーが発生しました: 'SeminarGUI' object has no attribute 'initial_seminars_str'
+Traceback (most recent call last):
+  File "c:\Users\hiker\seminar_optimization\seminar_optimization\seminar_gui.py", line 196, in _load_gui_settings
+    self.initial_seminars_str = self._get_setting('GUI', 'seminars', self.initial_seminars_str, str)
+                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SeminarGUI' object has no attribute 'initial_seminars_str'
+2025-07-24 22:55:04,216 - seminar_optimization.logger_config - DEBUG - ステータスバー更新: タイプ=error, メッセージ='エラー: GUI設定ファイルの読み込み中にエラーが発生しました。
+'SeminarGUI' object has no attribute 'initial_seminars_str''
+2025-07-24 23:15:45,930 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250724.log' に出力します。
+2025-07-24 23:15:45,930 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-24 23:15:45,931 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-24 23:15:46,044 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 初期化を開始します。
+2025-07-24 23:15:46,044 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-24 23:15:46,045 - seminar_optimization.logger_config - DEBUG - SeminarGUI: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 23:15:46,046 - seminar_optimization.logger_config - INFO - SeminarGUI: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 23:15:46,046 - seminar_optimization.logger_config - DEBUG - --- ロードされたgui_settings.iniの内容 ---
+2025-07-24 23:15:46,046 - seminar_optimization.logger_config - DEBUG - [GUI]
+2025-07-24 23:15:46,046 - seminar_optimization.logger_config - DEBUG -   seminars = ["A", "B", "C"]
+2025-07-24 23:15:46,046 - seminar_optimization.logger_config - DEBUG -   num_students = 112
+2025-07-24 23:15:46,047 - seminar_optimization.logger_config - DEBUG -   magnification = {"A": 5.5, "B": 1.0, "C": 0.6}
+2025-07-24 23:15:46,047 - seminar_optimization.logger_config - DEBUG -   min_size = 5
+2025-07-24 23:15:46,047 - seminar_optimization.logger_config - DEBUG -   max_size = 15
+2025-07-24 23:15:46,047 - seminar_optimization.logger_config - DEBUG -   q_boost_probability = 0.2
+2025-07-24 23:15:46,047 - seminar_optimization.logger_config - DEBUG -   num_preferences_to_consider = 5
+2025-07-24 23:15:46,047 - seminar_optimization.logger_config - DEBUG -   num_patterns = 200000
+2025-07-24 23:15:46,047 - seminar_optimization.logger_config - DEBUG -   max_workers = 8
+2025-07-24 23:15:46,048 - seminar_optimization.logger_config - DEBUG -   local_search_iterations = 500
+2025-07-24 23:15:46,048 - seminar_optimization.logger_config - DEBUG -   initial_temperature = 1.0
+2025-07-24 23:15:46,048 - seminar_optimization.logger_config - DEBUG -   cooling_rate = 0.995
+2025-07-24 23:15:46,048 - seminar_optimization.logger_config - DEBUG -   preference_weights_1st = 5.0
+2025-07-24 23:15:46,048 - seminar_optimization.logger_config - DEBUG -   preference_weights_2nd = 2.0
+2025-07-24 23:15:46,048 - seminar_optimization.logger_config - DEBUG -   preference_weights_3rd = 1.0
+2025-07-24 23:15:46,048 - seminar_optimization.logger_config - DEBUG -   preference_weights_other = 0.5
+2025-07-24 23:15:46,048 - seminar_optimization.logger_config - DEBUG -   early_stop_threshold = 0.001
+2025-07-24 23:15:46,049 - seminar_optimization.logger_config - DEBUG -   no_improvement_limit = 1000
+2025-07-24 23:15:46,049 - seminar_optimization.logger_config - DEBUG -   data_source = auto
+2025-07-24 23:15:46,049 - seminar_optimization.logger_config - DEBUG -   log_enabled = True
+2025-07-24 23:15:46,049 - seminar_optimization.logger_config - DEBUG -   save_intermediate = False
+2025-07-24 23:15:46,049 - seminar_optimization.logger_config - DEBUG -   theme = "clam"
+2025-07-24 23:15:46,049 - seminar_optimization.logger_config - DEBUG -   config_file_path = 
+2025-07-24 23:15:46,050 - seminar_optimization.logger_config - DEBUG -   student_file_path = 
+2025-07-24 23:15:46,050 - seminar_optimization.logger_config - DEBUG -   ga_population_size = 100
+2025-07-24 23:15:46,050 - seminar_optimization.logger_config - DEBUG -   ga_crossover_rate = 0.8
+2025-07-24 23:15:46,050 - seminar_optimization.logger_config - DEBUG -   ga_mutation_rate = 0.05
+2025-07-24 23:15:46,050 - seminar_optimization.logger_config - DEBUG -   ga_generations = 200
+2025-07-24 23:15:46,050 - seminar_optimization.logger_config - DEBUG -   ga_no_improvement_limit = 10
+2025-07-24 23:15:46,050 - seminar_optimization.logger_config - DEBUG -   optimization_strategy = Greedy_LS
+2025-07-24 23:15:46,050 - seminar_optimization.logger_config - DEBUG -   seminars_file_path = c:\Users\hiker\seminar_optimization\seminar_optimization\data\seminars.json
+2025-07-24 23:15:46,051 - seminar_optimization.logger_config - DEBUG -   students_file_path = c:\Users\hiker\seminar_optimization\seminar_optimization\data\students.json
+2025-07-24 23:15:46,051 - seminar_optimization.logger_config - DEBUG -   data_input_method = json
+2025-07-24 23:15:46,051 - seminar_optimization.logger_config - DEBUG -   num_seminars = 10
+2025-07-24 23:15:46,051 - seminar_optimization.logger_config - DEBUG -   min_preferences = 3
+2025-07-24 23:15:46,051 - seminar_optimization.logger_config - DEBUG -   max_preferences = 5
+2025-07-24 23:15:46,051 - seminar_optimization.logger_config - DEBUG -   preference_distribution = random
+2025-07-24 23:15:46,051 - seminar_optimization.logger_config - DEBUG -   random_seed = 42
+2025-07-24 23:15:46,051 - seminar_optimization.logger_config - DEBUG -   ilp_time_limit = 300
+2025-07-24 23:15:46,052 - seminar_optimization.logger_config - DEBUG -   cp_time_limit = 300
+2025-07-24 23:15:46,052 - seminar_optimization.logger_config - DEBUG -   multilevel_clusters = 5
+2025-07-24 23:15:46,052 - seminar_optimization.logger_config - DEBUG -   generate_pdf_report = True
+2025-07-24 23:15:46,052 - seminar_optimization.logger_config - DEBUG -   generate_csv_report = True
+2025-07-24 23:15:46,052 - seminar_optimization.logger_config - DEBUG -   max_adaptive_iterations = 5
+2025-07-24 23:15:46,052 - seminar_optimization.logger_config - DEBUG -   strategy_time_limit = 60
+2025-07-24 23:15:46,052 - seminar_optimization.logger_config - DEBUG -   adaptive_history_size = 5
+2025-07-24 23:15:46,052 - seminar_optimization.logger_config - DEBUG -   adaptive_exploration_epsilon = 0.1
+2025-07-24 23:15:46,052 - seminar_optimization.logger_config - DEBUG -   adaptive_learning_rate = 0.5
+2025-07-24 23:15:46,052 - seminar_optimization.logger_config - DEBUG -   adaptive_score_weight = 0.6
+2025-07-24 23:15:46,053 - seminar_optimization.logger_config - DEBUG -   adaptive_unassigned_weight = 0.3
+2025-07-24 23:15:46,053 - seminar_optimization.logger_config - DEBUG -   adaptive_time_weight = 0.1
+2025-07-24 23:15:46,053 - seminar_optimization.logger_config - DEBUG -   max_time_for_normalization = 300.0
+2025-07-24 23:15:46,053 - seminar_optimization.logger_config - DEBUG -   greedy_ls_iterations = 200000
+2025-07-24 23:15:46,053 - seminar_optimization.logger_config - DEBUG -   output_directory = results
+2025-07-24 23:15:46,053 - seminar_optimization.logger_config - DEBUG - --- gui_settings.iniの内容出力終了 ---
+2025-07-24 23:15:46,053 - seminar_optimization.logger_config - WARNING - SeminarGUI: 'config_file_path' の値が空です。デフォルト値 '' を使用します。
+2025-07-24 23:15:46,054 - seminar_optimization.logger_config - WARNING - SeminarGUI: 'student_file_path' の値が空です。デフォルト値 '' を使用します。
+2025-07-24 23:15:46,054 - seminar_optimization.logger_config - WARNING - SeminarGUI: Failed to load 'debug_mode': No option 'debug_mode' in section: 'GUI'. Using current default.
+2025-07-24 23:15:46,075 - seminar_optimization.logger_config - DEBUG - SeminarGUI: GUIウィンドウの初期表示設定を適用しました。
+2025-07-24 23:15:46,075 - seminar_optimization.logger_config - DEBUG - SeminarGUI: GUIウィジェットの作成を開始します。
+2025-07-24 23:15:46,078 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ナビゲーションボタンを作成中...
+2025-07-24 23:15:46,094 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ナビゲーションボタンの作成が完了しました。
+2025-07-24 23:15:46,095 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「データ入力と設定」タブの作成を開始します。
+2025-07-24 23:15:46,102 - seminar_optimization.logger_config - DEBUG - SeminarGUI: データ入力方法の選択が完了しました。
+2025-07-24 23:15:46,104 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 自動生成固有のフィールドの作成を開始します。
+2025-07-24 23:15:46,122 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 倍率エントリーの更新を開始します。
+2025-07-24 23:15:46,126 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 倍率エントリーの更新が完了しました。
+2025-07-24 23:15:46,127 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 自動生成固有のフィールドの作成が完了しました。
+2025-07-24 23:15:46,127 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 自動生成設定フレームの作成が完了しました。
+2025-07-24 23:15:46,128 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力固有のフィールドの作成を開始します。
+2025-07-24 23:15:46,137 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-24 23:15:46,138 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力設定フレームの作成が完了しました。
+2025-07-24 23:15:46,139 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-24 23:15:46,190 - seminar_optimization.logger_config - DEBUG - SeminarGUI: アルゴリズムフィールドの更新を開始します。
+2025-07-24 23:15:46,190 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 選択された戦略 'Greedy_LS' に基づいてフィールドを更新しました。
+2025-07-24 23:15:46,191 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-24 23:15:46,191 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-24 23:15:46,192 - seminar_optimization.logger_config - DEBUG - SeminarGUI: レポートとログ固有のフィールドの作成を開始します。
+2025-07-24 23:15:46,208 - seminar_optimization.logger_config - DEBUG - SeminarGUI: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-24 23:15:46,208 - seminar_optimization.logger_config - DEBUG - SeminarGUI: レポートとログ設定フレームの作成が完了しました。
+2025-07-24 23:15:46,208 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「データ入力と設定」タブの作成が完了しました。
+2025-07-24 23:15:46,209 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「最適化結果」タブを作成中...
+2025-07-24 23:15:46,212 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「最適化結果」タブの作成が完了しました。
+2025-07-24 23:15:46,213 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「ログ」タブを作成中...
+2025-07-24 23:15:46,214 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「ログ」タブの作成が完了しました。
+2025-07-24 23:29:39,613 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250724.log' に出力します。
+2025-07-24 23:29:39,614 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-24 23:29:39,614 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-24 23:29:39,705 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 初期化を開始します。
+2025-07-24 23:29:39,706 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-24 23:29:39,706 - seminar_optimization.logger_config - DEBUG - SeminarGUI: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 23:29:39,707 - seminar_optimization.logger_config - INFO - SeminarGUI: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 23:29:39,707 - seminar_optimization.logger_config - DEBUG - --- ロードされたgui_settings.iniの内容 ---
+2025-07-24 23:29:39,708 - seminar_optimization.logger_config - DEBUG - [GUI]
+2025-07-24 23:29:39,708 - seminar_optimization.logger_config - DEBUG -   seminars = ["A", "B", "C"]
+2025-07-24 23:29:39,708 - seminar_optimization.logger_config - DEBUG -   num_students = 112
+2025-07-24 23:29:39,709 - seminar_optimization.logger_config - DEBUG -   magnification = {"A": 5.5, "B": 1.0, "C": 0.6}
+2025-07-24 23:29:39,709 - seminar_optimization.logger_config - DEBUG -   min_size = 5
+2025-07-24 23:29:39,709 - seminar_optimization.logger_config - DEBUG -   max_size = 15
+2025-07-24 23:29:39,710 - seminar_optimization.logger_config - DEBUG -   q_boost_probability = 0.2
+2025-07-24 23:29:39,710 - seminar_optimization.logger_config - DEBUG -   num_preferences_to_consider = 5
+2025-07-24 23:29:39,710 - seminar_optimization.logger_config - DEBUG -   num_patterns = 200000
+2025-07-24 23:29:39,711 - seminar_optimization.logger_config - DEBUG -   max_workers = 8
+2025-07-24 23:29:39,712 - seminar_optimization.logger_config - DEBUG -   local_search_iterations = 500
+2025-07-24 23:29:39,713 - seminar_optimization.logger_config - DEBUG -   initial_temperature = 1.0
+2025-07-24 23:29:39,714 - seminar_optimization.logger_config - DEBUG -   cooling_rate = 0.995
+2025-07-24 23:29:39,715 - seminar_optimization.logger_config - DEBUG -   preference_weights_1st = 5.0
+2025-07-24 23:29:39,716 - seminar_optimization.logger_config - DEBUG -   preference_weights_2nd = 2.0
+2025-07-24 23:29:39,716 - seminar_optimization.logger_config - DEBUG -   preference_weights_3rd = 1.0
+2025-07-24 23:29:39,717 - seminar_optimization.logger_config - DEBUG -   preference_weights_other = 0.5
+2025-07-24 23:29:39,718 - seminar_optimization.logger_config - DEBUG -   early_stop_threshold = 0.001
+2025-07-24 23:29:39,719 - seminar_optimization.logger_config - DEBUG -   no_improvement_limit = 1000
+2025-07-24 23:29:39,720 - seminar_optimization.logger_config - DEBUG -   data_source = auto
+2025-07-24 23:29:39,721 - seminar_optimization.logger_config - DEBUG -   log_enabled = True
+2025-07-24 23:29:39,722 - seminar_optimization.logger_config - DEBUG -   save_intermediate = False
+2025-07-24 23:29:39,722 - seminar_optimization.logger_config - DEBUG -   theme = "clam"
+2025-07-24 23:29:39,723 - seminar_optimization.logger_config - DEBUG -   config_file_path = 
+2025-07-24 23:29:39,724 - seminar_optimization.logger_config - DEBUG -   student_file_path = 
+2025-07-24 23:29:39,724 - seminar_optimization.logger_config - DEBUG -   ga_population_size = 100
+2025-07-24 23:29:39,725 - seminar_optimization.logger_config - DEBUG -   ga_crossover_rate = 0.8
+2025-07-24 23:29:39,725 - seminar_optimization.logger_config - DEBUG -   ga_mutation_rate = 0.05
+2025-07-24 23:29:39,727 - seminar_optimization.logger_config - DEBUG -   ga_generations = 200
+2025-07-24 23:29:39,727 - seminar_optimization.logger_config - DEBUG -   ga_no_improvement_limit = 10
+2025-07-24 23:29:39,728 - seminar_optimization.logger_config - DEBUG -   optimization_strategy = Greedy_LS
+2025-07-24 23:29:39,729 - seminar_optimization.logger_config - DEBUG -   seminars_file_path = c:\Users\hiker\seminar_optimization\seminar_optimization\data\seminars.json
+2025-07-24 23:29:39,730 - seminar_optimization.logger_config - DEBUG -   students_file_path = c:\Users\hiker\seminar_optimization\seminar_optimization\data\students.json
+2025-07-24 23:29:39,731 - seminar_optimization.logger_config - DEBUG -   data_input_method = json
+2025-07-24 23:29:39,732 - seminar_optimization.logger_config - DEBUG -   num_seminars = 10
+2025-07-24 23:29:39,733 - seminar_optimization.logger_config - DEBUG -   min_preferences = 3
+2025-07-24 23:29:39,734 - seminar_optimization.logger_config - DEBUG -   max_preferences = 5
+2025-07-24 23:29:39,735 - seminar_optimization.logger_config - DEBUG -   preference_distribution = random
+2025-07-24 23:29:39,736 - seminar_optimization.logger_config - DEBUG -   random_seed = 42
+2025-07-24 23:29:39,737 - seminar_optimization.logger_config - DEBUG -   ilp_time_limit = 300
+2025-07-24 23:29:39,738 - seminar_optimization.logger_config - DEBUG -   cp_time_limit = 300
+2025-07-24 23:29:39,738 - seminar_optimization.logger_config - DEBUG -   multilevel_clusters = 5
+2025-07-24 23:29:39,740 - seminar_optimization.logger_config - DEBUG -   generate_pdf_report = True
+2025-07-24 23:29:39,741 - seminar_optimization.logger_config - DEBUG -   generate_csv_report = True
+2025-07-24 23:29:39,742 - seminar_optimization.logger_config - DEBUG -   max_adaptive_iterations = 5
+2025-07-24 23:29:39,743 - seminar_optimization.logger_config - DEBUG -   strategy_time_limit = 60
+2025-07-24 23:29:39,744 - seminar_optimization.logger_config - DEBUG -   adaptive_history_size = 5
+2025-07-24 23:29:39,745 - seminar_optimization.logger_config - DEBUG -   adaptive_exploration_epsilon = 0.1
+2025-07-24 23:29:39,746 - seminar_optimization.logger_config - DEBUG -   adaptive_learning_rate = 0.5
+2025-07-24 23:29:39,746 - seminar_optimization.logger_config - DEBUG -   adaptive_score_weight = 0.6
+2025-07-24 23:29:39,747 - seminar_optimization.logger_config - DEBUG -   adaptive_unassigned_weight = 0.3
+2025-07-24 23:29:39,748 - seminar_optimization.logger_config - DEBUG -   adaptive_time_weight = 0.1
+2025-07-24 23:29:39,749 - seminar_optimization.logger_config - DEBUG -   max_time_for_normalization = 300.0
+2025-07-24 23:29:39,750 - seminar_optimization.logger_config - DEBUG -   greedy_ls_iterations = 200000
+2025-07-24 23:29:39,752 - seminar_optimization.logger_config - DEBUG -   output_directory = results
+2025-07-24 23:29:39,753 - seminar_optimization.logger_config - DEBUG - --- gui_settings.iniの内容出力終了 ---
+2025-07-24 23:29:39,755 - seminar_optimization.logger_config - WARNING - SeminarGUI: 'config_file_path' の値が空です。デフォルト値 '' を使用します。
+2025-07-24 23:29:39,756 - seminar_optimization.logger_config - WARNING - SeminarGUI: 'student_file_path' の値が空です。デフォルト値 '' を使用します。
+2025-07-24 23:29:39,757 - seminar_optimization.logger_config - WARNING - SeminarGUI: Failed to load 'debug_mode': No option 'debug_mode' in section: 'GUI'. Using current default.
+2025-07-24 23:29:39,869 - seminar_optimization.logger_config - DEBUG - SeminarGUI: GUIウィンドウの初期表示設定を適用しました。
+2025-07-24 23:29:39,870 - seminar_optimization.logger_config - DEBUG - SeminarGUI: GUIウィジェットの作成を開始します。
+2025-07-24 23:29:39,874 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「データ入力と設定」タブの作成を開始します。
+2025-07-24 23:29:39,895 - seminar_optimization.logger_config - DEBUG - SeminarGUI: データ入力方法の選択が完了しました。
+2025-07-24 23:29:39,902 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 自動生成固有のフィールドの作成を開始します。
+2025-07-24 23:29:39,934 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 倍率エントリーの更新を開始します。
+2025-07-24 23:29:39,940 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 倍率エントリーの更新が完了しました。
+2025-07-24 23:29:39,941 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 自動生成固有のフィールドの作成が完了しました。
+2025-07-24 23:29:39,941 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 自動生成設定フレームの作成が完了しました。
+2025-07-24 23:29:39,942 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力固有のフィールドの作成を開始します。
+2025-07-24 23:29:39,951 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-24 23:29:39,952 - seminar_optimization.logger_config - DEBUG - SeminarGUI: ファイル入力設定フレームの作成が完了しました。
+2025-07-24 23:29:39,953 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-24 23:29:40,003 - seminar_optimization.logger_config - DEBUG - SeminarGUI: アルゴリズムフィールドの更新を開始します。
+2025-07-24 23:29:40,004 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 選択された戦略 'Greedy_LS' に基づいてフィールドを更新しました。
+2025-07-24 23:29:40,004 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-24 23:29:40,004 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-24 23:29:40,005 - seminar_optimization.logger_config - DEBUG - SeminarGUI: レポートとログ固有のフィールドの作成を開始します。
+2025-07-24 23:29:40,018 - seminar_optimization.logger_config - DEBUG - SeminarGUI: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-24 23:29:40,018 - seminar_optimization.logger_config - DEBUG - SeminarGUI: レポートとログ設定フレームの作成が完了しました。
+2025-07-24 23:29:40,018 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「データ入力と設定」タブの作成が完了しました。
+2025-07-24 23:29:40,018 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「最適化結果」タブを作成中...
+2025-07-24 23:29:40,022 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「最適化結果」タブの作成が完了しました。
+2025-07-24 23:29:40,022 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「ログ」タブを作成中...
+2025-07-24 23:29:40,024 - seminar_optimization.logger_config - DEBUG - SeminarGUI: 「ログ」タブの作成が完了しました。
+2025-07-24 23:46:43,078 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250724.log' に出力します。
+2025-07-24 23:46:43,080 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-24 23:46:43,081 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-24 23:46:43,358 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-24 23:46:43,360 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-24 23:46:43,362 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 23:46:43,365 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 23:46:43,366 - settings_manager - WARNING - SettingsManager: 未知のGUI設定キー: ga_crossover_rate = 0.8
+2025-07-24 23:46:43,367 - settings_manager - WARNING - SettingsManager: 未知のGUI設定キー: ga_mutation_rate = 0.05
+2025-07-24 23:49:16,594 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250724.log' に出力します。
+2025-07-24 23:49:16,595 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-24 23:49:16,595 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-24 23:49:16,718 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-24 23:49:16,719 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-24 23:49:16,719 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 23:49:16,720 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 23:49:16,721 - settings_manager - WARNING - SettingsManager: 未知のGUI設定キー: ga_crossover_rate = 0.8
+2025-07-24 23:49:16,721 - settings_manager - WARNING - SettingsManager: 未知のGUI設定キー: ga_mutation_rate = 0.05
+2025-07-24 23:49:16,777 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィンドウの初期表示設定を適用しました。
+2025-07-24 23:49:16,777 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-24 23:49:16,786 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-24 23:49:16,883 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-24 23:49:16,914 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成を開始します。
+2025-07-24 23:49:16,976 - gui_tabs.data_input_tab - DEBUG - DataInputTab: データ入力方法の選択が完了しました。
+2025-07-24 23:49:16,997 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成を開始します。
+2025-07-24 23:49:17,173 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 倍率エントリーの更新を開始します。
+2025-07-24 23:49:17,175 - gui_tabs.data_input_tab - DEBUG - DataInputTab: セミナーIDが空のため、倍率エントリーを更新しませんでした。
+2025-07-24 23:49:17,175 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成が完了しました。
+2025-07-24 23:49:17,176 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成設定フレームの作成が完了しました。
+2025-07-24 23:49:17,179 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成を開始します。
+2025-07-24 23:49:17,328 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-24 23:49:17,330 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力設定フレームの作成が完了しました。
+2025-07-24 23:49:17,412 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-24 23:55:31,495 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250724.log' に出力します。
+2025-07-24 23:55:31,496 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-24 23:55:31,497 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-24 23:55:31,690 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-24 23:55:31,691 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-24 23:55:31,692 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 23:55:31,693 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 23:55:31,693 - settings_manager - WARNING - SettingsManager: 未知のGUI設定キー: ga_crossover_rate = 0.8
+2025-07-24 23:55:31,693 - settings_manager - WARNING - SettingsManager: 未知のGUI設定キー: ga_mutation_rate = 0.05
+2025-07-24 23:55:31,757 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィンドウの初期表示設定を適用しました。
+2025-07-24 23:55:31,757 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-24 23:55:31,766 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-24 23:55:31,786 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-24 23:55:31,788 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成を開始します。
+2025-07-24 23:55:31,792 - gui_tabs.data_input_tab - DEBUG - DataInputTab: データ入力方法の選択が完了しました。
+2025-07-24 23:55:31,794 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成を開始します。
+2025-07-24 23:55:31,813 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 倍率エントリーの更新を開始します。
+2025-07-24 23:55:31,814 - gui_tabs.data_input_tab - DEBUG - DataInputTab: セミナーIDが空のため、倍率エントリーを更新しませんでした。
+2025-07-24 23:55:31,814 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成が完了しました。
+2025-07-24 23:55:31,814 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成設定フレームの作成が完了しました。
+2025-07-24 23:55:31,815 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成を開始します。
+2025-07-24 23:55:31,823 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-24 23:55:31,823 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力設定フレームの作成が完了しました。
+2025-07-24 23:55:31,824 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-24 23:55:31,960 - gui_tabs.data_input_tab - DEBUG - DataInputTab: アルゴリズムフィールドの更新を開始します。
+2025-07-24 23:55:31,960 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 選択された戦略 '' に基づいてフィールドを更新しました。
+2025-07-24 23:55:31,960 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-24 23:55:31,960 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-24 23:55:31,962 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成を開始します。
+2025-07-24 23:55:41,654 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250724.log' に出力します。
+2025-07-24 23:55:41,656 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-24 23:55:41,658 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-24 23:55:41,968 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-24 23:55:41,969 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-24 23:55:41,970 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 23:55:41,973 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 23:55:41,973 - settings_manager - WARNING - SettingsManager: 未知のGUI設定キー: ga_crossover_rate = 0.8
+2025-07-24 23:55:41,973 - settings_manager - WARNING - SettingsManager: 未知のGUI設定キー: ga_mutation_rate = 0.05
+2025-07-24 23:55:42,006 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィンドウの初期表示設定を適用しました。
+2025-07-24 23:55:42,007 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-24 23:55:42,017 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-24 23:55:42,039 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-24 23:55:42,042 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成を開始します。
+2025-07-24 23:55:42,046 - gui_tabs.data_input_tab - DEBUG - DataInputTab: データ入力方法の選択が完了しました。
+2025-07-24 23:55:42,051 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成を開始します。
+2025-07-24 23:55:42,082 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 倍率エントリーの更新を開始します。
+2025-07-24 23:55:42,084 - gui_tabs.data_input_tab - DEBUG - DataInputTab: セミナーIDが空のため、倍率エントリーを更新しませんでした。
+2025-07-24 23:55:42,084 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成が完了しました。
+2025-07-24 23:55:42,084 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成設定フレームの作成が完了しました。
+2025-07-24 23:55:42,086 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成を開始します。
+2025-07-24 23:55:42,106 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-24 23:55:42,107 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力設定フレームの作成が完了しました。
+2025-07-24 23:55:42,108 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-24 23:55:42,215 - gui_tabs.data_input_tab - DEBUG - DataInputTab: アルゴリズムフィールドの更新を開始します。
+2025-07-24 23:55:42,216 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 選択された戦略 '' に基づいてフィールドを更新しました。
+2025-07-24 23:55:42,216 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-24 23:55:42,217 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-24 23:55:42,219 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成を開始します。
+2025-07-24 23:57:50,397 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization_20250724.log' に出力します。
+2025-07-24 23:57:50,398 - seminar_optimization.logger_config - INFO - ロギングがレベル 'DEBUG' で設定されました。
+2025-07-24 23:57:50,398 - seminar_optimization.logger_config - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-24 23:57:50,621 - seminar_optimization.logger_config - DEBUG - MainApplication: 初期化を開始します。
+2025-07-24 23:57:50,622 - seminar_optimization.logger_config - DEBUG - DPI認識が設定されました。
+2025-07-24 23:57:50,623 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 23:57:50,624 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-24 23:57:50,625 - settings_manager - WARNING - SettingsManager: 未知のGUI設定キー: ga_crossover_rate = 0.8
+2025-07-24 23:57:50,625 - settings_manager - WARNING - SettingsManager: 未知のGUI設定キー: ga_mutation_rate = 0.05
+2025-07-24 23:57:50,699 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィンドウの初期表示設定を適用しました。
+2025-07-24 23:57:50,700 - seminar_optimization.logger_config - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-24 23:57:50,704 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-24 23:57:50,723 - seminar_optimization.logger_config - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-24 23:57:50,727 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成を開始します。
+2025-07-24 23:57:50,732 - gui_tabs.data_input_tab - DEBUG - DataInputTab: データ入力方法の選択が完了しました。
+2025-07-24 23:57:50,735 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成を開始します。
+2025-07-24 23:57:50,767 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 倍率エントリーの更新を開始します。
+2025-07-24 23:57:50,768 - gui_tabs.data_input_tab - DEBUG - DataInputTab: セミナーIDが空のため、倍率エントリーを更新しませんでした。
+2025-07-24 23:57:50,769 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成固有のフィールドの作成が完了しました。
+2025-07-24 23:57:50,769 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 自動生成設定フレームの作成が完了しました。
+2025-07-24 23:57:50,772 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成を開始します。
+2025-07-24 23:57:50,785 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力固有のフィールドの作成が完了しました。
+2025-07-24 23:57:50,786 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ファイル入力設定フレームの作成が完了しました。
+2025-07-24 23:57:50,787 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成を開始します。
+2025-07-24 23:57:50,887 - gui_tabs.data_input_tab - DEBUG - DataInputTab: アルゴリズムフィールドの更新を開始します。
+2025-07-24 23:57:50,887 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 選択された戦略 '' に基づいてフィールドを更新しました。
+2025-07-24 23:57:50,888 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム固有のフィールドの作成が完了しました。
+2025-07-24 23:57:50,888 - gui_tabs.data_input_tab - DEBUG - DataInputTab: 最適化アルゴリズム設定フレームの作成が完了しました。
+2025-07-24 23:57:50,892 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成を開始します。
+2025-07-24 23:57:50,914 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ固有のフィールドの作成が完了しました。
+2025-07-24 23:57:50,915 - gui_tabs.data_input_tab - DEBUG - DataInputTab: レポートとログ設定フレームの作成が完了しました。
+2025-07-24 23:57:50,915 - gui_tabs.data_input_tab - DEBUG - DataInputTab: ウィジェットの作成が完了しました。
+2025-07-24 23:57:50,916 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成を開始します。
+2025-07-24 23:57:50,921 - gui_tabs.results_tab - DEBUG - ResultsTab: ウィジェットの作成が完了しました。
+2025-07-24 23:57:50,924 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成を開始します。
+2025-07-24 23:57:50,924 - gui_tabs.log_tab - DEBUG - LogTab: ウィジェットの作成が完了しました。
+2025-07-24 23:57:50,925 - seminar_optimization.logger_config - DEBUG - MainApplication: メインボタンを作成中...
