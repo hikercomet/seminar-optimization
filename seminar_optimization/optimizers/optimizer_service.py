@@ -23,12 +23,13 @@ from seminar_optimization.seminar_optimization.schemas import SEMINARS_SCHEMA, S
 
 # 各最適化アルゴリズムをインポート（同じ optimizers パッケージ内なので相対インポートも可能ですが、
 # 明示的に絶対インポートを維持します。これは好みによります。）
-from optimizers.greedy_ls_optimizer import GreedyLSOptimizer
-from optimizers.genetic_algorithm_optimizer import GeneticAlgorithmOptimizer
-from optimizers.ilp_optimizer import ILPOptimizer
-from optimizers.cp_sat_optimizer import CPSATOptimizer
-from optimizers.multilevel_optimizer import MultilevelOptimizer
-from optimizers.adaptive_optimizer import AdaptiveOptimizer
+# 修正: 絶対パスでのインポートに変更
+from seminar_optimization.optimizers.greedy_ls_optimizer import GreedyLSOptimizer
+from seminar_optimization.optimizers.genetic_algorithm_optimizer import GeneticAlgorithmOptimizer
+from seminar_optimization.optimizers.ilp_optimizer import ILPOptimizer
+from seminar_optimization.optimizers.cp_sat_optimizer import CPSATOptimizer
+from seminar_optimization.optimizers.multilevel_optimizer import MultilevelOptimizer
+from seminar_optimization.optimizers.adaptive_optimizer import AdaptiveOptimizer
 
 # オプティマイザのマッピングを定義
 OPTIMIZER_MAP = {
@@ -128,6 +129,9 @@ def run_optimization_service(
     logger.info("optimizer_service: 最適化サービスを開始します。")
     service = OptimizerService(config)
     
+    # configから最適化戦略を取得して設定
+    service.optimization_strategy = config.get("optimization_strategy", "Greedy_LS")
+
     result = service.run_optimization(seminars, students, cancel_event, progress_callback)
     
     # レポート生成
@@ -150,7 +154,7 @@ def _generate_reports(
     try:
         # output_generator.py からレポート保存関数をインポート
         # optimizer_service.py が optimizers/ に移動したため、絶対パスでインポートします。
-        from seminar_optimization.output_generator import save_csv_results, save_pdf_report
+        from seminar_optimization.seminar_optimization.output_generator import save_csv_results, save_pdf_report
         
         # output_generatorに渡す前にconfigに必要なデータを追加
         report_config = config.copy()

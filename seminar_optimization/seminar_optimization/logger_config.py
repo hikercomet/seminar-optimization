@@ -38,10 +38,12 @@ def setup_logging(log_level: str = "INFO", log_file: Optional[str] = None):
 
     logging.getLogger(__name__).info(f"ロギングがレベル '{log_level}' で設定されました。")
 
+# このモジュールがインポートされたときに、他のモジュールが使用できるロガーインスタンスを定義
+logger = logging.getLogger(__name__)
+
 # このモジュールが直接実行された場合のテスト用
 if __name__ == "__main__":
     setup_logging(log_level="DEBUG", log_file="test_app.log")
-    logger = logging.getLogger(__name__)
     logger.debug("これはデバッグメッセージです。")
     logger.info("これは情報メッセージです。")
     logger.warning("これは警告メッセージです。")
