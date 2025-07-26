@@ -1,0 +1,56 @@
+2025-07-26 06:17:38,299 - __main__ - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-26 06:17:38,392 - __main__ - DEBUG - MainApplication: 初期化を開始します。
+2025-07-26 06:17:38,403 - __main__ - DEBUG - MainApplication: ステータスバーを初期化しました。
+2025-07-26 06:17:38,404 - __main__ - DEBUG - ステータスバー更新: タイプ=info, メッセージ='アプリケーションを初期化中...'
+2025-07-26 06:17:38,485 - __main__ - DEBUG - DPI認識が設定されました。
+2025-07-26 06:17:38,487 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-26 06:17:38,494 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-26 06:17:38,496 - __main__ - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-26 06:17:38,507 - __main__ - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-26 06:17:38,518 - __main__ - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-26 06:17:38,525 - __main__ - ERROR - タブの作成中にエラーが発生しました: 'MainApplication' object has no attribute 'setting_handler'
+Traceback (most recent call last):
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 471, in _create_tabs
+    self.notebook.add(self.setting_handler.frame, text="セッティング")
+                      ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'MainApplication' object has no attribute 'setting_handler'. Did you mean: 'settings_manager'?
+2025-07-26 06:17:38,531 - __main__ - DEBUG - MainApplication: GUIウィジェットの作成が完了しました。
+2025-07-26 06:17:38,531 - __main__ - DEBUG - MainApplication: _create_widgets() 呼び出し完了。
+2025-07-26 06:17:38,532 - __main__ - DEBUG - MainApplication: デフォルトの最適化設定を生成します。
+2025-07-26 06:17:38,532 - __main__ - DEBUG - MainApplication: デフォルトの最適化設定ロード完了。
+2025-07-26 06:17:38,532 - __main__ - DEBUG - MainApplication: UI要素の初期化を開始します。
+2025-07-26 06:17:38,532 - __main__ - DEBUG - MainApplication: UI要素の初期化が完了しました。
+2025-07-26 06:17:38,533 - __main__ - DEBUG - MainApplication: UI要素の初期化完了。
+2025-07-26 06:17:38,533 - __main__ - DEBUG - MainApplication: _create_main_buttons: 開始。
+2025-07-26 06:17:38,629 - __main__ - DEBUG - MainApplication: メインボタンの作成が完了しました。
+2025-07-26 06:17:38,630 - __main__ - DEBUG - MainApplication: GUIウィンドウの初期表示設定を適用しました。
+2025-07-26 06:17:38,630 - __main__ - INFO - MainApplication: 初期化が完了しました。
+2025-07-26 06:25:29,592 - __main__ - INFO - アプリケーション終了処理を開始します。
+2025-07-26 06:25:29,593 - __main__ - INFO - 設定保存ボタンが押されました。
+2025-07-26 06:25:29,594 - settings_manager - INFO - SettingsManager: GUI設定の保存を開始します。
+2025-07-26 06:25:29,595 - settings_manager - INFO - SettingsManager: GUI設定を 'C:\Users\hiker\seminar_optimization\gui_settings.ini' に保存しました。
+2025-07-26 06:25:29,596 - __main__ - DEBUG - ステータスバー更新: タイプ=info, メッセージ='GUI設定を保存しました。'
+2025-07-26 06:25:29,657 - __main__ - INFO - アプリケーションが正常に終了しました。
+2025-07-26 06:25:29,658 - __main__ - INFO - Main loop exited.
+2025-07-26 10:12:25,665 - __main__ - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-26 10:12:25,775 - __main__ - DEBUG - MainApplication: 初期化を開始します。
+2025-07-26 10:12:25,784 - __main__ - DEBUG - MainApplication: ステータスバーを初期化しました。
+2025-07-26 10:12:25,784 - __main__ - DEBUG - ステータスバー更新: タイプ=info, メッセージ='アプリケーションを初期化中...'
+2025-07-26 10:12:25,843 - __main__ - DEBUG - DPI認識が設定されました。
+2025-07-26 10:12:25,844 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-26 10:12:25,846 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-26 10:12:25,848 - __main__ - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-26 10:12:25,852 - __main__ - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-26 10:12:25,869 - __main__ - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-26 10:12:25,880 - __main__ - DEBUG - MainApplication: タブの作成が完了しました。
+2025-07-26 10:12:25,880 - __main__ - DEBUG - MainApplication: GUIウィジェットの作成が完了しました。
+2025-07-26 10:12:25,880 - __main__ - DEBUG - MainApplication: _create_widgets() 呼び出し完了。
+2025-07-26 10:12:25,880 - __main__ - DEBUG - MainApplication: デフォルトの最適化設定を生成します。
+2025-07-26 10:12:25,881 - __main__ - DEBUG - MainApplication: デフォルトの最適化設定ロード完了。
+2025-07-26 10:12:25,881 - __main__ - DEBUG - MainApplication: UI要素の初期化を開始します。
+2025-07-26 10:12:25,881 - __main__ - DEBUG - MainApplication: UI要素の初期化が完了しました。
+2025-07-26 10:12:25,881 - __main__ - DEBUG - MainApplication: UI要素の初期化完了。
+2025-07-26 10:12:25,881 - __main__ - DEBUG - MainApplication: _create_main_buttons: 開始。
+2025-07-26 10:12:26,042 - __main__ - DEBUG - MainApplication: メインボタンの作成が完了しました。
+2025-07-26 10:12:26,042 - __main__ - DEBUG - MainApplication: GUIウィンドウの初期表示設定を適用しました。
+2025-07-26 10:12:26,042 - __main__ - INFO - MainApplication: 初期化が完了しました。

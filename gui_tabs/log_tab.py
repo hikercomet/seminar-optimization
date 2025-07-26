@@ -8,9 +8,14 @@ from typing import Optional
 logger = logging.getLogger(__name__)
 
 class TextHandler(logging.Handler):
-    """
-    TkinterのScrolledTextウィジェットにログメッセージをリダイレクトするためのハンドラ。
-    """
+    def _on_mousewheel(self, event):
+        # Windows/macOSではevent.deltaが使用され、Linuxではevent.num (Button-4/5) が使用される
+        if event.delta: # Windows/macOS
+            self.canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+        elif event.num == 4: # Linux (スクロールアップ)
+            self.canvas.yview_scroll(-1, "units")
+        elif event.num == 5: # Linux (スクロールダウン)
+            self.canvas.yview_scroll(1, "units")
     def __init__(self, text_widget):
         super().__init__()
         self.text_widget = text_widget

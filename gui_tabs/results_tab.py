@@ -11,6 +11,14 @@ class ResultsTab:
         self.notebook = notebook
         self.frame = ttk.Frame(notebook, padding="10")
         self._create_widgets()
+    def _on_mousewheel(self, event):
+        # Windows/macOSではevent.deltaが使用され、Linuxではevent.num (Button-4/5) が使用される
+        if event.delta: # Windows/macOS
+            self.canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+        elif event.num == 4: # Linux (スクロールアップ)
+            self.canvas.yview_scroll(-1, "units")
+        elif event.num == 5: # Linux (スクロールダウン)
+            self.canvas.yview_scroll(1, "units")
 
     def _create_widgets(self):
         """

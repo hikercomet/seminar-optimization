@@ -28,7 +28,7 @@ class ProgressDialog:
 
             self.progress_bar = ttk.Progressbar(self.dialog, mode='indeterminate', length=300)
             self.progress_bar.pack(pady=10)
-            self.progress_bar.start(10) # 10msごとに更新
+            self.progress_bar.start(5) # 5msごとに更新
 
             if self.cancel_command:
                 ttk.Button(self.dialog, text="キャンセル", command=self.cancel_command).pack(pady=5)

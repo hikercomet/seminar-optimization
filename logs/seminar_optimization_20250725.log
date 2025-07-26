@@ -905,3 +905,131 @@ _tkinter.TclError: unknown option "-minwidth"
 2025-07-25 08:13:34,575 - __main__ - DEBUG - ステータスバー更新: タイプ=info, メッセージ='GUI設定を保存しました。'
 2025-07-25 08:13:34,973 - __main__ - INFO - アプリケーションが正常に終了しました。
 2025-07-25 08:13:34,974 - __main__ - INFO - Main loop exited.
+2025-07-25 08:14:31,384 - __main__ - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 08:14:31,471 - __main__ - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 08:14:31,485 - __main__ - DEBUG - MainApplication: ステータスバーを初期化しました。
+2025-07-25 08:14:31,486 - __main__ - DEBUG - ステータスバー更新: タイプ=info, メッセージ='アプリケーションを初期化中...'
+2025-07-25 08:14:31,569 - __main__ - DEBUG - DPI認識が設定されました。
+2025-07-25 08:14:31,570 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 08:14:31,572 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 08:14:31,573 - __main__ - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 08:14:31,578 - __main__ - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-25 08:14:31,586 - __main__ - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-25 08:14:31,601 - __main__ - DEBUG - MainApplication: タブの作成が完了しました。
+2025-07-25 08:14:31,602 - __main__ - DEBUG - MainApplication: GUIウィジェットの作成が完了しました。
+2025-07-25 08:14:31,602 - __main__ - DEBUG - MainApplication: _create_widgets() 呼び出し完了。
+2025-07-25 08:14:31,602 - __main__ - DEBUG - MainApplication: デフォルトの最適化設定を生成します。
+2025-07-25 08:14:31,602 - __main__ - DEBUG - MainApplication: デフォルトの最適化設定ロード完了。
+2025-07-25 08:14:31,602 - __main__ - DEBUG - MainApplication: UI要素の初期化を開始します。
+2025-07-25 08:14:31,603 - __main__ - DEBUG - MainApplication: UI要素の初期化が完了しました。
+2025-07-25 08:14:31,603 - __main__ - DEBUG - MainApplication: UI要素の初期化完了。
+2025-07-25 08:14:31,603 - __main__ - DEBUG - MainApplication: _create_main_buttons: 開始。
+2025-07-25 08:14:31,754 - __main__ - DEBUG - MainApplication: メインボタンの作成が完了しました。
+2025-07-25 08:14:31,755 - __main__ - DEBUG - MainApplication: GUIウィンドウの初期表示設定を適用しました。
+2025-07-25 08:14:31,755 - __main__ - INFO - MainApplication: 初期化が完了しました。
+2025-07-25 08:18:10,438 - __main__ - DEBUG - ステータスバー更新: タイプ=info, メッセージ='「登録」ボタンがクリックされました。'
+2025-07-25 08:18:10,441 - __main__ - INFO - MainApplication: ナビゲーションボタンクリック: 登録
+2025-07-25 08:44:40,975 - __main__ - INFO - アプリケーション終了処理を開始します。
+2025-07-25 08:44:40,977 - __main__ - INFO - 設定保存ボタンが押されました。
+2025-07-25 08:44:40,979 - settings_manager - INFO - SettingsManager: GUI設定の保存を開始します。
+2025-07-25 08:44:40,982 - settings_manager - INFO - SettingsManager: GUI設定を 'C:\Users\hiker\seminar_optimization\gui_settings.ini' に保存しました。
+2025-07-25 08:44:40,985 - __main__ - DEBUG - ステータスバー更新: タイプ=info, メッセージ='GUI設定を保存しました。'
+2025-07-25 08:44:41,343 - __main__ - INFO - アプリケーションが正常に終了しました。
+2025-07-25 08:44:41,345 - __main__ - INFO - Main loop exited.
+2025-07-25 15:51:26,720 - __main__ - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 15:51:26,985 - __main__ - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 15:51:27,029 - __main__ - DEBUG - MainApplication: ステータスバーを初期化しました。
+2025-07-25 15:51:27,030 - __main__ - DEBUG - ステータスバー更新: タイプ=info, メッセージ='アプリケーションを初期化中...'
+2025-07-25 15:51:27,075 - __main__ - DEBUG - DPI認識が設定されました。
+2025-07-25 15:51:27,076 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 15:51:27,077 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 15:51:27,079 - __main__ - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 15:51:27,094 - __main__ - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-25 15:51:27,207 - __main__ - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-25 15:51:27,343 - __main__ - DEBUG - MainApplication: タブの作成が完了しました。
+2025-07-25 15:51:27,344 - __main__ - DEBUG - MainApplication: GUIウィジェットの作成が完了しました。
+2025-07-25 15:51:27,345 - __main__ - DEBUG - MainApplication: _create_widgets() 呼び出し完了。
+2025-07-25 15:51:27,346 - __main__ - DEBUG - MainApplication: デフォルトの最適化設定を生成します。
+2025-07-25 15:51:27,347 - __main__ - DEBUG - MainApplication: デフォルトの最適化設定ロード完了。
+2025-07-25 15:51:27,347 - __main__ - DEBUG - MainApplication: UI要素の初期化を開始します。
+2025-07-25 15:51:27,348 - __main__ - DEBUG - MainApplication: UI要素の初期化が完了しました。
+2025-07-25 15:51:27,348 - __main__ - DEBUG - MainApplication: UI要素の初期化完了。
+2025-07-25 15:51:27,350 - __main__ - DEBUG - MainApplication: _create_main_buttons: 開始。
+2025-07-25 15:51:27,665 - __main__ - DEBUG - MainApplication: メインボタンの作成が完了しました。
+2025-07-25 15:51:27,666 - __main__ - DEBUG - MainApplication: GUIウィンドウの初期表示設定を適用しました。
+2025-07-25 15:51:27,667 - __main__ - INFO - MainApplication: 初期化が完了しました。
+2025-07-25 15:51:48,055 - __main__ - INFO - 結果クリアボタンが押されました。
+2025-07-25 15:51:48,056 - __main__ - INFO - Results would be cleared here
+2025-07-25 15:51:48,056 - __main__ - DEBUG - ステータスバー更新: タイプ=info, メッセージ='結果表示をクリアしました。'
+2025-07-25 15:51:58,052 - __main__ - INFO - アプリケーション終了処理を開始します。
+2025-07-25 15:51:58,052 - __main__ - INFO - 設定保存ボタンが押されました。
+2025-07-25 15:51:58,052 - settings_manager - INFO - SettingsManager: GUI設定の保存を開始します。
+2025-07-25 15:51:58,053 - settings_manager - INFO - SettingsManager: GUI設定を 'C:\Users\hiker\seminar_optimization\gui_settings.ini' に保存しました。
+2025-07-25 15:51:58,054 - __main__ - DEBUG - ステータスバー更新: タイプ=info, メッセージ='GUI設定を保存しました。'
+2025-07-25 15:51:58,109 - __main__ - INFO - アプリケーションが正常に終了しました。
+2025-07-25 15:51:58,109 - __main__ - INFO - Main loop exited.
+2025-07-25 15:56:23,259 - __main__ - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 15:56:23,359 - __main__ - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 15:56:23,454 - __main__ - DEBUG - MainApplication: ステータスバーを初期化しました。
+2025-07-25 15:56:23,454 - __main__ - DEBUG - ステータスバー更新: タイプ=info, メッセージ='アプリケーションを初期化中...'
+2025-07-25 15:56:23,652 - __main__ - DEBUG - DPI認識が設定されました。
+2025-07-25 15:56:23,653 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 15:56:23,654 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 15:56:23,655 - __main__ - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 15:56:23,666 - __main__ - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-25 15:56:23,707 - __main__ - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-25 15:56:23,743 - __main__ - DEBUG - MainApplication: タブの作成が完了しました。
+2025-07-25 15:56:23,743 - __main__ - DEBUG - MainApplication: GUIウィジェットの作成が完了しました。
+2025-07-25 15:56:23,743 - __main__ - DEBUG - MainApplication: _create_widgets() 呼び出し完了。
+2025-07-25 15:56:23,743 - __main__ - DEBUG - MainApplication: デフォルトの最適化設定を生成します。
+2025-07-25 15:56:23,744 - __main__ - DEBUG - MainApplication: デフォルトの最適化設定ロード完了。
+2025-07-25 15:56:23,744 - __main__ - DEBUG - MainApplication: UI要素の初期化を開始します。
+2025-07-25 15:56:23,744 - __main__ - DEBUG - MainApplication: UI要素の初期化が完了しました。
+2025-07-25 15:56:23,744 - __main__ - DEBUG - MainApplication: UI要素の初期化完了。
+2025-07-25 15:56:23,744 - __main__ - DEBUG - MainApplication: _create_main_buttons: 開始。
+2025-07-25 15:56:23,872 - __main__ - DEBUG - MainApplication: メインボタンの作成が完了しました。
+2025-07-25 15:56:23,872 - __main__ - DEBUG - MainApplication: GUIウィンドウの初期表示設定を適用しました。
+2025-07-25 15:56:23,873 - __main__ - INFO - MainApplication: 初期化が完了しました。
+2025-07-25 15:56:26,931 - __main__ - DEBUG - ステータスバー更新: タイプ=info, メッセージ='「インフォメーション」ボタンがクリックされました。'
+2025-07-25 15:56:26,934 - __main__ - INFO - MainApplication: ナビゲーションボタンクリック: インフォメーション
+2025-07-25 15:56:27,675 - __main__ - DEBUG - ステータスバー更新: タイプ=info, メッセージ='「インフォメーション」ボタンがクリックされました。'
+2025-07-25 15:56:27,678 - __main__ - INFO - MainApplication: ナビゲーションボタンクリック: インフォメーション
+2025-07-25 15:56:28,927 - __main__ - DEBUG - ステータスバー更新: タイプ=info, メッセージ='「登録」ボタンがクリックされました。'
+2025-07-25 15:56:28,932 - __main__ - INFO - MainApplication: ナビゲーションボタンクリック: 登録
+2025-07-25 15:56:29,663 - __main__ - DEBUG - ステータスバー更新: タイプ=info, メッセージ='「照会」ボタンがクリックされました。'
+2025-07-25 15:56:29,668 - __main__ - INFO - MainApplication: ナビゲーションボタンクリック: 照会
+2025-07-25 15:56:30,120 - __main__ - DEBUG - ステータスバー更新: タイプ=info, メッセージ='「リクエスト」ボタンがクリックされました。'
+2025-07-25 15:56:30,122 - __main__ - INFO - MainApplication: ナビゲーションボタンクリック: リクエスト
+2025-07-25 15:56:30,631 - __main__ - DEBUG - ステータスバー更新: タイプ=info, メッセージ='「終了」ボタンがクリックされました。'
+2025-07-25 15:56:30,635 - __main__ - INFO - MainApplication: ナビゲーションボタンクリック: 終了
+2025-07-25 15:56:30,635 - __main__ - INFO - アプリケーション終了処理を開始します。
+2025-07-25 15:56:30,635 - __main__ - INFO - 設定保存ボタンが押されました。
+2025-07-25 15:56:30,636 - settings_manager - INFO - SettingsManager: GUI設定の保存を開始します。
+2025-07-25 15:56:30,637 - settings_manager - INFO - SettingsManager: GUI設定を 'C:\Users\hiker\seminar_optimization\gui_settings.ini' に保存しました。
+2025-07-25 15:56:30,637 - __main__ - DEBUG - ステータスバー更新: タイプ=info, メッセージ='GUI設定を保存しました。'
+2025-07-25 15:56:30,693 - __main__ - INFO - アプリケーションが正常に終了しました。
+2025-07-25 15:56:30,693 - __main__ - INFO - Main loop exited.
+2025-07-25 15:56:34,598 - __main__ - INFO - main: アプリケーションのロギングが初期化されました。
+2025-07-25 15:56:34,675 - __main__ - DEBUG - MainApplication: 初期化を開始します。
+2025-07-25 15:56:34,685 - __main__ - DEBUG - MainApplication: ステータスバーを初期化しました。
+2025-07-25 15:56:34,685 - __main__ - DEBUG - ステータスバー更新: タイプ=info, メッセージ='アプリケーションを初期化中...'
+2025-07-25 15:56:34,736 - __main__ - DEBUG - DPI認識が設定されました。
+2025-07-25 15:56:34,737 - settings_manager - DEBUG - SettingsManager: gui_settings.iniのロードを開始します: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 15:56:34,738 - settings_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-25 15:56:34,739 - __main__ - DEBUG - MainApplication: GUIウィジェットの作成を開始します。
+2025-07-25 15:56:34,743 - __main__ - DEBUG - MainApplication: ナビゲーションボタンを作成中...
+2025-07-25 15:56:34,752 - __main__ - DEBUG - MainApplication: ナビゲーションボタンの作成が完了しました。
+2025-07-25 15:56:34,757 - __main__ - DEBUG - MainApplication: タブの作成が完了しました。
+2025-07-25 15:56:34,758 - __main__ - DEBUG - MainApplication: GUIウィジェットの作成が完了しました。
+2025-07-25 15:56:34,758 - __main__ - DEBUG - MainApplication: _create_widgets() 呼び出し完了。
+2025-07-25 15:56:34,758 - __main__ - DEBUG - MainApplication: デフォルトの最適化設定を生成します。
+2025-07-25 15:56:34,758 - __main__ - DEBUG - MainApplication: デフォルトの最適化設定ロード完了。
+2025-07-25 15:56:34,758 - __main__ - DEBUG - MainApplication: UI要素の初期化を開始します。
+2025-07-25 15:56:34,759 - __main__ - DEBUG - MainApplication: UI要素の初期化が完了しました。
+2025-07-25 15:56:34,759 - __main__ - DEBUG - MainApplication: UI要素の初期化完了。
+2025-07-25 15:56:34,759 - __main__ - DEBUG - MainApplication: _create_main_buttons: 開始。
+2025-07-25 15:56:34,855 - __main__ - DEBUG - MainApplication: メインボタンの作成が完了しました。
+2025-07-25 15:56:34,855 - __main__ - DEBUG - MainApplication: GUIウィンドウの初期表示設定を適用しました。
+2025-07-25 15:56:34,855 - __main__ - INFO - MainApplication: 初期化が完了しました。
+2025-07-25 15:57:24,660 - __main__ - INFO - 最適化開始ボタンが押されました。
+2025-07-25 15:57:24,661 - __main__ - DEBUG - ステータスバー更新: タイプ=error, メッセージ='最適化サービスが利用できません。'

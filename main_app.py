@@ -7,6 +7,7 @@ import json
 import os
 import sys
 import logging
+import random
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Callable, Tuple
 
@@ -27,7 +28,7 @@ def get_project_root() -> Path:
                 return parent
         # または、特定のディレクトリ名がプロジェクトルートである場合
         if parent.name == "seminar_optimization" and (parent / "seminar_optimization").is_dir():
-             return parent
+            return parent
     
     # 見つからない場合は、現在のスクリプトの親ディレクトリを返す（フォールバック）
     print("プロジェクトルートマーカーが見つかりませんでした。現在のスクリプトの親ディレクトリをルートとみなします。")
@@ -35,687 +36,369 @@ def get_project_root() -> Path:
 
 # プロジェクトルートを設定
 PROJECT_ROOT = get_project_root()
-
-# sys.path にプロジェクトルートを追加して、絶対インポートを可能にする
+# プロジェクトルートをsys.pathに追加して、絶対インポートを可能にする
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-# インポートエラーを処理する簡単なラッパー
-def safe_import(module_name, from_package=None):
-    """安全にモジュールをインポートし、失敗時にNoneを返す"""
-    try:
-        if from_package:
-            return __import__(from_package, fromlist=[module_name])
-        else:
-            return __import__(module_name)
-    except ImportError as e:
-        print(f"Warning: Could not import {from_package}.{module_name} or {module_name}: {e}")
-        return None
+# seminar_optimization パッケージ内のモジュールをインポート
+from seminar_optimization.logger_config import setup_logging, logger
+from seminar_optimization.data_generator import DataGenerator
+from seminar_optimization.schemas import CONFIG_SCHEMA
+from seminar_optimization.output_generator import save_pdf_report, save_csv_results
+from optimizers.optimizer_service import OptimizerService, OPTIMIZER_MAP
+from setting_manager import SettingsManager
+from gui_tabs.data_input_tab import DataInputTab
+from gui_tabs.results_tab import ResultsTab
+from gui_tabs.log_tab import LogTab
+from gui_tabs.setting_tab import SettingTab
+from gui_components.progress_dialog import ProgressDialog
 
-# 基本的なロガー設定（依存関係がない場合のフォールバック）
-def setup_basic_logging(log_level="DEBUG", log_file=None):
+class MainApplication(tk.Tk):
     """
-    基本的なロギング設定を行う関数
-    :param log_level: ログレベル（デフォルト: "DEBUG"）
-    :param log_file: ログファイルのパス（オプション）
+    セミナー割当最適化ツールのメインアプリケーションクラス。
+    GUIの構築、設定の管理、最適化処理の実行を統括する。
     """
-    # ログレベルを文字列から対応するレベルに変換
-    level_map = {
-        "DEBUG": logging.DEBUG,
-        "INFO": logging.INFO,
-        "WARNING": logging.WARNING,
-        "ERROR": logging.ERROR,
-        "CRITICAL": logging.CRITICAL
-    }
-    log_level_numeric = level_map.get(log_level.upper(), logging.DEBUG)
-    
-    # ハンドラーのリストを作成
-    handlers = [logging.StreamHandler()]
-    
-    # ログファイルが指定されている場合は追加
-    if log_file:
-        try:
-            # ログファイルのディレクトリが存在しない場合は作成
-            log_file_path = Path(log_file)
-            log_file_path.parent.mkdir(parents=True, exist_ok=True)
-            handlers.append(logging.FileHandler(str(log_file_path)))
-        except Exception as e:
-            print(f"Warning: Could not create log file {log_file}: {e}")
-    else:
-        # デフォルトのログファイル名
-        default_log_file = f'seminar_optimization_{datetime.now().strftime("%Y%m%d")}.log'
-        try:
-            handlers.append(logging.FileHandler(default_log_file))
-        except Exception as e:
-            print(f"Warning: Could not create default log file {default_log_file}: {e}")
-    
-    logging.basicConfig(
-        level=log_level_numeric,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-        handlers=handlers,
-        force=True  # 既存の設定を上書き
-    )
-    return logging.getLogger(__name__)
+    def __init__(self, project_root: Path):
+        super().__init__()
+        # self.project_root は必ず最初に設定する
+        self.project_root = project_root 
+        self.title("セミナー割当最適化ツール")
+        self.geometry("1200x800") # ウィンドウの初期サイズを設定
 
-# 依存モジュールのインポート（失敗時はNoneになる）
-optimizer_service_module = safe_import("optimizer_service", "optimizers")
-data_generator_module = safe_import("data_generator", "seminar_optimization")
-logger_config_module = safe_import("logger_config", "seminar_optimization")
-schemas_module = safe_import("schemas", "seminar_optimization")
+        # ロギング設定の初期化
+        # gui_settings.iniから読み込む前に、一時的にデフォルトのログレベルを設定
+        setup_logging(log_level="INFO", log_file=str(self.project_root / "logs" / "seminar_optimization.log"))
 
-# jsonschemaのインポート
-try:
-    import jsonschema
-except ImportError:
-    jsonschema = None
-    print("Warning: jsonschema not available")
+        # GUI設定の初期値 (SettingsManagerからロードされる値を保持する属性を定義)
+        # DataInputTabが管理する設定
+        self.initial_seminars_file_path: str = ""
+        self.initial_students_file_path: str = ""
+        self.initial_data_input_method: str = "auto_generate"
+        self.initial_num_seminars: int = 5
+        self.initial_num_students: int = 50
+        self.initial_min_capacity: int = 5
+        self.initial_max_capacity: int = 15
+        self.initial_preference_distribution: str = "uniform"
+        self.initial_random_seed: int = 42
+        self.initial_q_boost_probability: float = 0.2
+        self.initial_num_preferences_to_consider: int = 5 # UI上の「考慮する希望数（最大）」
+        self.initial_min_preferences: int = 1 # 最小希望数の初期値
+        self.initial_max_preferences: int = 5 # 最大希望数の初期値 (num_preferences_to_considerと同じ値で初期化)
 
-# ロガーの設定
-if logger_config_module:
-    setup_logging = getattr(logger_config_module, 'setup_logging', None)
-    logger = getattr(logger_config_module, 'logger', None)
-    # setup_loggingが存在しない場合はsetup_basic_loggingを使用
-    if setup_logging is None:
-        setup_logging = setup_basic_logging
-    # loggerが存在しない場合は基本ロガーを作成
-    if logger is None:
-        logger = setup_basic_logging()
-else:
-    setup_logging = setup_basic_logging
-    logger = setup_basic_logging()
+        # SettingTabが管理する設定
+        self.initial_optimization_strategy: str = "Greedy_LS"
+        self.initial_ga_population_size: int = 100
+        self.initial_ga_generations: int = 200
+        self.initial_ga_mutation_rate: float = 0.05
+        self.initial_ga_crossover_rate: float = 0.8
+        self.initial_ga_no_improvement_limit: int = 10
+        self.initial_ilp_time_limit: int = 300
+        self.initial_cp_time_limit: int = 300
+        self.initial_multilevel_clusters: int = 5
+        self.initial_greedy_ls_iterations: int = 200000
+        self.initial_local_search_iterations: int = 500
+        self.initial_initial_temperature: float = 1.0
+        self.initial_cooling_rate: float = 0.995
+        self.initial_score_weights: Dict[str, float] = {"1st_choice": 5.0, "2nd_choice": 2.0, "3rd_choice": 1.0, "other": 0.5}
+        self.initial_early_stop_threshold: float = 0.001
+        # 修正: early_stop_no_improvement_limit に名前を変更
+        self.initial_early_stop_no_improvement_limit: int = 1000 
+        self.initial_generate_pdf_report: bool = True
+        self.initial_generate_csv_report: bool = True
+        self.initial_output_directory: Path = self.project_root / "output"
+        self.initial_pdf_font_path: str = ""
+        self.initial_debug_mode: bool = False
+        self.initial_log_enabled: bool = True
+        self.initial_save_intermediate: bool = False
+        self.initial_theme: str = "clam"
+        self.initial_config_file_path: str = ""
 
-# GUIコンポーネントのインポート（失敗時は代替実装を使用）
-gui_tabs_data_input = safe_import("data_input_tab", "gui_tabs")
-gui_tabs_results = safe_import("results_tab", "gui_tabs")
-gui_tabs_log = safe_import("log_tab", "gui_tabs")
-gui_components_progress = safe_import("progress_dialog", "gui_components")
-settings_manager_module = safe_import("settings_manager")
-
-# 代替実装クラス（インポートが失敗した場合）
-class FallbackTab:
-    def __init__(self, notebook, text_content="このタブは利用できません"):
-        self.frame = ttk.Frame(notebook)
-        self.text_content = text_content
-        label = ttk.Label(self.frame, text=text_content)
-        label.pack(expand=True)
-
-class FallbackDataInputTab(FallbackTab):
-    def __init__(self, notebook, main_app):
-        super().__init__(notebook, "データ入力タブは現在利用できません")
-        self.main_app = main_app
-        # デフォルト値を設定
-        self.log_enabled_var = tk.BooleanVar(value=True)
-        self.seminar_ids_var = tk.StringVar(value="A,B,C")
-    
-    def initialize_fields(self, **kwargs):
-        """初期化メソッド（何もしない）"""
-        pass
-    
-    def get_current_config(self):
-        """デフォルト設定を返す"""
-        return {
-            "data_input_method": "auto",
-            "num_seminars": 10,
-            "min_capacity": 5,
-            "max_capacity": 15,
-            "num_students": 100,
-            "min_preferences": 3,
-            "max_preferences": 5,
-            "preference_distribution": "random",
-            "random_seed": 42,
-            "optimization_strategy": "Greedy_LS"
-        }
-    
-    def get_current_settings_for_save(self):
-        """保存用設定を返す"""
-        return {}
-
-class FallbackResultsTab(FallbackTab):
-    def __init__(self, notebook):
-        super().__init__(notebook, "結果タブは現在利用できません")
-    
-    def display_results(self, result):
-        """結果表示（プレースホルダー）"""
-        logger.info(f"Results would be displayed here: {result}")
-    
-    def clear_results(self):
-        """結果クリア（プレースホルダー）"""
-        logger.info("Results would be cleared here")
-
-class FallbackLogTab(FallbackTab):
-    def __init__(self, notebook):
-        super().__init__(notebook, "ログタブは現在利用できません")
-        self.text_widget = tk.Text(self.frame)
-        self.text_widget.pack(expand=True, fill=tk.BOTH)
-    
-    def get_text_handler(self):
-        """テキストハンドラーを返す（None）"""
-        return None
-
-class FallbackProgressDialog:
-    def __init__(self, parent, cancel_callback):
-        self.parent = parent
-        self.cancel_callback = cancel_callback
-        self.dialog = None
-    
-    def show(self):
-        """プログレスダイアログを表示"""
-        if self.dialog is None:
-            self.dialog = tk.Toplevel(self.parent)
-            self.dialog.title("処理中")
-            self.dialog.geometry("300x100")
-            self.label = ttk.Label(self.dialog, text="処理中...")
-            self.label.pack(expand=True)
-            ttk.Button(self.dialog, text="キャンセル", command=self.cancel_callback).pack()
-    
-    def update_message(self, message):
-        """メッセージを更新"""
-        if self.dialog and hasattr(self, 'label'):
-            self.label.config(text=message)
-    
-    def hide(self):
-        """ダイアログを非表示"""
-        if self.dialog:
-            self.dialog.destroy()
-            self.dialog = None
-
-class FallbackSettingsManager:
-    def __init__(self, project_root):
-        self.project_root = project_root
-    
-    def load_gui_settings(self, main_app):
-        """GUI設定をロード（空の辞書を返す）"""
-        return {}
-    
-    def save_gui_settings(self, settings):
-        """GUI設定を保存（何もしない）"""
-        logger.info("Settings would be saved here")
-
-class MainApplication:
-    def __init__(self, root: tk.Tk):
-        try:
-            logger.debug("MainApplication: 初期化を開始します。")
-            self.root = root
-            
-            # ステータスバーの初期化を最上位に配置
-            self.status_bar_label = ttk.Label(self.root, text="初期化中...", relief=tk.SUNKEN, anchor=tk.W)
-            self.status_bar_label.pack(side=tk.BOTTOM, fill=tk.X)
-            logger.debug("MainApplication: ステータスバーを初期化しました。")
-            self._update_status_bar("アプリケーションを初期化中...", "info")
-
-            self._set_dpi_awareness()
-            
-            # スタイルオブジェクトをここで初期化
-            self.style = ttk.Style()
-
-            # SettingsManagerのインスタンスを作成（フォールバックあり）
-            if settings_manager_module:
-                SettingsManager = getattr(settings_manager_module, 'SettingsManager', FallbackSettingsManager)
-                self.settings_manager = SettingsManager(PROJECT_ROOT)
+        # SettingsManagerから設定をロードし、initial_属性を更新
+        self.settings_manager = SettingsManager(self.project_root)
+        loaded_settings = self.settings_manager.load_gui_settings(self)
+        for key, value in loaded_settings.items():
+            full_key = 'initial_' + key
+            if hasattr(self, full_key):
+                setattr(self, full_key, value)
             else:
-                self.settings_manager = FallbackSettingsManager(PROJECT_ROOT)
+                logger.warning(f"MainApplication: 未知の初期設定 '{key}' がgui_settings.iniに存在します。")
+        
+        # ロギング設定をgui_settings.iniから読み込んだ値で再設定
+        setup_logging(
+            log_level="DEBUG" if self.initial_debug_mode else "INFO",
+            log_file=str(self.project_root / "logs" / "seminar_optimization.log") if self.initial_log_enabled else None
+        )
+        logger.info("MainApplication: アプリケーションの初期化を開始します。")
 
-            # 初期値の設定
-            self._set_initial_values()
+        # 出力ディレクトリが存在しない場合は作成
+        self.initial_output_directory.mkdir(parents=True, exist_ok=True)
+        logger.info(f"MainApplication: 出力ディレクトリを確認/作成しました: {self.initial_output_directory}")
 
-            # GUI設定をロード
-            loaded_settings = self.settings_manager.load_gui_settings(self)
-            for key, value in loaded_settings.items():
-                if hasattr(self, key): 
-                    setattr(self, key, value)
-            
-            # テーマを適用
-            try:
-                self.style.theme_use(getattr(self, 'initial_theme', 'clam'))
-            except tk.TclError:
-                self.style.theme_use('clam')  # フォールバック
+        # スタイル設定
+        self.style = ttk.Style()
+        self.style.theme_use(self.initial_theme)
+        logger.debug(f"MainApplication: GUIテーマを '{self.initial_theme}' に設定しました。")
 
-            self.root.title("セミナー割り当て最適化ツール")
-            self.root.geometry("1200x800+100+100") 
-            self.root.protocol("WM_DELETE_WINDOW", self._on_closing)
+        self._create_widgets()
+        self._create_main_buttons()
 
-            self.cancel_event = threading.Event()
-            self.optimization_thread: Optional[threading.Thread] = None
-            self.progress_dialog_instance: Optional[object] = None
-            self.text_handler: Optional[logging.Handler] = None
+        self.optimization_thread: Optional[threading.Thread] = None
+        self.cancel_optimization_event = threading.Event()
+        self.progress_dialog = ProgressDialog(self, self._cancel_optimization)
 
-            # GUIウィジェットを作成
-            self._create_widgets()
-            logger.debug("MainApplication: _create_widgets() 呼び出し完了。")
+        # 最適化サービスを初期化
+        self.optimizer_service = OptimizerService(
+            progress_callback=self._update_progress_message,
+            logger_instance=logger
+        )
+        logger.debug("MainApplication: OptimizerServiceを初期化しました。")
 
-            # configをロード
-            self.optimization_config = self._set_default_optimization_config()
-            logger.debug("MainApplication: デフォルトの最適化設定ロード完了。")
-
-            # DataGeneratorとOptimizerServiceのインスタンスを初期化（利用可能な場合）
-            self._initialize_services()
-
-            # UI要素の状態を初期化
-            self._initialize_ui_elements()
-            logger.debug("MainApplication: UI要素の初期化完了。")
-
-            # メインボタンをコンテンツフレームの下部に配置
-            self._create_main_buttons(self.content_frame)
-
-            # ウィンドウの表示設定
-            self.root.deiconify() 
-            self.root.state('normal')
-            self.root.lift()
-            self.root.focus_force()
-            self.root.update_idletasks()
-            logger.debug("MainApplication: GUIウィンドウの初期表示設定を適用しました。")
-
-            logger.info("MainApplication: 初期化が完了しました。")
-
-        except Exception as e:
-            logger.critical(f"MainApplication: 初期化中に致命的なエラーが発生しました: {e}", exc_info=True)
-            messagebox.showerror("致命的なエラー", f"アプリケーションの初期化中に致命的なエラーが発生しました。\n詳細: {e}")
-            sys.exit(1)
-
-    def _set_initial_values(self):
-        """初期値を設定"""
-        self.initial_seminars_str = 'A,B,C'
-        self.initial_num_students = 112
-        self.initial_magnification = {"A": 5.5, "B": 1.0, "C": 0.6}
-        self.initial_min_size = 5
-        self.initial_max_size = 15
-        self.initial_q_boost_probability = 0.2
-        self.initial_num_preferences_to_consider = 5
-        self.initial_num_patterns = 200000
-        self.initial_max_workers = 8
-        self.initial_local_search_iterations = 500
-        self.initial_initial_temperature = 1.0
-        self.initial_cooling_rate = 0.995
-        self.initial_preference_weights = {"1st_choice": 5.0, "2nd_choice": 2.0, "3rd_choice": 1.0, "other_preference": 0.5}
-        self.initial_early_stop_threshold = 0.001
-        self.initial_no_improvement_limit = 1000
-        self.initial_data_source = 'auto'
-        self.initial_log_enabled = True
-        self.initial_save_intermediate = False
-        self.initial_theme = 'clam'
-        # 他の初期値...（元のコードから必要に応じて追加）
-
-    def _initialize_services(self):
-        """サービスクラスの初期化"""
-        if data_generator_module:
-            DataGenerator = getattr(data_generator_module, 'DataGenerator', None)
-            if DataGenerator:
-                self.data_generator = DataGenerator(self.optimization_config, logger)
-            else:
-                self.data_generator = None
-        else:
-            self.data_generator = None
-
-        if optimizer_service_module:
-            OptimizerService = getattr(optimizer_service_module, 'OptimizerService', None)
-            if OptimizerService:
-                self.optimizer_service = OptimizerService(self.optimization_config, logger)
-            else:
-                self.optimizer_service = None
-        else:
-            self.optimizer_service = None
-
-    def _set_dpi_awareness(self):
-        """Windowsで高DPIスケーリングを有効にする。"""
-        try:
-            import ctypes
-            ctypes.windll.shcore.SetProcessDpiAwareness(1)
-            logger.debug("DPI認識が設定されました。")
-        except (AttributeError, ImportError, OSError):
-            logger.debug("DPI認識設定はWindowsでのみ利用可能です。")
-
-    def _set_default_optimization_config(self) -> Dict[str, Any]:
-        """最適化設定のデフォルト値を返す。"""
-        logger.debug("MainApplication: デフォルトの最適化設定を生成します。")
-        return {
-            "data_directory": "data",
-            "seminars_file": "seminars.json",
-            "students_file": "students.json",
-            "results_file": "optimization_results.json",
-            "num_seminars": 10,
-            "min_capacity": 5,
-            "max_capacity": 10,
-            "num_students": 50,
-            "min_preferences": 3,
-            "max_preferences": 5,
-            "preference_distribution": "random",
-            "optimization_strategy": "Greedy_LS",
-            "random_seed": 42,
-            "debug_mode": True,
-            "output_directory": "results"
-        }
-
-    def _initialize_ui_elements(self):
-        """GUI要素の初期値を設定する。"""
-        logger.debug("MainApplication: UI要素の初期化を開始します。")
-        # DataInputTabの初期化（利用可能な場合のみ）
-        if hasattr(self.data_input_tab_handler, 'initialize_fields'):
-            try:
-                self.data_input_tab_handler.initialize_fields(
-                    initial_seminars_str=getattr(self, 'initial_seminars_str', 'A,B,C'),
-                    initial_num_students=getattr(self, 'initial_num_students', 100),
-                    # 他の初期値パラメータ...
-                )
-            except Exception as e:
-                logger.warning(f"DataInputTabの初期化に失敗しました: {e}")
-        logger.debug("MainApplication: UI要素の初期化が完了しました。")
+        # アプリケーション終了時の処理を設定
+        self.protocol("WM_DELETE_WINDOW", self._on_closing)
+        logger.info("MainApplication: 初期化が完了しました。")
 
     def _create_widgets(self):
-        """GUIのウィジェットを作成し、配置する。"""
-        try:
-            logger.debug("MainApplication: GUIウィジェットの作成を開始します。")
+        """
+        メインウィンドウのウィジェットを作成する。
+        """
+        logger.debug("MainApplication: メインウィジェットの作成を開始します。")
+        # 左右に分割するPanedWindow
+        self.paned_window = ttk.PanedWindow(self, orient=tk.HORIZONTAL)
+        self.paned_window.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
-            # メインフレーム
-            main_frame = ttk.Frame(self.root, padding="10") 
-            main_frame.pack(fill=tk.BOTH, expand=True)
+        # 左側のフレーム（コントロールパネル）
+        self.control_frame = ttk.Frame(self.paned_window, width=400)
+        self.paned_window.add(self.control_frame, weight=1)
 
-            # PanedWindowで左側のナビゲーションと中央のコンテンツを分割
-            self.main_pane = ttk.PanedWindow(main_frame, orient=tk.HORIZONTAL) 
-            self.main_pane.pack(fill=tk.BOTH, expand=True)
+        # コントロールフレーム内にノートブック（タブ）を作成
+        self.notebook = ttk.Notebook(self.control_frame)
+        self.notebook.pack(fill=tk.BOTH, expand=True)
 
-            # 左側のナビゲーションフレーム
-            self.nav_frame = ttk.Frame(self.main_pane, width=180, relief=tk.RAISED, borderwidth=1)
-            self.main_pane.add(self.nav_frame, weight=0) 
+        # 各タブのインスタンスを作成し、ノートブックに追加
+        # 各タブにMainApplicationインスタンス自身を渡すことで、設定値にアクセスできるようにする
+        self.data_input_tab = DataInputTab(self.notebook, self)
+        self.setting_tab = SettingTab(self.notebook, self)
+        self.results_tab = ResultsTab(self.notebook)
+        self.log_tab = LogTab(self.notebook)
 
-            # 中央のコンテンツフレーム
-            self.content_frame = ttk.Frame(self.main_pane)
-            self.main_pane.add(self.content_frame, weight=1)
+        self.notebook.add(self.data_input_tab.frame, text="データ入力")
+        self.notebook.add(self.setting_tab.frame, text="設定")
+        self.notebook.add(self.results_tab.frame, text="最適化結果")
+        self.notebook.add(self.log_tab.frame, text="ログ")
 
-            # ナビゲーションボタンの作成
-            self._create_navigation_buttons(self.nav_frame)
+        # 右側のフレーム（将来的なグラフ表示など）
+        self.display_frame = ttk.Frame(self.paned_window, width=800)
+        self.paned_window.add(self.display_frame, weight=2)
+        
+        # 仮の表示内容
+        ttk.Label(self.display_frame, text="最適化結果のグラフや詳細表示エリア", font=("Inter", 16)).pack(pady=50)
+        logger.debug("MainApplication: メインウィジェットの作成が完了しました。")
 
-            # ノートブック（タブ）をコンテンツフレーム内に配置
-            self.notebook = ttk.Notebook(self.content_frame)
-            self.notebook.pack(fill=tk.BOTH, expand=True, padx=5, pady=(5, 40))
 
-            # 各タブのインスタンスを作成し、ノートブックに追加
-            self._create_tabs()
+    def _create_main_buttons(self):
+        """
+        メイン操作ボタンを作成する。
+        """
+        logger.debug("MainApplication: メインボタンの作成を開始します。")
+        button_frame = ttk.Frame(self)
+        button_frame.pack(pady=10)
 
-            logger.debug("MainApplication: GUIウィジェットの作成が完了しました。")
-        except Exception as e:
-            logger.error(f"MainApplication: _create_widgetsでエラーが発生しました: {e}", exc_info=True)
-            self._update_status_bar(f"エラー: ウィジェットの作成に失敗しました: {e}", "error")
-            messagebox.showerror("GUIエラー", f"ウィジェットの作成中にエラーが発生しました。\n詳細: {e}")
-            raise
+        self.start_button = ttk.Button(button_frame, text="最適化実行", command=self._start_optimization)
+        self.start_button.pack(side=tk.LEFT, padx=5)
 
-    def _create_tabs(self):
-        """タブを作成してノートブックに追加"""
-        try:
-            # DataInputTabの作成
-            if gui_tabs_data_input:
-                DataInputTab = getattr(gui_tabs_data_input, 'DataInputTab', FallbackDataInputTab)
-                self.data_input_tab_handler = DataInputTab(self.notebook, self)
+        self.save_settings_button = ttk.Button(button_frame, text="設定保存", command=self.save_current_settings)
+        self.save_settings_button.pack(side=tk.LEFT, padx=5)
+
+        self.exit_button = ttk.Button(button_frame, text="終了", command=self._on_closing)
+        self.exit_button.pack(side=tk.LEFT, padx=5)
+        logger.debug("MainApplication: メインボタンの作成が完了しました。")
+
+    def save_current_settings(self):
+        """
+        GUIの現在の設定値をgui_settings.iniに保存する。
+        各タブから最新の設定値を取得し、MainApplicationの属性に反映させてから保存する。
+        """
+        logger.info("MainApplication: 現在の設定の保存を開始します。")
+        settings_to_save = {}
+
+        # DataInputTabからデータを取得
+        data_input_settings = self.data_input_tab.get_current_settings_for_main_app()
+        settings_to_save.update(data_input_settings)
+
+        # SettingTabからデータを取得
+        general_settings = self.setting_tab.get_current_settings_for_main_app()
+        settings_to_save.update(general_settings)
+
+        # MainApplicationのinitial_属性を更新（オプション、だが一貫性のため推奨）
+        for key, value in settings_to_save.items():
+            full_key = 'initial_' + key 
+            if hasattr(self, full_key):
+                setattr(self, full_key, value)
             else:
-                self.data_input_tab_handler = FallbackDataInputTab(self.notebook, self)
-
-            # ResultsTabの作成
-            if gui_tabs_results:
-                ResultsTab = getattr(gui_tabs_results, 'ResultsTab', FallbackResultsTab)
-                self.results_tab_handler = ResultsTab(self.notebook)
-            else:
-                self.results_tab_handler = FallbackResultsTab(self.notebook)
-
-            # LogTabの作成
-            if gui_tabs_log:
-                LogTab = getattr(gui_tabs_log, 'LogTab', FallbackLogTab)
-                self.log_tab_handler = LogTab(self.notebook)
-            else:
-                self.log_tab_handler = FallbackLogTab(self.notebook)
-
-            # タブをノートブックに追加
-            self.notebook.add(self.data_input_tab_handler.frame, text="データ入力と設定")
-            self.notebook.add(self.results_tab_handler.frame, text="最適化結果")
-            self.notebook.add(self.log_tab_handler.frame, text="ログ")
-
-            # TextHandlerをLogTabから取得し、ロギングシステムに追加
-            self.text_handler = self.log_tab_handler.get_text_handler()
-            if self.text_handler:
-                logging.getLogger().addHandler(self.text_handler)
-                logging.getLogger().setLevel(logging.DEBUG)
-
-            logger.debug("MainApplication: タブの作成が完了しました。")
-        except Exception as e:
-            logger.error(f"タブの作成中にエラーが発生しました: {e}", exc_info=True)
-            # フォールバックタブを作成
-            self.data_input_tab_handler = FallbackDataInputTab(self.notebook, self)
-            self.results_tab_handler = FallbackResultsTab(self.notebook)
-            self.log_tab_handler = FallbackLogTab(self.notebook)
-            
-            self.notebook.add(self.data_input_tab_handler.frame, text="データ入力と設定")
-            self.notebook.add(self.results_tab_handler.frame, text="最適化結果")
-            self.notebook.add(self.log_tab_handler.frame, text="ログ")
-
-    def _create_navigation_buttons(self, parent_frame: ttk.Frame):
-        """左側のナビゲーションボタンを作成する。"""
-        logger.debug("MainApplication: ナビゲーションボタンを作成中...")
-        button_texts = ["インフォメーション", "登録", "照会", "リクエスト", "終了"]
-        for text in button_texts:
-            btn = ttk.Button(parent_frame, text=text, command=lambda t=text: self._on_nav_button_click(t))
-            btn.pack(fill=tk.X, pady=5, padx=5)
-        logger.debug("MainApplication: ナビゲーションボタンの作成が完了しました。")
-
-    def _on_nav_button_click(self, button_text: str):
-        """ナビゲーションボタンがクリックされたときの処理。"""
-        self._update_status_bar(f"「{button_text}」ボタンがクリックされました。", "info")
-        logger.info(f"MainApplication: ナビゲーションボタンクリック: {button_text}")
-        if button_text == "終了":
-            self._on_closing()
-
-    def _create_main_buttons(self, parent_frame: ttk.Frame):
-        """メインの操作ボタンを作成する。"""
-        try:
-            logger.debug("MainApplication: _create_main_buttons: 開始。")
-            parent_frame.update_idletasks()
-
-            button_frame = ttk.Frame(parent_frame)
-            button_frame.pack(side=tk.BOTTOM, fill=tk.X, pady=5)
-
-            ttk.Button(button_frame, text="最適化開始", command=self._start_optimization).pack(side=tk.LEFT, padx=5, expand=True)
-            ttk.Button(button_frame, text="最適化停止", command=self._cancel_optimization).pack(side=tk.LEFT, padx=5, expand=True)
-            ttk.Button(button_frame, text="結果クリア", command=self._clear_results).pack(side=tk.LEFT, padx=5, expand=True)
-            ttk.Button(button_frame, text="設定保存", command=self._save_current_gui_settings).pack(side=tk.LEFT, padx=5, expand=True)
-
-            self.root.update()
-            logger.debug("MainApplication: メインボタンの作成が完了しました。")
-        except Exception as e:
-            logger.error(f"MainApplication: _create_main_buttonsでエラーが発生しました: {e}", exc_info=True)
-            self._update_status_bar(f"エラー: メインボタンの作成に失敗しました: {e}", "error")
-
-    def _update_status_bar(self, message: str, message_type: str = "info"):
-        """ステータスバーを更新する。"""
-        logger.debug(f"ステータスバー更新: タイプ={message_type}, メッセージ='{message}'")
-        if self.status_bar_label:
-            self.status_bar_label.config(text=message)
-            if message_type == "info":
-                self.status_bar_label.config(background="SystemButtonFace", foreground="black")
-            elif message_type == "warning":
-                self.status_bar_label.config(background="yellow", foreground="black")
-            elif message_type == "error":
-                self.status_bar_label.config(background="red", foreground="white")
-            self.root.update_idletasks()
+                logger.warning(f"MainApplication.save_current_settings: Unknown key for MainApplication attribute: {full_key}")
+        
+        # settings_managerに渡す辞書は、'initial_' プレフィックスなしのキーで構成
+        # Pathオブジェクトは文字列に変換して保存
+        final_settings_for_save = {k: str(v) if isinstance(v, Path) else v for k, v in settings_to_save.items()}
+        self.settings_manager.save_gui_settings(final_settings_for_save)
+        messagebox.showinfo("設定保存", "現在の設定が保存されました！")
+        logger.info("MainApplication: 設定の保存が完了しました。")
 
     def _start_optimization(self):
-        """最適化プロセスを開始する。"""
-        logger.info("最適化開始ボタンが押されました。")
+        """
+        最適化処理を新しいスレッドで開始する。
+        """
+        logger.info("MainApplication: 最適化処理を開始します。")
         if self.optimization_thread and self.optimization_thread.is_alive():
-            self._update_status_bar("最適化がすでに実行中です。", "warning")
+            messagebox.showwarning("最適化実行中", "既に最適化が実行中です。")
+            logger.warning("MainApplication: 最適化が既に実行中のため、開始をスキップしました。")
             return
 
-        if not self.optimizer_service:
-            self._update_status_bar("最適化サービスが利用できません。", "error")
-            messagebox.showerror("エラー", "最適化サービスが初期化されていません。")
+        # 最新の設定をMainApplicationの属性に反映 (GUIで変更された値を反映)
+        self.save_current_settings()
+
+        # DataInputTabからデータを取得
+        seminars_data = self.data_input_tab.get_seminars_data()
+        students_data = self.data_input_tab.get_students_data()
+
+        if not seminars_data or not students_data:
+            messagebox.showerror("データエラー", "セミナーデータまたは学生データがロードされていません。")
+            logger.error("MainApplication: セミナーまたは学生データが不足しているため、最適化を開始できませんでした。")
             return
 
-        self._clear_results()
-        self._update_status_bar("最適化を開始しています...", "info")
-        self.cancel_event.clear()
+        # configはMainApplicationのinitial_属性から構築
+        config = {
+            # DataInputTabが管理する設定
+            "num_seminars": self.initial_num_seminars,
+            "num_students": self.initial_num_students,
+            "min_capacity": self.initial_min_capacity,
+            "max_capacity": self.initial_max_capacity,
+            "preference_distribution": self.initial_preference_distribution,
+            "random_seed": self.initial_random_seed,
+            "q_boost_probability": self.initial_q_boost_probability,
+            "min_preferences": self.initial_min_preferences,
+            "max_preferences": self.initial_max_preferences, # max_preferencesとして渡す
+            "seminars_file": self.initial_seminars_file_path,
+            "students_file": self.initial_students_file_path,
 
-        current_config = self.data_input_tab_handler.get_current_config()
-        
+            # SettingTabが管理する設定
+            "optimization_strategy": self.initial_optimization_strategy,
+            "ga_population_size": self.initial_ga_population_size,
+            "ga_generations": self.initial_ga_generations,
+            "ga_mutation_rate": self.initial_ga_mutation_rate,
+            "ga_crossover_rate": self.initial_ga_crossover_rate,
+            "ga_no_improvement_limit": self.initial_ga_no_improvement_limit,
+            "ilp_time_limit": self.initial_ilp_time_limit,
+            "cp_time_limit": self.initial_cp_time_limit,
+            "multilevel_clusters": self.initial_multilevel_clusters,
+            "greedy_ls_iterations": self.initial_greedy_ls_iterations,
+            "local_search_iterations": self.initial_local_search_iterations,
+            "initial_temperature": self.initial_initial_temperature,
+            "cooling_rate": self.initial_cooling_rate,
+            "score_weights": self.initial_score_weights,
+            "early_stop_threshold": self.initial_early_stop_threshold,
+            # 修正: early_stop_no_improvement_limit を config に追加
+            "early_stop_no_improvement_limit": self.initial_early_stop_no_improvement_limit,
+            "generate_pdf_report": self.initial_generate_pdf_report,
+            "generate_csv_report": self.initial_generate_csv_report,
+            "output_directory": str(self.initial_output_directory),
+            "pdf_font_path": self.initial_pdf_font_path,
+            "debug_mode": self.initial_debug_mode,
+            "log_enabled": self.initial_log_enabled,
+            "save_intermediate": self.initial_save_intermediate,
+            "data_directory": str(self.project_root / "data")
+        }
+
+        self.cancel_optimization_event.clear()
+        self.progress_dialog.show()
+
+        # 最適化を別スレッドで実行
         self.optimization_thread = threading.Thread(
-            target=self._run_optimization,
-            args=(current_config, self.cancel_event)
+            target=self._run_optimization_in_thread,
+            args=(seminars_data, students_data, config, self.cancel_optimization_event)
         )
         self.optimization_thread.start()
-        self._show_progress_dialog()
+        logger.info("MainApplication: 最適化スレッドを開始しました。")
 
-    def _run_optimization(self, current_config: Dict[str, Any], cancel_event: threading.Event):
-        """最適化プロセスを実行する。"""
-        logger.info("最適化プロセスを開始します。")
-        self.root.after(0, self._update_status_bar, "最適化を実行中...", "info")
-        
+    def _run_optimization_in_thread(self, seminars_data: List[Dict[str, Any]], students_data: List[Dict[str, Any]], config: Dict[str, Any], cancel_event: threading.Event):
+        """
+        最適化処理をスレッド内で実行する。
+        """
         try:
-            # 簡単な処理をシミュレート（実際の最適化が利用できない場合）
-            import time
-            for i in range(10):
-                if cancel_event.is_set():
-                    break
-                time.sleep(0.5)
-                progress_msg = f"処理中... {i+1}/10"
-                self.root.after(0, self._progress_callback, progress_msg)
-            
-            # ダミーの結果を作成
-            result = type('Result', (), {
-                'status': 'completed',
-                'message': '最適化が完了しました（シミュレーション）',
-                'data': {'score': 95.5, 'assignments': 'テストデータ'}
-            })()
-            
-            self.root.after(0, self._display_results, result)
-
+            logger.info("MainApplication: 最適化処理スレッドが開始されました。")
+            result = self.optimizer_service.optimize(
+                seminars=seminars_data,
+                students=students_data,
+                config=config,
+                cancel_event=cancel_event
+            )
+            # メインスレッドでUIを更新
+            self.after(0, lambda: self._handle_optimization_result(result, config))
         except Exception as e:
-            logger.error(f"最適化中にエラーが発生しました: {e}", exc_info=True)
-            self.root.after(0, self._update_status_bar, f"エラー: {e}", "error")
-            self.root.after(0, messagebox.showerror, "最適化エラー", f"最適化中にエラーが発生しました。\n詳細: {e}")
+            logger.exception("MainApplication: 最適化処理中に予期せぬエラーが発生しました。")
+            self.after(0, lambda: messagebox.showerror("最適化エラー", f"最適化中にエラーが発生しました: {e}"))
         finally:
-            self.root.after(0, self._hide_progress_dialog)
+            self.after(0, self.progress_dialog.hide)
+            logger.info("MainApplication: 最適化処理スレッドが終了しました。")
 
-    def _progress_callback(self, message: str):
-        """最適化の進捗をプログレスダイアログに表示するコールバック関数。"""
-        self.root.after(0, self._update_progress_dialog, message)
+    def _handle_optimization_result(self, result: Any, config: Dict[str, Any]):
+        """
+        最適化結果を処理し、UIを更新する。
+        """
+        logger.info(f"MainApplication: 最適化結果を処理します。ステータス: {result.status}")
+        self.results_tab.display_results(result)
+        self.notebook.select(self.results_tab.frame)
 
-    def _show_progress_dialog(self):
-        """プログレスダイアログを表示する。"""
-        logger.debug("MainApplication: プログレスダイアログを表示します。")
-        if self.progress_dialog_instance is None:
-            if gui_components_progress:
-                ProgressDialog = getattr(gui_components_progress, 'ProgressDialog', FallbackProgressDialog)
-                self.progress_dialog_instance = ProgressDialog(self.root, self._cancel_optimization)
-            else:
-                self.progress_dialog_instance = FallbackProgressDialog(self.root, self._cancel_optimization)
-        self.progress_dialog_instance.show()
+        if result.status == "CANCELLED":
+            messagebox.showinfo("最適化キャンセル", "最適化がキャンセルされました。")
+            logger.info("MainApplication: 最適化がユーザーによってキャンセルされました。")
+        elif result.status == "OPTIMAL" or result.status == "FEASIBLE":
+            messagebox.showinfo("最適化完了", "最適化が成功しました！")
+            logger.info("MainApplication: 最適化が成功しました。")
+        else:
+            messagebox.showwarning("最適化失敗", f"最適化が完了しましたが、問題が発生しました: {result.message}")
+            logger.warning(f"MainApplication: 最適化が完了しましたが、問題が発生しました: {result.message}")
 
-    def _update_progress_dialog(self, message: str):
-        """プログレスダイアログのメッセージを更新する。"""
-        if self.progress_dialog_instance:
-            self.progress_dialog_instance.update_message(message)
-            self.root.update_idletasks()
+        logger.debug("MainApplication: 最適化結果の処理が完了しました。")
 
-    def _hide_progress_dialog(self):
-        """プログレスダイアログを非表示にする。"""
-        logger.debug("MainApplication: プログレスダイアログを非表示にします。")
-        if self.progress_dialog_instance:
-            self.progress_dialog_instance.hide()
-            self.progress_dialog_instance = None
+    def _update_progress_message(self, message: str):
+        """
+        プログレスダイアログのメッセージを更新する。
+        """
+        self.after(0, self.progress_dialog.update_message, message)
 
     def _cancel_optimization(self):
-        """最適化プロセスをキャンセルする。"""
-        logger.info("最適化停止ボタンが押されました。")
+        """
+        最適化処理をキャンセルする。
+        """
+        logger.info("MainApplication: 最適化キャンセルリクエストを受信しました。")
         if self.optimization_thread and self.optimization_thread.is_alive():
-            self.cancel_event.set()
-            self._update_status_bar("最適化をキャンセルしています...", "warning")
+            self.cancel_optimization_event.set()
+            self.progress_dialog.update_message("最適化をキャンセルしています...")
+            logger.info("MainApplication: キャンセルイベントを設定しました。")
         else:
-            self._update_status_bar("実行中の最適化はありません。", "info")
-        self._hide_progress_dialog()
+            self.progress_dialog.hide()
+            logger.info("MainApplication: 最適化スレッドが実行中でないため、キャンセル不要です。")
 
-    def _display_results(self, result: Any):
-        """最適化結果をUIに表示する。ResultsTabに処理を委譲。"""
-        logger.info("最適化結果をUIに表示します。")
-        self.results_tab_handler.display_results(result)
-        self._update_status_bar(f"最適化完了: {result.status}", "info")
-        self.notebook.select(self.notebook.tabs()[1])  # 結果タブに切り替える
-        logger.info("最適化結果のUI表示が完了しました。")
-
-    def _clear_results(self):
-        """結果表示エリアをクリアする。ResultsTabに処理を委譲。"""
-        logger.info("結果クリアボタンが押されました。")
-        self.results_tab_handler.clear_results()
-        self._update_status_bar("結果表示をクリアしました。", "info")
-
-    def _save_current_gui_settings(self):
-        """現在のGUI設定をgui_settings.iniに保存する。SettingsManagerに処理を委譲。"""
-        logger.info("設定保存ボタンが押されました。")
-        # 各タブから現在の設定値を取得して保存
-        current_settings = self.data_input_tab_handler.get_current_settings_for_save()
-        
-        # MainApplicationが直接管理する設定も追加
-        try:
-            current_settings['theme'] = self.style.theme_use()
-        except:
-            current_settings['theme'] = 'clam'
-
-        try:
-            self.settings_manager.save_gui_settings(current_settings)
-            self._update_status_bar("GUI設定を保存しました。", "info")
-        except Exception as e:
-            logger.error(f"MainApplication: GUI設定の保存中にエラーが発生しました: {e}", exc_info=True)
-            self._update_status_bar(f"エラー: GUI設定の保存に失敗しました: {e}", "error")
 
     def _on_closing(self):
-        """アプリケーション終了時の処理。"""
-        logger.info("アプリケーション終了処理を開始します。")
+        """
+        アプリケーション終了時の処理。
+        """
+        logger.info("MainApplication: アプリケーションを終了します。")
         if self.optimization_thread and self.optimization_thread.is_alive():
-            if messagebox.askyesno("最適化実行中", "最適化プロセスが実行中です。終了すると中断されます。続行しますか？"):
-                logger.debug("Exit process confirmed by user.")
-                self.cancel_event.set()
-                if self.optimization_thread and self.optimization_thread.is_alive():
-                    self.optimization_thread.join(timeout=5)
-                    if self.optimization_thread.is_alive():
-                        logger.warning("Optimization thread did not terminate within timeout. Forcing exit.")
-                        self._update_status_bar("Warning: Optimization thread did not terminate.", "warning")
+            if messagebox.askyesno("終了確認", "最適化が実行中です。本当に終了しますか？"):
+                self.cancel_optimization_event.set()
+                self.optimization_thread.join(timeout=5)
+                if self.optimization_thread.is_alive():
+                    logger.warning("MainApplication: 最適化スレッドがタイムアウト内に終了しませんでした。")
+                self.destroy()
             else:
-                logger.debug("Exit process cancelled by user.")
-                self._update_status_bar("Exit cancelled.", "info")
-                return
-        
-        # GUI設定を保存
-        self._save_current_gui_settings()
-
-        # プログレスダイアログが開いている場合は閉じる
-        if self.progress_dialog_instance:
-            self.progress_dialog_instance.hide()
-            self.progress_dialog_instance = None
-
-        # TextHandlerをロガーから削除
-        if self.text_handler:
-            logging.getLogger().removeHandler(self.text_handler)
-            logger.debug("TextHandler removed from logger.")
-
-        self.root.destroy()
-        logger.info("アプリケーションが正常に終了しました。")
-
-
-if __name__ == "__main__":
-    # ロギングの初期設定
-    log_file_path = PROJECT_ROOT / "logs" / f"seminar_optimization_{datetime.now().strftime('%Y%m%d')}.log"
-    
-    try:
-        if logger_config_module and hasattr(logger_config_module, 'setup_logging'):
-            # 元のsetup_logging関数を使用
-            setup_logging_func = getattr(logger_config_module, 'setup_logging')
-            setup_logging_func(log_level="DEBUG", log_file=str(log_file_path))
+                logger.info("MainApplication: 終了がキャンセルされました。")
         else:
-            # フォールバック関数を使用
-            setup_basic_logging(log_level="DEBUG", log_file=str(log_file_path))
-    except Exception as e:
-        print(f"Warning: Could not set up logging properly: {e}")
-        # 最低限のロギング設定
-        logging.basicConfig(level=logging.DEBUG)
-        logger = logging.getLogger(__name__)
-    
-    logger.info("main: アプリケーションのロギングが初期化されました。")
-    
-    root = tk.Tk()
-    app = MainApplication(root)
-    root.mainloop()
-    logger.info("Main loop exited.")
+            self.destroy()
+
+# アプリケーションのエントリーポイント
+if __name__ == "__main__":
+    app = MainApplication(PROJECT_ROOT)
+    app.mainloop()
