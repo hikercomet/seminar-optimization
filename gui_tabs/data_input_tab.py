@@ -4,6 +4,11 @@ import os
 import json
 import logging
 from typing import Dict, List, Any, Optional, Callable, Tuple
+import ctypes
+try:
+    ctypes.windll.shcore.SetProcessDpiAwareness(True)
+except:
+    pass
 
 # ロギングは logger_config.py で一元的に設定されるため、ここではロガーの取得のみ
 from seminar_optimization.logger_config import logger
@@ -16,6 +21,37 @@ class DataInputTab:
     「データ入力」タブのUIとロジックを管理するクラス。
     セミナーと学生データのロード、生成、および関連する設定を扱う。
     """
+    def _on_mousewheel(self, event):
+        # Windows/macOSではevent.deltaが使用され、Linuxではevent.num (Button-4/5) が使用される
+        if event.delta: # Windows/macOS
+            self.canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+        elif event.num == 4: # Linux (スクロールアップ)
+            self.canvas.yview_scroll(-1, "units")
+        elif event.num == 5: # Linux (スクロールダウン)
+            self.canvas.yview_scroll(1, "units")
+        # Canvasを作成し、スクロールバーを関連付ける
+        self.canvas = tk.Canvas(self.frame)
+        self.scrollbar = ttk.Scrollbar(self.frame, orient="vertical", command=self.canvas.yview)
+        self.scrollable_frame = ttk.Frame(self.canvas) # このフレーム内にすべての設定ウィジェットを配置する
+
+        self.scrollable_frame.bind(
+            "<Configure>",
+            lambda e: self.canvas.configure(
+                scrollregion=self.canvas.bbox("all")
+            )
+        )
+
+        self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+
+        self.canvas.pack(side="left", fill="both", expand=True)
+        self.scrollbar.pack(side="right", fill="y")
+
+        # マウスホイールイベントをバインド
+        self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
+        self.canvas.bind_all("<Button-4>", self._on_mousewheel) # Linuxの場合
+        self.canvas.bind_all("<Button-5>", self._on_mousewheel) # Linuxの場合
+        logger.debug("ResultsTab:Canvasとスクロールバーのウェジットをさくせいしました。")
     def __init__(self, notebook: ttk.Notebook, parent_app: Any): # parent_app は MainApplication インスタンス
         self.notebook = notebook
         self.parent_app = parent_app # MainApplicationインスタンスへの参照を保持
@@ -54,6 +90,8 @@ class DataInputTab:
         """
         「データ入力」タブのウィジェットを作成する。
         """
+
+
         logger.debug("DataInputTab: ウィジェットの作成を開始します。")
         # 入力方法選択フレーム
         input_method_frame = ttk.LabelFrame(self.frame, text="データ入力方法", padding="10")
@@ -251,6 +289,7 @@ class DataInputTab:
             # MainApplicationの属性も更新する（SettingTabの設定も含む）
             # これはMainApplicationのsave_current_settingsが最終的に行うべき処理だが、
             # config.jsonロード時に即座にUIと内部状態を同期させるためにここで呼び出す
+            self.parent_app.initial_data_input_method = self.num_seminars_var.get()
             self.parent_app.initial_num_seminars = self.num_seminars_var.get()
             self.parent_app.initial_num_students = self.num_students_var.get()
             self.parent_app.initial_min_capacity = self.min_capacity_var.get()

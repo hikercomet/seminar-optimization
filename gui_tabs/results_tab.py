@@ -3,6 +3,11 @@ from tkinter import ttk
 import tkinter.scrolledtext as scrolledtext
 import logging
 from typing import Any, Dict
+import ctypes
+try:
+    ctypes.windll.shcore.SetProcessDpiAwareness(True)
+except:
+    pass
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +28,33 @@ class ResultsTab:
     def _create_widgets(self):
         """
         「最適化結果」タブのウィジェットを作成する。
+        
         """
+                # Canvasを作成し、スクロールバーを関連付ける
+        self.canvas = tk.Canvas(self.frame)
+        self.scrollbar = ttk.Scrollbar(self.frame, orient="vertical", command=self.canvas.yview)
+        self.scrollable_frame = ttk.Frame(self.canvas) # このフレーム内にすべての設定ウィジェットを配置する
+
+        self.scrollable_frame.bind(
+            "<Configure>",
+            lambda e: self.canvas.configure(
+                scrollregion=self.canvas.bbox("all")
+            )
+        )
+
+        self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+
+        self.canvas.pack(side="left", fill="both", expand=True)
+        self.scrollbar.pack(side="right", fill="y")
+
+        # マウスホイールイベントをバインド
+        self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
+        self.canvas.bind_all("<Button-4>", self._on_mousewheel) # Linuxの場合
+        self.canvas.bind_all("<Button-5>", self._on_mousewheel) # Linuxの場合
+        logger.debug("ResultsTab:Canvasとスクロールバーのウェジットをさくせいしました")
+
+
         logger.debug("ResultsTab: ウィジェットの作成を開始します。")
         # 結果表示エリア
         self.results_text = scrolledtext.ScrolledText(self.frame, wrap=tk.WORD, state='disabled', height=10)

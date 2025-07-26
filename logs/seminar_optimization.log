@@ -2353,3 +2353,2381 @@ On instance:
 2025-07-26 12:17:02,950 - gui_tabs.results_tab - INFO - ResultsTab: 最適化結果のUI表示が完了しました。
 2025-07-26 12:17:02,958 - seminar_optimization.logger_config - INFO - MainApplication: 最適化処理スレッドが終了しました。
 2025-07-26 12:17:05,546 - seminar_optimization.logger_config - WARNING - MainApplication: 最適化が完了しましたが、問題が発生しました: データ検証エラー: 入力データの形式が不正です: 'max_workers' is a required property (パス: )
+2025-07-26 13:31:10,509 - seminar_optimization.logger_config - INFO - MainApplication: 最適化処理を開始します。
+2025-07-26 13:31:10,511 - seminar_optimization.logger_config - INFO - MainApplication: 現在の設定の保存を開始します。
+2025-07-26 13:31:10,515 - setting_manager - INFO - SettingsManager: GUI設定の保存を開始します。
+2025-07-26 13:31:10,517 - setting_manager - INFO - SettingsManager: GUI設定をgui_settings.iniに保存しました。
+2025-07-26 13:31:11,694 - seminar_optimization.logger_config - INFO - MainApplication: 設定の保存が完了しました。
+2025-07-26 13:31:11,705 - seminar_optimization.logger_config - INFO - MainApplication: 最適化処理スレッドが開始されました。
+2025-07-26 13:31:11,705 - seminar_optimization.logger_config - INFO - MainApplication: 最適化スレッドを開始しました。
+2025-07-26 13:31:11,705 - seminar_optimization.logger_config - INFO - OptimizerService: 最適化処理を開始します。
+2025-07-26 13:31:11,706 - seminar_optimization.logger_config - INFO - OptimizerService: 入力データのスキーマ検証を開始します。
+2025-07-26 13:31:11,737 - seminar_optimization.logger_config - ERROR - OptimizerService: データ検証エラー: 'max_workers' is a required property (パス: )
+Traceback (most recent call last):
+  File "C:\Users\hiker\seminar_optimization\optimizers\optimizer_service.py", line 70, in _validate_data
+    jsonschema.validate(instance=config, schema=CONFIG_SCHEMA)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\AppData\Local\Programs\Python\Python313\Lib\site-packages\jsonschema\validators.py", line 1332, in validate
+    raise error
+jsonschema.exceptions.ValidationError: 'max_workers' is a required property
+
+Failed validating 'required' in schema:
+    {'type': 'object',
+     'properties': {'num_seminars': {'type': 'integer', 'minimum': 1},
+                    'min_capacity': {'type': 'integer', 'minimum': 1},
+                    'max_capacity': {'type': 'integer', 'minimum': 1},
+                    'num_students': {'type': 'integer', 'minimum': 1},
+                    'min_preferences': {'type': 'integer', 'minimum': 1},
+                    'max_preferences': {'type': 'integer', 'minimum': 1},
+                    'preference_distribution': {'type': 'string',
+                                                'enum': ['random',
+                                                         'uniform',
+                                                         'biased']},
+                    'random_seed': {'type': ['integer', 'null']},
+                    'optimization_strategy': {'type': 'string',
+                                              'enum': ['Greedy_LS',
+                                                       'GA_LS',
+                                                       'ILP',
+                                                       'CP',
+                                                       'Multilevel',
+                                                       'Adaptive']},
+                    'ga_population_size': {'type': 'integer', 'minimum': 1},
+                    'ga_generations': {'type': 'integer', 'minimum': 1},
+                    'ga_mutation_rate': {'type': 'number',
+                                         'minimum': 0,
+                                         'maximum': 1},
+                    'ga_crossover_rate': {'type': 'number',
+                                          'minimum': 0,
+                                          'maximum': 1},
+                    'ga_no_improvement_limit': {'type': 'integer',
+                                                'minimum': 1},
+                    'ilp_time_limit': {'type': 'integer', 'minimum': 1},
+                    'cp_time_limit': {'type': 'integer', 'minimum': 1},
+                    'max_workers': {'type': 'integer', 'minimum': 1},
+                    'multilevel_clusters': {'type': 'integer',
+                                            'minimum': 1},
+                    'greedy_ls_iterations': {'type': 'integer',
+                                             'minimum': 1},
+                    'local_search_iterations': {'type': 'integer',
+                                                'minimum': 1},
+                    'early_stop_no_improvement_limit': {'type': 'integer',
+                                                        'minimum': 1},
+                    'initial_temperature': {'type': 'number', 'minimum': 0},
+                    'cooling_rate': {'type': 'number',
+                                     'minimum': 0,
+                                     'maximum': 1},
+                    'generate_pdf_report': {'type': 'boolean'},
+                    'generate_csv_report': {'type': 'boolean'},
+                    'debug_mode': {'type': 'boolean'},
+                    'log_enabled': {'type': 'boolean'},
+                    'output_directory': {'type': 'string'},
+                    'seminars_file': {'type': 'string'},
+                    'students_file': {'type': 'string'},
+                    'score_weights': {'type': 'object',
+                                      'properties': {'1st_choice': {'type': 'number',
+                                                                    'minimum': 0},
+                                                     '2nd_choice': {'type': 'number',
+                                                                    'minimum': 0},
+                                                     '3rd_choice': {'type': 'number',
+                                                                    'minimum': 0},
+                                                     'other_preference': {'type': 'number',
+                                                                          'minimum': 0}},
+                                      'required': ['1st_choice',
+                                                   '2nd_choice',
+                                                   '3rd_choice',
+                                                   'other_preference'],
+                                      'additionalProperties': False},
+                    'adaptive_history_size': {'type': 'integer',
+                                              'minimum': 1},
+                    'adaptive_exploration_epsilon': {'type': 'number',
+                                                     'minimum': 0,
+                                                     'maximum': 1},
+                    'adaptive_learning_rate': {'type': 'number',
+                                               'minimum': 0,
+                                               'maximum': 1},
+                    'adaptive_score_weight': {'type': 'number',
+                                              'minimum': 0,
+                                              'maximum': 1},
+                    'adaptive_unassigned_weight': {'type': 'number',
+                                                   'minimum': 0,
+                                                   'maximum': 1},
+                    'adaptive_time_weight': {'type': 'number',
+                                             'minimum': 0,
+                                             'maximum': 1},
+                    'max_time_for_normalization': {'type': 'number',
+                                                   'minimum': 1}},
+     'required': ['num_seminars',
+                  'min_capacity',
+                  'max_capacity',
+                  'num_students',
+                  'min_preferences',
+                  'max_preferences',
+                  'preference_distribution',
+                  'optimization_strategy',
+                  'ga_population_size',
+                  'ga_generations',
+                  'ilp_time_limit',
+                  'cp_time_limit',
+                  'multilevel_clusters',
+                  'greedy_ls_iterations',
+                  'local_search_iterations',
+                  'early_stop_no_improvement_limit',
+                  'initial_temperature',
+                  'cooling_rate',
+                  'generate_pdf_report',
+                  'generate_csv_report',
+                  'debug_mode',
+                  'log_enabled',
+                  'output_directory',
+                  'seminars_file',
+                  'students_file',
+                  'score_weights',
+                  'ga_mutation_rate',
+                  'ga_crossover_rate',
+                  'ga_no_improvement_limit',
+                  'max_workers',
+                  'adaptive_history_size',
+                  'adaptive_exploration_epsilon',
+                  'adaptive_learning_rate',
+                  'adaptive_score_weight',
+                  'adaptive_unassigned_weight',
+                  'adaptive_time_weight',
+                  'max_time_for_normalization'],
+     'additionalProperties': False}
+
+On instance:
+    {'num_seminars': 10,
+     'num_students': 112,
+     'min_capacity': 10,
+     'max_capacity': 15,
+     'preference_distribution': 'random',
+     'random_seed': 42,
+     'q_boost_probability': 0.2,
+     'min_preferences': 3,
+     'max_preferences': 5,
+     'seminars_file': 'c:\\Users\\hiker\\seminar_optimization\\seminar_optimization\\data\\seminars.json',
+     'students_file': 'c:\\Users\\hiker\\seminar_optimization\\seminar_optimization\\data\\students.json',
+     'optimization_strategy': 'Greedy_LS',
+     'ga_population_size': 100,
+     'ga_generations': 200,
+     'ga_mutation_rate': 0.05,
+     'ga_crossover_rate': 0.8,
+     'ga_no_improvement_limit': 10,
+     'ilp_time_limit': 300,
+     'cp_time_limit': 300,
+     'multilevel_clusters': 5,
+     'greedy_ls_iterations': 200000,
+     'local_search_iterations': 500,
+     'initial_temperature': 1.0,
+     'cooling_rate': 0.995,
+     'score_weights': {'1st_choice': 5.0,
+                       '2nd_choice': 2.0,
+                       '3rd_choice': 1.0,
+                       'other': 0.5},
+     'early_stop_threshold': 0.001,
+     'early_stop_no_improvement_limit': 1000,
+     'generate_pdf_report': True,
+     'generate_csv_report': True,
+     'output_directory': 'results',
+     'pdf_font_path': '',
+     'debug_mode': False,
+     'log_enabled': True,
+     'save_intermediate': True,
+     'data_directory': 'C:\\Users\\hiker\\seminar_optimization\\data'}
+2025-07-26 13:31:11,757 - seminar_optimization.logger_config - INFO - MainApplication: 最適化結果を処理します。ステータス: FAILED
+2025-07-26 13:31:11,758 - gui_tabs.results_tab - INFO - ResultsTab: 最適化結果をUIに表示します。
+2025-07-26 13:31:11,759 - gui_tabs.results_tab - INFO - ResultsTab: 最適化結果のUI表示が完了しました。
+2025-07-26 13:31:11,779 - seminar_optimization.logger_config - INFO - MainApplication: 最適化処理スレッドが終了しました。
+2025-07-26 13:31:13,481 - seminar_optimization.logger_config - WARNING - MainApplication: 最適化が完了しましたが、問題が発生しました: データ検証エラー: 入力データの形式が不正です: 'max_workers' is a required property (パス: )
+2025-07-26 22:29:28,573 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 22:29:28,573 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 22:29:28,575 - setting_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-26 22:29:28,575 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'seminars' がgui_settings.iniに存在します。
+2025-07-26 22:29:28,576 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'magnification' がgui_settings.iniに存在します。
+2025-07-26 22:29:28,576 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'min_size' がgui_settings.iniに存在します。
+2025-07-26 22:29:28,576 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_size' がgui_settings.iniに存在します。
+2025-07-26 22:29:28,577 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'num_patterns' がgui_settings.iniに存在します。
+2025-07-26 22:29:28,577 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_workers' がgui_settings.iniに存在します。
+2025-07-26 22:29:28,577 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_1st' がgui_settings.iniに存在します。
+2025-07-26 22:29:28,577 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_2nd' がgui_settings.iniに存在します。
+2025-07-26 22:29:28,578 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_3rd' がgui_settings.iniに存在します。
+2025-07-26 22:29:28,578 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_other' がgui_settings.iniに存在します。
+2025-07-26 22:29:28,578 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'no_improvement_limit' がgui_settings.iniに存在します。
+2025-07-26 22:29:28,578 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'data_source' がgui_settings.iniに存在します。
+2025-07-26 22:29:28,578 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'student_file_path' がgui_settings.iniに存在します。
+2025-07-26 22:29:28,578 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_adaptive_iterations' がgui_settings.iniに存在します。
+2025-07-26 22:29:28,579 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'strategy_time_limit' がgui_settings.iniに存在します。
+2025-07-26 22:29:28,579 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_history_size' がgui_settings.iniに存在します。
+2025-07-26 22:29:28,579 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_exploration_epsilon' がgui_settings.iniに存在します。
+2025-07-26 22:29:28,579 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_learning_rate' がgui_settings.iniに存在します。
+2025-07-26 22:29:28,580 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_score_weight' がgui_settings.iniに存在します。
+2025-07-26 22:29:28,580 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_unassigned_weight' がgui_settings.iniに存在します。
+2025-07-26 22:29:28,580 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_time_weight' がgui_settings.iniに存在します。
+2025-07-26 22:29:28,581 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_time_for_normalization' がgui_settings.iniに存在します。
+2025-07-26 22:29:28,581 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 22:29:28,582 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 22:29:28,582 - seminar_optimization.logger_config - INFO - MainApplication: アプリケーションの初期化を開始します。
+2025-07-26 22:29:28,583 - seminar_optimization.logger_config - INFO - MainApplication: 出力ディレクトリを確認/作成しました: results
+2025-07-26 22:29:28,703 - seminar_optimization.logger_config - INFO - MainApplication: 初期化が完了しました。
+2025-07-26 22:29:31,422 - seminar_optimization.logger_config - INFO - MainApplication: 最適化処理を開始します。
+2025-07-26 22:29:31,422 - seminar_optimization.logger_config - INFO - MainApplication: 現在の設定の保存を開始します。
+2025-07-26 22:29:31,423 - setting_manager - INFO - SettingsManager: GUI設定の保存を開始します。
+2025-07-26 22:29:31,424 - setting_manager - INFO - SettingsManager: GUI設定をgui_settings.iniに保存しました。
+2025-07-26 22:29:32,758 - seminar_optimization.logger_config - INFO - MainApplication: 設定の保存が完了しました。
+2025-07-26 22:29:34,029 - seminar_optimization.logger_config - ERROR - MainApplication: セミナーまたは学生データが不足しているため、最適化を開始できませんでした。
+2025-07-26 22:29:34,926 - seminar_optimization.data_generator - INFO - DataGenerator: ランダムなセミナーと学生のデータを生成します。
+2025-07-26 22:29:34,936 - seminar_optimization.data_generator - INFO - DataGenerator: データ生成の論理的検証に成功しました。
+2025-07-26 22:29:34,937 - seminar_optimization.data_generator - INFO - DataGenerator: データ生成と検証が完了しました。
+2025-07-26 22:29:35,996 - seminar_optimization.logger_config - INFO - DataInputTab: データを自動生成しました。セミナー数: 10, 学生数: 112
+2025-07-26 22:29:38,781 - seminar_optimization.logger_config - INFO - MainApplication: 最適化処理を開始します。
+2025-07-26 22:29:38,782 - seminar_optimization.logger_config - INFO - MainApplication: 現在の設定の保存を開始します。
+2025-07-26 22:29:38,782 - setting_manager - INFO - SettingsManager: GUI設定の保存を開始します。
+2025-07-26 22:29:38,784 - setting_manager - INFO - SettingsManager: GUI設定をgui_settings.iniに保存しました。
+2025-07-26 22:29:39,723 - seminar_optimization.logger_config - INFO - MainApplication: 設定の保存が完了しました。
+2025-07-26 22:29:39,729 - seminar_optimization.logger_config - INFO - MainApplication: 最適化処理スレッドが開始されました。
+2025-07-26 22:29:39,729 - seminar_optimization.logger_config - INFO - MainApplication: 最適化スレッドを開始しました。
+2025-07-26 22:29:39,729 - seminar_optimization.logger_config - INFO - OptimizerService: 最適化処理を開始します。
+2025-07-26 22:29:39,729 - seminar_optimization.logger_config - INFO - OptimizerService: 入力データのスキーマ検証を開始します。
+2025-07-26 22:29:39,753 - seminar_optimization.logger_config - ERROR - OptimizerService: データ検証エラー: 'max_workers' is a required property (パス: )
+Traceback (most recent call last):
+  File "C:\Users\hiker\seminar_optimization\optimizers\optimizer_service.py", line 70, in _validate_data
+    jsonschema.validate(instance=config, schema=CONFIG_SCHEMA)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\AppData\Local\Programs\Python\Python313\Lib\site-packages\jsonschema\validators.py", line 1332, in validate
+    raise error
+jsonschema.exceptions.ValidationError: 'max_workers' is a required property
+
+Failed validating 'required' in schema:
+    {'type': 'object',
+     'properties': {'num_seminars': {'type': 'integer', 'minimum': 1},
+                    'min_capacity': {'type': 'integer', 'minimum': 1},
+                    'max_capacity': {'type': 'integer', 'minimum': 1},
+                    'num_students': {'type': 'integer', 'minimum': 1},
+                    'min_preferences': {'type': 'integer', 'minimum': 1},
+                    'max_preferences': {'type': 'integer', 'minimum': 1},
+                    'preference_distribution': {'type': 'string',
+                                                'enum': ['random',
+                                                         'uniform',
+                                                         'biased']},
+                    'random_seed': {'type': ['integer', 'null']},
+                    'optimization_strategy': {'type': 'string',
+                                              'enum': ['Greedy_LS',
+                                                       'GA_LS',
+                                                       'ILP',
+                                                       'CP',
+                                                       'Multilevel',
+                                                       'Adaptive']},
+                    'ga_population_size': {'type': 'integer', 'minimum': 1},
+                    'ga_generations': {'type': 'integer', 'minimum': 1},
+                    'ga_mutation_rate': {'type': 'number',
+                                         'minimum': 0,
+                                         'maximum': 1},
+                    'ga_crossover_rate': {'type': 'number',
+                                          'minimum': 0,
+                                          'maximum': 1},
+                    'ga_no_improvement_limit': {'type': 'integer',
+                                                'minimum': 1},
+                    'ilp_time_limit': {'type': 'integer', 'minimum': 1},
+                    'cp_time_limit': {'type': 'integer', 'minimum': 1},
+                    'max_workers': {'type': 'integer', 'minimum': 1},
+                    'multilevel_clusters': {'type': 'integer',
+                                            'minimum': 1},
+                    'greedy_ls_iterations': {'type': 'integer',
+                                             'minimum': 1},
+                    'local_search_iterations': {'type': 'integer',
+                                                'minimum': 1},
+                    'early_stop_no_improvement_limit': {'type': 'integer',
+                                                        'minimum': 1},
+                    'initial_temperature': {'type': 'number', 'minimum': 0},
+                    'cooling_rate': {'type': 'number',
+                                     'minimum': 0,
+                                     'maximum': 1},
+                    'generate_pdf_report': {'type': 'boolean'},
+                    'generate_csv_report': {'type': 'boolean'},
+                    'debug_mode': {'type': 'boolean'},
+                    'log_enabled': {'type': 'boolean'},
+                    'output_directory': {'type': 'string'},
+                    'seminars_file': {'type': 'string'},
+                    'students_file': {'type': 'string'},
+                    'score_weights': {'type': 'object',
+                                      'properties': {'1st_choice': {'type': 'number',
+                                                                    'minimum': 0},
+                                                     '2nd_choice': {'type': 'number',
+                                                                    'minimum': 0},
+                                                     '3rd_choice': {'type': 'number',
+                                                                    'minimum': 0},
+                                                     'other_preference': {'type': 'number',
+                                                                          'minimum': 0}},
+                                      'required': ['1st_choice',
+                                                   '2nd_choice',
+                                                   '3rd_choice',
+                                                   'other_preference'],
+                                      'additionalProperties': False},
+                    'adaptive_history_size': {'type': 'integer',
+                                              'minimum': 1},
+                    'adaptive_exploration_epsilon': {'type': 'number',
+                                                     'minimum': 0,
+                                                     'maximum': 1},
+                    'adaptive_learning_rate': {'type': 'number',
+                                               'minimum': 0,
+                                               'maximum': 1},
+                    'adaptive_score_weight': {'type': 'number',
+                                              'minimum': 0,
+                                              'maximum': 1},
+                    'adaptive_unassigned_weight': {'type': 'number',
+                                                   'minimum': 0,
+                                                   'maximum': 1},
+                    'adaptive_time_weight': {'type': 'number',
+                                             'minimum': 0,
+                                             'maximum': 1},
+                    'max_time_for_normalization': {'type': 'number',
+                                                   'minimum': 1}},
+     'required': ['num_seminars',
+                  'min_capacity',
+                  'max_capacity',
+                  'num_students',
+                  'min_preferences',
+                  'max_preferences',
+                  'preference_distribution',
+                  'optimization_strategy',
+                  'ga_population_size',
+                  'ga_generations',
+                  'ilp_time_limit',
+                  'cp_time_limit',
+                  'multilevel_clusters',
+                  'greedy_ls_iterations',
+                  'local_search_iterations',
+                  'early_stop_no_improvement_limit',
+                  'initial_temperature',
+                  'cooling_rate',
+                  'generate_pdf_report',
+                  'generate_csv_report',
+                  'debug_mode',
+                  'log_enabled',
+                  'output_directory',
+                  'seminars_file',
+                  'students_file',
+                  'score_weights',
+                  'ga_mutation_rate',
+                  'ga_crossover_rate',
+                  'ga_no_improvement_limit',
+                  'max_workers',
+                  'adaptive_history_size',
+                  'adaptive_exploration_epsilon',
+                  'adaptive_learning_rate',
+                  'adaptive_score_weight',
+                  'adaptive_unassigned_weight',
+                  'adaptive_time_weight',
+                  'max_time_for_normalization'],
+     'additionalProperties': False}
+
+On instance:
+    {'num_seminars': 10,
+     'num_students': 112,
+     'min_capacity': 10,
+     'max_capacity': 15,
+     'preference_distribution': 'random',
+     'random_seed': 42,
+     'q_boost_probability': 0.2,
+     'min_preferences': 3,
+     'max_preferences': 5,
+     'seminars_file': 'c:\\Users\\hiker\\seminar_optimization\\seminar_optimization\\data\\seminars.json',
+     'students_file': 'c:\\Users\\hiker\\seminar_optimization\\seminar_optimization\\data\\students.json',
+     'optimization_strategy': 'Greedy_LS',
+     'ga_population_size': 100,
+     'ga_generations': 200,
+     'ga_mutation_rate': 0.05,
+     'ga_crossover_rate': 0.8,
+     'ga_no_improvement_limit': 10,
+     'ilp_time_limit': 300,
+     'cp_time_limit': 300,
+     'multilevel_clusters': 5,
+     'greedy_ls_iterations': 200000,
+     'local_search_iterations': 500,
+     'initial_temperature': 1.0,
+     'cooling_rate': 0.995,
+     'score_weights': {'1st_choice': 5.0,
+                       '2nd_choice': 2.0,
+                       '3rd_choice': 1.0,
+                       'other': 0.5},
+     'early_stop_threshold': 0.001,
+     'early_stop_no_improvement_limit': 1000,
+     'generate_pdf_report': True,
+     'generate_csv_report': True,
+     'output_directory': 'results',
+     'pdf_font_path': '',
+     'debug_mode': False,
+     'log_enabled': True,
+     'save_intermediate': True,
+     'data_directory': 'C:\\Users\\hiker\\seminar_optimization\\data'}
+2025-07-26 22:29:39,774 - seminar_optimization.logger_config - INFO - MainApplication: 最適化結果を処理します。ステータス: FAILED
+2025-07-26 22:29:39,774 - gui_tabs.results_tab - INFO - ResultsTab: 最適化結果をUIに表示します。
+2025-07-26 22:29:39,777 - gui_tabs.results_tab - INFO - ResultsTab: 最適化結果のUI表示が完了しました。
+2025-07-26 22:29:39,782 - seminar_optimization.logger_config - INFO - MainApplication: 最適化処理スレッドが終了しました。
+2025-07-26 22:29:42,618 - seminar_optimization.logger_config - WARNING - MainApplication: 最適化が完了しましたが、問題が発生しました: データ検証エラー: 入力データの形式が不正です: 'max_workers' is a required property (パス: )
+2025-07-26 22:42:34,027 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 22:42:34,028 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 22:42:34,029 - setting_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-26 22:42:34,029 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'seminars' がgui_settings.iniに存在します。
+2025-07-26 22:42:34,030 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'magnification' がgui_settings.iniに存在します。
+2025-07-26 22:42:34,030 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'min_size' がgui_settings.iniに存在します。
+2025-07-26 22:42:34,030 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_size' がgui_settings.iniに存在します。
+2025-07-26 22:42:34,030 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'num_patterns' がgui_settings.iniに存在します。
+2025-07-26 22:42:34,031 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_1st' がgui_settings.iniに存在します。
+2025-07-26 22:42:34,031 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_2nd' がgui_settings.iniに存在します。
+2025-07-26 22:42:34,031 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_3rd' がgui_settings.iniに存在します。
+2025-07-26 22:42:34,031 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_other' がgui_settings.iniに存在します。
+2025-07-26 22:42:34,031 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'no_improvement_limit' がgui_settings.iniに存在します。
+2025-07-26 22:42:34,032 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'data_source' がgui_settings.iniに存在します。
+2025-07-26 22:42:34,032 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'student_file_path' がgui_settings.iniに存在します。
+2025-07-26 22:42:34,032 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_adaptive_iterations' がgui_settings.iniに存在します。
+2025-07-26 22:42:34,032 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'strategy_time_limit' がgui_settings.iniに存在します。
+2025-07-26 22:42:34,032 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_history_size' がgui_settings.iniに存在します。
+2025-07-26 22:42:34,032 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_exploration_epsilon' がgui_settings.iniに存在します。
+2025-07-26 22:42:34,033 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_learning_rate' がgui_settings.iniに存在します。
+2025-07-26 22:42:34,033 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_score_weight' がgui_settings.iniに存在します。
+2025-07-26 22:42:34,033 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_unassigned_weight' がgui_settings.iniに存在します。
+2025-07-26 22:42:34,033 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_time_weight' がgui_settings.iniに存在します。
+2025-07-26 22:42:34,033 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_time_for_normalization' がgui_settings.iniに存在します。
+2025-07-26 22:42:34,034 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 22:42:34,034 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 22:42:34,034 - seminar_optimization.logger_config - INFO - MainApplication: アプリケーションの初期化を開始します。
+2025-07-26 22:42:34,035 - seminar_optimization.logger_config - INFO - MainApplication: 出力ディレクトリを確認/作成しました: results
+2025-07-26 22:42:34,164 - seminar_optimization.logger_config - INFO - MainApplication: 初期化が完了しました。
+2025-07-26 22:46:34,196 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 22:46:34,197 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 22:46:34,198 - setting_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-26 22:46:34,199 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'seminars' がgui_settings.iniに存在します。
+2025-07-26 22:46:34,199 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'magnification' がgui_settings.iniに存在します。
+2025-07-26 22:46:34,199 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'min_size' がgui_settings.iniに存在します。
+2025-07-26 22:46:34,199 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_size' がgui_settings.iniに存在します。
+2025-07-26 22:46:34,199 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'num_patterns' がgui_settings.iniに存在します。
+2025-07-26 22:46:34,200 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_1st' がgui_settings.iniに存在します。
+2025-07-26 22:46:34,200 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_2nd' がgui_settings.iniに存在します。
+2025-07-26 22:46:34,200 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_3rd' がgui_settings.iniに存在します。
+2025-07-26 22:46:34,200 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_other' がgui_settings.iniに存在します。
+2025-07-26 22:46:34,200 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'no_improvement_limit' がgui_settings.iniに存在します。
+2025-07-26 22:46:34,200 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'data_source' がgui_settings.iniに存在します。
+2025-07-26 22:46:34,201 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'student_file_path' がgui_settings.iniに存在します。
+2025-07-26 22:46:34,201 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_adaptive_iterations' がgui_settings.iniに存在します。
+2025-07-26 22:46:34,201 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'strategy_time_limit' がgui_settings.iniに存在します。
+2025-07-26 22:46:34,201 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_history_size' がgui_settings.iniに存在します。
+2025-07-26 22:46:34,201 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_exploration_epsilon' がgui_settings.iniに存在します。
+2025-07-26 22:46:34,201 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_learning_rate' がgui_settings.iniに存在します。
+2025-07-26 22:46:34,202 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_score_weight' がgui_settings.iniに存在します。
+2025-07-26 22:46:34,202 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_unassigned_weight' がgui_settings.iniに存在します。
+2025-07-26 22:46:34,202 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_time_weight' がgui_settings.iniに存在します。
+2025-07-26 22:46:34,202 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_time_for_normalization' がgui_settings.iniに存在します。
+2025-07-26 22:46:34,202 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 22:46:34,203 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 22:46:34,203 - seminar_optimization.logger_config - INFO - MainApplication: アプリケーションの初期化を開始します。
+2025-07-26 22:46:34,203 - seminar_optimization.logger_config - INFO - MainApplication: 出力ディレクトリを確認/作成しました: results
+2025-07-26 22:46:34,288 - seminar_optimization.logger_config - INFO - MainApplication: 初期化が完了しました。
+2025-07-26 22:56:19,793 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 22:56:19,794 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 22:56:19,795 - setting_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-26 22:56:19,795 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'seminars' がgui_settings.iniに存在します。
+2025-07-26 22:56:19,795 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'magnification' がgui_settings.iniに存在します。
+2025-07-26 22:56:19,796 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'min_size' がgui_settings.iniに存在します。
+2025-07-26 22:56:19,796 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_size' がgui_settings.iniに存在します。
+2025-07-26 22:56:19,796 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'num_patterns' がgui_settings.iniに存在します。
+2025-07-26 22:56:19,796 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_1st' がgui_settings.iniに存在します。
+2025-07-26 22:56:19,796 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_2nd' がgui_settings.iniに存在します。
+2025-07-26 22:56:19,796 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_3rd' がgui_settings.iniに存在します。
+2025-07-26 22:56:19,796 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_other' がgui_settings.iniに存在します。
+2025-07-26 22:56:19,796 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'no_improvement_limit' がgui_settings.iniに存在します。
+2025-07-26 22:56:19,797 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'data_source' がgui_settings.iniに存在します。
+2025-07-26 22:56:19,797 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'student_file_path' がgui_settings.iniに存在します。
+2025-07-26 22:56:19,797 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_adaptive_iterations' がgui_settings.iniに存在します。
+2025-07-26 22:56:19,797 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'strategy_time_limit' がgui_settings.iniに存在します。
+2025-07-26 22:56:19,797 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_history_size' がgui_settings.iniに存在します。
+2025-07-26 22:56:19,797 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_exploration_epsilon' がgui_settings.iniに存在します。
+2025-07-26 22:56:19,797 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_learning_rate' がgui_settings.iniに存在します。
+2025-07-26 22:56:19,798 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_score_weight' がgui_settings.iniに存在します。
+2025-07-26 22:56:19,798 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_unassigned_weight' がgui_settings.iniに存在します。
+2025-07-26 22:56:19,798 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_time_weight' がgui_settings.iniに存在します。
+2025-07-26 22:56:19,798 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_time_for_normalization' がgui_settings.iniに存在します。
+2025-07-26 22:56:19,799 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 22:56:19,799 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 22:56:19,799 - seminar_optimization.logger_config - INFO - MainApplication: アプリケーションの初期化を開始します。
+2025-07-26 22:56:19,800 - seminar_optimization.logger_config - INFO - MainApplication: 出力ディレクトリを確認/作成しました: results
+2025-07-26 22:57:04,720 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 22:57:04,720 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 22:57:04,722 - setting_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-26 22:57:04,722 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'seminars' がgui_settings.iniに存在します。
+2025-07-26 22:57:04,722 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'magnification' がgui_settings.iniに存在します。
+2025-07-26 22:57:04,723 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'min_size' がgui_settings.iniに存在します。
+2025-07-26 22:57:04,723 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_size' がgui_settings.iniに存在します。
+2025-07-26 22:57:04,723 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'num_patterns' がgui_settings.iniに存在します。
+2025-07-26 22:57:04,723 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_1st' がgui_settings.iniに存在します。
+2025-07-26 22:57:04,723 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_2nd' がgui_settings.iniに存在します。
+2025-07-26 22:57:04,723 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_3rd' がgui_settings.iniに存在します。
+2025-07-26 22:57:04,723 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_other' がgui_settings.iniに存在します。
+2025-07-26 22:57:04,724 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'no_improvement_limit' がgui_settings.iniに存在します。
+2025-07-26 22:57:04,724 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'data_source' がgui_settings.iniに存在します。
+2025-07-26 22:57:04,724 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'student_file_path' がgui_settings.iniに存在します。
+2025-07-26 22:57:04,724 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_adaptive_iterations' がgui_settings.iniに存在します。
+2025-07-26 22:57:04,724 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'strategy_time_limit' がgui_settings.iniに存在します。
+2025-07-26 22:57:04,724 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_history_size' がgui_settings.iniに存在します。
+2025-07-26 22:57:04,725 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_exploration_epsilon' がgui_settings.iniに存在します。
+2025-07-26 22:57:04,725 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_learning_rate' がgui_settings.iniに存在します。
+2025-07-26 22:57:04,725 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_score_weight' がgui_settings.iniに存在します。
+2025-07-26 22:57:04,725 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_unassigned_weight' がgui_settings.iniに存在します。
+2025-07-26 22:57:04,726 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_time_weight' がgui_settings.iniに存在します。
+2025-07-26 22:57:04,727 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_time_for_normalization' がgui_settings.iniに存在します。
+2025-07-26 22:57:04,728 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 22:57:04,729 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 22:57:04,732 - seminar_optimization.logger_config - INFO - MainApplication: アプリケーションの初期化を開始します。
+2025-07-26 22:57:04,734 - seminar_optimization.logger_config - INFO - MainApplication: 出力ディレクトリを確認/作成しました: results
+2025-07-26 22:58:40,092 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 22:58:40,092 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 22:58:40,094 - setting_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-26 22:58:40,095 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'seminars' がgui_settings.iniに存在します。
+2025-07-26 22:58:40,096 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'magnification' がgui_settings.iniに存在します。
+2025-07-26 22:58:40,096 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'min_size' がgui_settings.iniに存在します。
+2025-07-26 22:58:40,097 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_size' がgui_settings.iniに存在します。
+2025-07-26 22:58:40,097 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'num_patterns' がgui_settings.iniに存在します。
+2025-07-26 22:58:40,098 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_1st' がgui_settings.iniに存在します。
+2025-07-26 22:58:40,098 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_2nd' がgui_settings.iniに存在します。
+2025-07-26 22:58:40,098 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_3rd' がgui_settings.iniに存在します。
+2025-07-26 22:58:40,099 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_other' がgui_settings.iniに存在します。
+2025-07-26 22:58:40,099 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'no_improvement_limit' がgui_settings.iniに存在します。
+2025-07-26 22:58:40,100 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'data_source' がgui_settings.iniに存在します。
+2025-07-26 22:58:40,100 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'student_file_path' がgui_settings.iniに存在します。
+2025-07-26 22:58:40,101 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_adaptive_iterations' がgui_settings.iniに存在します。
+2025-07-26 22:58:40,101 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'strategy_time_limit' がgui_settings.iniに存在します。
+2025-07-26 22:58:40,102 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_history_size' がgui_settings.iniに存在します。
+2025-07-26 22:58:40,102 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_exploration_epsilon' がgui_settings.iniに存在します。
+2025-07-26 22:58:40,102 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_learning_rate' がgui_settings.iniに存在します。
+2025-07-26 22:58:40,102 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_score_weight' がgui_settings.iniに存在します。
+2025-07-26 22:58:40,103 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_unassigned_weight' がgui_settings.iniに存在します。
+2025-07-26 22:58:40,103 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_time_weight' がgui_settings.iniに存在します。
+2025-07-26 22:58:40,103 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_time_for_normalization' がgui_settings.iniに存在します。
+2025-07-26 22:58:40,104 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 22:58:40,104 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 22:58:40,105 - seminar_optimization.logger_config - INFO - MainApplication: アプリケーションの初期化を開始します。
+2025-07-26 22:58:40,106 - seminar_optimization.logger_config - INFO - MainApplication: 出力ディレクトリを確認/作成しました: results
+2025-07-26 22:58:40,215 - seminar_optimization.logger_config - INFO - MainApplication: 初期化が完了しました。
+2025-07-26 22:59:01,418 - seminar_optimization.logger_config - INFO - MainApplication: 最適化処理を開始します。
+2025-07-26 22:59:01,419 - seminar_optimization.logger_config - INFO - MainApplication: 現在の設定の保存を開始します。
+2025-07-26 22:59:01,419 - setting_manager - INFO - SettingsManager: GUI設定の保存を開始します。
+2025-07-26 22:59:01,421 - setting_manager - INFO - SettingsManager: GUI設定をgui_settings.iniに保存しました。
+2025-07-26 22:59:02,472 - seminar_optimization.logger_config - INFO - MainApplication: 設定の保存が完了しました。
+2025-07-26 22:59:03,436 - seminar_optimization.logger_config - ERROR - MainApplication: セミナーまたは学生データが不足しているため、最適化を開始できませんでした。
+2025-07-26 22:59:07,194 - seminar_optimization.logger_config - INFO - MainApplication: 最適化処理を開始します。
+2025-07-26 22:59:07,195 - seminar_optimization.logger_config - INFO - MainApplication: 現在の設定の保存を開始します。
+2025-07-26 22:59:07,195 - setting_manager - INFO - SettingsManager: GUI設定の保存を開始します。
+2025-07-26 22:59:07,197 - setting_manager - INFO - SettingsManager: GUI設定をgui_settings.iniに保存しました。
+2025-07-26 22:59:08,307 - seminar_optimization.logger_config - INFO - MainApplication: 設定の保存が完了しました。
+2025-07-26 22:59:09,283 - seminar_optimization.logger_config - ERROR - MainApplication: セミナーまたは学生データが不足しているため、最適化を開始できませんでした。
+2025-07-26 22:59:10,388 - seminar_optimization.data_generator - INFO - DataGenerator: ランダムなセミナーと学生のデータを生成します。
+2025-07-26 22:59:10,396 - seminar_optimization.data_generator - INFO - DataGenerator: データ生成の論理的検証に成功しました。
+2025-07-26 22:59:10,397 - seminar_optimization.data_generator - INFO - DataGenerator: データ生成と検証が完了しました。
+2025-07-26 22:59:11,198 - seminar_optimization.logger_config - INFO - DataInputTab: データを自動生成しました。セミナー数: 10, 学生数: 112
+2025-07-26 22:59:12,563 - seminar_optimization.logger_config - INFO - MainApplication: 最適化処理を開始します。
+2025-07-26 22:59:12,563 - seminar_optimization.logger_config - INFO - MainApplication: 現在の設定の保存を開始します。
+2025-07-26 22:59:12,564 - setting_manager - INFO - SettingsManager: GUI設定の保存を開始します。
+2025-07-26 22:59:12,565 - setting_manager - INFO - SettingsManager: GUI設定をgui_settings.iniに保存しました。
+2025-07-26 22:59:13,436 - seminar_optimization.logger_config - INFO - MainApplication: 設定の保存が完了しました。
+2025-07-26 22:59:13,441 - seminar_optimization.logger_config - INFO - MainApplication: 最適化処理スレッドが開始されました。
+2025-07-26 22:59:13,441 - seminar_optimization.logger_config - INFO - MainApplication: 最適化スレッドを開始しました。
+2025-07-26 22:59:13,442 - seminar_optimization.logger_config - INFO - OptimizerService: 最適化処理を開始します。
+2025-07-26 22:59:13,442 - seminar_optimization.logger_config - INFO - OptimizerService: 入力データのスキーマ検証を開始します。
+2025-07-26 22:59:13,467 - seminar_optimization.logger_config - ERROR - OptimizerService: データ検証エラー: 'adaptive_history_size' is a required property (パス: )
+Traceback (most recent call last):
+  File "C:\Users\hiker\seminar_optimization\optimizers\optimizer_service.py", line 70, in _validate_data
+    jsonschema.validate(instance=config, schema=CONFIG_SCHEMA)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\AppData\Local\Programs\Python\Python313\Lib\site-packages\jsonschema\validators.py", line 1332, in validate
+    raise error
+jsonschema.exceptions.ValidationError: 'adaptive_history_size' is a required property
+
+Failed validating 'required' in schema:
+    {'type': 'object',
+     'properties': {'num_seminars': {'type': 'integer', 'minimum': 1},
+                    'min_capacity': {'type': 'integer', 'minimum': 1},
+                    'max_capacity': {'type': 'integer', 'minimum': 1},
+                    'num_students': {'type': 'integer', 'minimum': 1},
+                    'min_preferences': {'type': 'integer', 'minimum': 1},
+                    'max_preferences': {'type': 'integer', 'minimum': 1},
+                    'preference_distribution': {'type': 'string',
+                                                'enum': ['random',
+                                                         'uniform',
+                                                         'biased']},
+                    'random_seed': {'type': ['integer', 'null']},
+                    'optimization_strategy': {'type': 'string',
+                                              'enum': ['Greedy_LS',
+                                                       'GA_LS',
+                                                       'ILP',
+                                                       'CP',
+                                                       'Multilevel',
+                                                       'Adaptive']},
+                    'ga_population_size': {'type': 'integer', 'minimum': 1},
+                    'ga_generations': {'type': 'integer', 'minimum': 1},
+                    'ga_mutation_rate': {'type': 'number',
+                                         'minimum': 0,
+                                         'maximum': 1},
+                    'ga_crossover_rate': {'type': 'number',
+                                          'minimum': 0,
+                                          'maximum': 1},
+                    'ga_no_improvement_limit': {'type': 'integer',
+                                                'minimum': 1},
+                    'ilp_time_limit': {'type': 'integer', 'minimum': 1},
+                    'cp_time_limit': {'type': 'integer', 'minimum': 1},
+                    'max_workers': {'type': 'integer', 'minimum': 1},
+                    'multilevel_clusters': {'type': 'integer',
+                                            'minimum': 1},
+                    'greedy_ls_iterations': {'type': 'integer',
+                                             'minimum': 1},
+                    'local_search_iterations': {'type': 'integer',
+                                                'minimum': 1},
+                    'early_stop_no_improvement_limit': {'type': 'integer',
+                                                        'minimum': 1},
+                    'initial_temperature': {'type': 'number', 'minimum': 0},
+                    'cooling_rate': {'type': 'number',
+                                     'minimum': 0,
+                                     'maximum': 1},
+                    'generate_pdf_report': {'type': 'boolean'},
+                    'generate_csv_report': {'type': 'boolean'},
+                    'debug_mode': {'type': 'boolean'},
+                    'log_enabled': {'type': 'boolean'},
+                    'output_directory': {'type': 'string'},
+                    'seminars_file': {'type': 'string'},
+                    'students_file': {'type': 'string'},
+                    'score_weights': {'type': 'object',
+                                      'properties': {'1st_choice': {'type': 'number',
+                                                                    'minimum': 0},
+                                                     '2nd_choice': {'type': 'number',
+                                                                    'minimum': 0},
+                                                     '3rd_choice': {'type': 'number',
+                                                                    'minimum': 0},
+                                                     'other_preference': {'type': 'number',
+                                                                          'minimum': 0}},
+                                      'required': ['1st_choice',
+                                                   '2nd_choice',
+                                                   '3rd_choice',
+                                                   'other_preference'],
+                                      'additionalProperties': False},
+                    'adaptive_history_size': {'type': 'integer',
+                                              'minimum': 1},
+                    'adaptive_exploration_epsilon': {'type': 'number',
+                                                     'minimum': 0,
+                                                     'maximum': 1},
+                    'adaptive_learning_rate': {'type': 'number',
+                                               'minimum': 0,
+                                               'maximum': 1},
+                    'adaptive_score_weight': {'type': 'number',
+                                              'minimum': 0,
+                                              'maximum': 1},
+                    'adaptive_unassigned_weight': {'type': 'number',
+                                                   'minimum': 0,
+                                                   'maximum': 1},
+                    'adaptive_time_weight': {'type': 'number',
+                                             'minimum': 0,
+                                             'maximum': 1},
+                    'max_time_for_normalization': {'type': 'number',
+                                                   'minimum': 1}},
+     'required': ['num_seminars',
+                  'min_capacity',
+                  'max_capacity',
+                  'num_students',
+                  'min_preferences',
+                  'max_preferences',
+                  'preference_distribution',
+                  'optimization_strategy',
+                  'ga_population_size',
+                  'ga_generations',
+                  'ilp_time_limit',
+                  'cp_time_limit',
+                  'multilevel_clusters',
+                  'greedy_ls_iterations',
+                  'local_search_iterations',
+                  'early_stop_no_improvement_limit',
+                  'initial_temperature',
+                  'cooling_rate',
+                  'generate_pdf_report',
+                  'generate_csv_report',
+                  'debug_mode',
+                  'log_enabled',
+                  'output_directory',
+                  'seminars_file',
+                  'students_file',
+                  'score_weights',
+                  'ga_mutation_rate',
+                  'ga_crossover_rate',
+                  'ga_no_improvement_limit',
+                  'max_workers',
+                  'adaptive_history_size',
+                  'adaptive_exploration_epsilon',
+                  'adaptive_learning_rate',
+                  'adaptive_score_weight',
+                  'adaptive_unassigned_weight',
+                  'adaptive_time_weight',
+                  'max_time_for_normalization'],
+     'additionalProperties': False}
+
+On instance:
+    {'num_seminars': 10,
+     'num_students': 112,
+     'min_capacity': 10,
+     'max_capacity': 15,
+     'preference_distribution': 'random',
+     'random_seed': 42,
+     'q_boost_probability': 0.2,
+     'min_preferences': 3,
+     'max_preferences': 5,
+     'seminars_file': 'c:\\Users\\hiker\\seminar_optimization\\seminar_optimization\\data\\seminars.json',
+     'students_file': 'c:\\Users\\hiker\\seminar_optimization\\seminar_optimization\\data\\students.json',
+     'optimization_strategy': 'Greedy_LS',
+     'max_workers': '8',
+     'ga_population_size': 100,
+     'ga_generations': 200,
+     'ga_mutation_rate': 0.05,
+     'ga_crossover_rate': 0.8,
+     'ga_no_improvement_limit': 10,
+     'ilp_time_limit': 300,
+     'cp_time_limit': 300,
+     'multilevel_clusters': 5,
+     'greedy_ls_iterations': 200000,
+     'local_search_iterations': 500,
+     'initial_temperature': 1.0,
+     'cooling_rate': 0.995,
+     'score_weights': {'1st_choice': 5.0,
+                       '2nd_choice': 2.0,
+                       '3rd_choice': 1.0,
+                       'other': 0.5},
+     'early_stop_threshold': 0.001,
+     'early_stop_no_improvement_limit': 1000,
+     'generate_pdf_report': True,
+     'generate_csv_report': True,
+     'output_directory': 'results',
+     'pdf_font_path': '',
+     'debug_mode': False,
+     'log_enabled': True,
+     'save_intermediate': True,
+     'data_directory': 'C:\\Users\\hiker\\seminar_optimization\\data'}
+2025-07-26 22:59:13,473 - seminar_optimization.logger_config - INFO - MainApplication: 最適化結果を処理します。ステータス: FAILED
+2025-07-26 22:59:13,473 - gui_tabs.results_tab - INFO - ResultsTab: 最適化結果をUIに表示します。
+2025-07-26 22:59:13,474 - gui_tabs.results_tab - INFO - ResultsTab: 最適化結果のUI表示が完了しました。
+2025-07-26 22:59:13,482 - seminar_optimization.logger_config - INFO - MainApplication: 最適化処理スレッドが終了しました。
+2025-07-26 22:59:15,695 - seminar_optimization.logger_config - WARNING - MainApplication: 最適化が完了しましたが、問題が発生しました: データ検証エラー: 入力データの形式が不正です: 'adaptive_history_size' is a required property (パス: )
+2025-07-26 23:09:55,858 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 23:09:55,858 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 23:09:55,859 - setting_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-26 23:09:55,860 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'seminars' がgui_settings.iniに存在します。
+2025-07-26 23:09:55,860 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'magnification' がgui_settings.iniに存在します。
+2025-07-26 23:09:55,860 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'min_size' がgui_settings.iniに存在します。
+2025-07-26 23:09:55,860 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_size' がgui_settings.iniに存在します。
+2025-07-26 23:09:55,861 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'num_patterns' がgui_settings.iniに存在します。
+2025-07-26 23:09:55,861 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_1st' がgui_settings.iniに存在します。
+2025-07-26 23:09:55,861 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_2nd' がgui_settings.iniに存在します。
+2025-07-26 23:09:55,861 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_3rd' がgui_settings.iniに存在します。
+2025-07-26 23:09:55,861 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_other' がgui_settings.iniに存在します。
+2025-07-26 23:09:55,861 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'no_improvement_limit' がgui_settings.iniに存在します。
+2025-07-26 23:09:55,861 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'data_source' がgui_settings.iniに存在します。
+2025-07-26 23:09:55,862 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'student_file_path' がgui_settings.iniに存在します。
+2025-07-26 23:09:55,862 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_adaptive_iterations' がgui_settings.iniに存在します。
+2025-07-26 23:09:55,862 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'strategy_time_limit' がgui_settings.iniに存在します。
+2025-07-26 23:09:55,862 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_exploration_epsilon' がgui_settings.iniに存在します。
+2025-07-26 23:09:55,862 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_learning_rate' がgui_settings.iniに存在します。
+2025-07-26 23:09:55,862 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_score_weight' がgui_settings.iniに存在します。
+2025-07-26 23:09:55,863 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_unassigned_weight' がgui_settings.iniに存在します。
+2025-07-26 23:09:55,863 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_time_weight' がgui_settings.iniに存在します。
+2025-07-26 23:09:55,863 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_time_for_normalization' がgui_settings.iniに存在します。
+2025-07-26 23:09:55,863 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 23:09:55,864 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 23:09:55,864 - seminar_optimization.logger_config - INFO - MainApplication: アプリケーションの初期化を開始します。
+2025-07-26 23:09:55,865 - seminar_optimization.logger_config - INFO - MainApplication: 出力ディレクトリを確認/作成しました: results
+2025-07-26 23:16:31,254 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 23:16:31,254 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 23:16:31,256 - setting_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-26 23:16:31,256 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'seminars' がgui_settings.iniに存在します。
+2025-07-26 23:16:31,257 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'magnification' がgui_settings.iniに存在します。
+2025-07-26 23:16:31,257 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'min_size' がgui_settings.iniに存在します。
+2025-07-26 23:16:31,257 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_size' がgui_settings.iniに存在します。
+2025-07-26 23:16:31,257 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'num_patterns' がgui_settings.iniに存在します。
+2025-07-26 23:16:31,257 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_1st' がgui_settings.iniに存在します。
+2025-07-26 23:16:31,257 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_2nd' がgui_settings.iniに存在します。
+2025-07-26 23:16:31,258 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_3rd' がgui_settings.iniに存在します。
+2025-07-26 23:16:31,258 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_other' がgui_settings.iniに存在します。
+2025-07-26 23:16:31,258 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'no_improvement_limit' がgui_settings.iniに存在します。
+2025-07-26 23:16:31,258 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'data_source' がgui_settings.iniに存在します。
+2025-07-26 23:16:31,258 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'student_file_path' がgui_settings.iniに存在します。
+2025-07-26 23:16:31,258 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_adaptive_iterations' がgui_settings.iniに存在します。
+2025-07-26 23:16:31,259 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'strategy_time_limit' がgui_settings.iniに存在します。
+2025-07-26 23:16:31,259 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_exploration_epsilon' がgui_settings.iniに存在します。
+2025-07-26 23:16:31,259 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_learning_rate' がgui_settings.iniに存在します。
+2025-07-26 23:16:31,259 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_score_weight' がgui_settings.iniに存在します。
+2025-07-26 23:16:31,259 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_unassigned_weight' がgui_settings.iniに存在します。
+2025-07-26 23:16:31,259 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_time_weight' がgui_settings.iniに存在します。
+2025-07-26 23:16:31,260 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_time_for_normalization' がgui_settings.iniに存在します。
+2025-07-26 23:16:31,261 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 23:16:31,261 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 23:16:31,261 - seminar_optimization.logger_config - INFO - MainApplication: アプリケーションの初期化を開始します。
+2025-07-26 23:16:31,262 - seminar_optimization.logger_config - INFO - MainApplication: 出力ディレクトリを確認/作成しました: results
+2025-07-26 23:19:59,559 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 23:19:59,560 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 23:19:59,561 - setting_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-26 23:19:59,562 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'seminars' がgui_settings.iniに存在します。
+2025-07-26 23:19:59,562 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'magnification' がgui_settings.iniに存在します。
+2025-07-26 23:19:59,562 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'min_size' がgui_settings.iniに存在します。
+2025-07-26 23:19:59,562 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_size' がgui_settings.iniに存在します。
+2025-07-26 23:19:59,563 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'num_patterns' がgui_settings.iniに存在します。
+2025-07-26 23:19:59,563 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_1st' がgui_settings.iniに存在します。
+2025-07-26 23:19:59,563 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_2nd' がgui_settings.iniに存在します。
+2025-07-26 23:19:59,564 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_3rd' がgui_settings.iniに存在します。
+2025-07-26 23:19:59,564 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_other' がgui_settings.iniに存在します。
+2025-07-26 23:19:59,564 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'no_improvement_limit' がgui_settings.iniに存在します。
+2025-07-26 23:19:59,564 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'data_source' がgui_settings.iniに存在します。
+2025-07-26 23:19:59,565 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'student_file_path' がgui_settings.iniに存在します。
+2025-07-26 23:19:59,565 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_adaptive_iterations' がgui_settings.iniに存在します。
+2025-07-26 23:19:59,565 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'strategy_time_limit' がgui_settings.iniに存在します。
+2025-07-26 23:19:59,566 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_exploration_epsilon' がgui_settings.iniに存在します。
+2025-07-26 23:19:59,566 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_learning_rate' がgui_settings.iniに存在します。
+2025-07-26 23:19:59,566 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_score_weight' がgui_settings.iniに存在します。
+2025-07-26 23:19:59,567 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_unassigned_weight' がgui_settings.iniに存在します。
+2025-07-26 23:19:59,567 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_time_weight' がgui_settings.iniに存在します。
+2025-07-26 23:19:59,567 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_time_for_normalization' がgui_settings.iniに存在します。
+2025-07-26 23:19:59,568 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 23:19:59,568 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 23:19:59,568 - seminar_optimization.logger_config - INFO - MainApplication: アプリケーションの初期化を開始します。
+2025-07-26 23:19:59,569 - seminar_optimization.logger_config - INFO - MainApplication: 出力ディレクトリを確認/作成しました: results
+2025-07-26 23:50:58,294 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 23:50:58,294 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 23:50:58,296 - setting_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-26 23:50:58,297 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'seminars' がgui_settings.iniに存在します。
+2025-07-26 23:50:58,297 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'magnification' がgui_settings.iniに存在します。
+2025-07-26 23:50:58,297 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'min_size' がgui_settings.iniに存在します。
+2025-07-26 23:50:58,297 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_size' がgui_settings.iniに存在します。
+2025-07-26 23:50:58,298 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'num_patterns' がgui_settings.iniに存在します。
+2025-07-26 23:50:58,298 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_1st' がgui_settings.iniに存在します。
+2025-07-26 23:50:58,298 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_2nd' がgui_settings.iniに存在します。
+2025-07-26 23:50:58,298 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_3rd' がgui_settings.iniに存在します。
+2025-07-26 23:50:58,298 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_other' がgui_settings.iniに存在します。
+2025-07-26 23:50:58,298 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'no_improvement_limit' がgui_settings.iniに存在します。
+2025-07-26 23:50:58,299 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'data_source' がgui_settings.iniに存在します。
+2025-07-26 23:50:58,299 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'student_file_path' がgui_settings.iniに存在します。
+2025-07-26 23:50:58,300 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_adaptive_iterations' がgui_settings.iniに存在します。
+2025-07-26 23:50:58,301 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'strategy_time_limit' がgui_settings.iniに存在します。
+2025-07-26 23:50:58,302 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_exploration_epsilon' がgui_settings.iniに存在します。
+2025-07-26 23:50:58,306 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_learning_rate' がgui_settings.iniに存在します。
+2025-07-26 23:50:58,307 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_score_weight' がgui_settings.iniに存在します。
+2025-07-26 23:50:58,307 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_unassigned_weight' がgui_settings.iniに存在します。
+2025-07-26 23:50:58,307 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_time_weight' がgui_settings.iniに存在します。
+2025-07-26 23:50:58,308 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_time_for_normalization' がgui_settings.iniに存在します。
+2025-07-26 23:50:58,309 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 23:50:58,309 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 23:50:58,309 - seminar_optimization.logger_config - INFO - MainApplication: アプリケーションの初期化を開始します。
+2025-07-26 23:50:58,310 - seminar_optimization.logger_config - INFO - MainApplication: 出力ディレクトリを確認/作成しました: results
+2025-07-26 23:52:49,427 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 23:52:49,428 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 23:52:49,429 - setting_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-26 23:52:49,429 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'seminars' がgui_settings.iniに存在します。
+2025-07-26 23:52:49,430 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'magnification' がgui_settings.iniに存在します。
+2025-07-26 23:52:49,430 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'min_size' がgui_settings.iniに存在します。
+2025-07-26 23:52:49,430 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_size' がgui_settings.iniに存在します。
+2025-07-26 23:52:49,431 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'num_patterns' がgui_settings.iniに存在します。
+2025-07-26 23:52:49,431 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_1st' がgui_settings.iniに存在します。
+2025-07-26 23:52:49,431 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_2nd' がgui_settings.iniに存在します。
+2025-07-26 23:52:49,431 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_3rd' がgui_settings.iniに存在します。
+2025-07-26 23:52:49,431 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_other' がgui_settings.iniに存在します。
+2025-07-26 23:52:49,431 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'no_improvement_limit' がgui_settings.iniに存在します。
+2025-07-26 23:52:49,432 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'data_source' がgui_settings.iniに存在します。
+2025-07-26 23:52:49,432 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'student_file_path' がgui_settings.iniに存在します。
+2025-07-26 23:52:49,432 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_adaptive_iterations' がgui_settings.iniに存在します。
+2025-07-26 23:52:49,432 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'strategy_time_limit' がgui_settings.iniに存在します。
+2025-07-26 23:52:49,432 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_exploration_epsilon' がgui_settings.iniに存在します。
+2025-07-26 23:52:49,433 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_learning_rate' がgui_settings.iniに存在します。
+2025-07-26 23:52:49,433 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_score_weight' がgui_settings.iniに存在します。
+2025-07-26 23:52:49,433 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_unassigned_weight' がgui_settings.iniに存在します。
+2025-07-26 23:52:49,433 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_time_weight' がgui_settings.iniに存在します。
+2025-07-26 23:52:49,434 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_time_for_normalization' がgui_settings.iniに存在します。
+2025-07-26 23:52:49,434 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 23:52:49,434 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 23:52:49,435 - seminar_optimization.logger_config - INFO - MainApplication: アプリケーションの初期化を開始します。
+2025-07-26 23:52:49,435 - seminar_optimization.logger_config - INFO - MainApplication: 出力ディレクトリを確認/作成しました: results
+2025-07-26 23:54:28,670 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 23:54:28,671 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 23:54:28,672 - setting_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-26 23:54:28,673 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'seminars' がgui_settings.iniに存在します。
+2025-07-26 23:54:28,673 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'magnification' がgui_settings.iniに存在します。
+2025-07-26 23:54:28,673 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'min_size' がgui_settings.iniに存在します。
+2025-07-26 23:54:28,674 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_size' がgui_settings.iniに存在します。
+2025-07-26 23:54:28,674 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'num_patterns' がgui_settings.iniに存在します。
+2025-07-26 23:54:28,674 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_1st' がgui_settings.iniに存在します。
+2025-07-26 23:54:28,674 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_2nd' がgui_settings.iniに存在します。
+2025-07-26 23:54:28,674 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_3rd' がgui_settings.iniに存在します。
+2025-07-26 23:54:28,674 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_other' がgui_settings.iniに存在します。
+2025-07-26 23:54:28,675 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'no_improvement_limit' がgui_settings.iniに存在します。
+2025-07-26 23:54:28,675 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'data_source' がgui_settings.iniに存在します。
+2025-07-26 23:54:28,675 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'student_file_path' がgui_settings.iniに存在します。
+2025-07-26 23:54:28,675 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_adaptive_iterations' がgui_settings.iniに存在します。
+2025-07-26 23:54:28,675 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'strategy_time_limit' がgui_settings.iniに存在します。
+2025-07-26 23:54:28,675 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_exploration_epsilon' がgui_settings.iniに存在します。
+2025-07-26 23:54:28,675 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_learning_rate' がgui_settings.iniに存在します。
+2025-07-26 23:54:28,676 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_score_weight' がgui_settings.iniに存在します。
+2025-07-26 23:54:28,676 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_unassigned_weight' がgui_settings.iniに存在します。
+2025-07-26 23:54:28,676 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_time_weight' がgui_settings.iniに存在します。
+2025-07-26 23:54:28,676 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_time_for_normalization' がgui_settings.iniに存在します。
+2025-07-26 23:54:28,677 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 23:54:28,677 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 23:54:28,678 - seminar_optimization.logger_config - INFO - MainApplication: アプリケーションの初期化を開始します。
+2025-07-26 23:54:28,678 - seminar_optimization.logger_config - INFO - MainApplication: 出力ディレクトリを確認/作成しました: results
+2025-07-26 23:57:45,999 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 23:57:46,000 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 23:57:46,001 - setting_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-26 23:57:46,002 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'seminars' がgui_settings.iniに存在します。
+2025-07-26 23:57:46,002 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'magnification' がgui_settings.iniに存在します。
+2025-07-26 23:57:46,002 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'min_size' がgui_settings.iniに存在します。
+2025-07-26 23:57:46,005 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_size' がgui_settings.iniに存在します。
+2025-07-26 23:57:46,006 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'num_patterns' がgui_settings.iniに存在します。
+2025-07-26 23:57:46,006 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_1st' がgui_settings.iniに存在します。
+2025-07-26 23:57:46,006 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_2nd' がgui_settings.iniに存在します。
+2025-07-26 23:57:46,007 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_3rd' がgui_settings.iniに存在します。
+2025-07-26 23:57:46,007 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_other' がgui_settings.iniに存在します。
+2025-07-26 23:57:46,007 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'no_improvement_limit' がgui_settings.iniに存在します。
+2025-07-26 23:57:46,007 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'data_source' がgui_settings.iniに存在します。
+2025-07-26 23:57:46,007 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'student_file_path' がgui_settings.iniに存在します。
+2025-07-26 23:57:46,007 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_adaptive_iterations' がgui_settings.iniに存在します。
+2025-07-26 23:57:46,008 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'strategy_time_limit' がgui_settings.iniに存在します。
+2025-07-26 23:57:46,008 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_exploration_epsilon' がgui_settings.iniに存在します。
+2025-07-26 23:57:46,008 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_learning_rate' がgui_settings.iniに存在します。
+2025-07-26 23:57:46,008 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_score_weight' がgui_settings.iniに存在します。
+2025-07-26 23:57:46,008 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_unassigned_weight' がgui_settings.iniに存在します。
+2025-07-26 23:57:46,008 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_time_weight' がgui_settings.iniに存在します。
+2025-07-26 23:57:46,008 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_time_for_normalization' がgui_settings.iniに存在します。
+2025-07-26 23:57:46,009 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-26 23:57:46,009 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-26 23:57:46,010 - seminar_optimization.logger_config - INFO - MainApplication: アプリケーションの初期化を開始します。
+2025-07-26 23:57:46,010 - seminar_optimization.logger_config - INFO - MainApplication: 出力ディレクトリを確認/作成しました: results
+2025-07-27 00:04:39,825 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-27 00:04:39,826 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-27 00:04:39,829 - setting_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-27 00:04:39,830 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'seminars' がgui_settings.iniに存在します。
+2025-07-27 00:04:39,831 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'magnification' がgui_settings.iniに存在します。
+2025-07-27 00:04:39,831 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'min_size' がgui_settings.iniに存在します。
+2025-07-27 00:04:39,832 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_size' がgui_settings.iniに存在します。
+2025-07-27 00:04:39,833 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'num_patterns' がgui_settings.iniに存在します。
+2025-07-27 00:04:39,833 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_1st' がgui_settings.iniに存在します。
+2025-07-27 00:04:39,834 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_2nd' がgui_settings.iniに存在します。
+2025-07-27 00:04:39,834 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_3rd' がgui_settings.iniに存在します。
+2025-07-27 00:04:39,835 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_other' がgui_settings.iniに存在します。
+2025-07-27 00:04:39,835 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'no_improvement_limit' がgui_settings.iniに存在します。
+2025-07-27 00:04:39,836 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'data_source' がgui_settings.iniに存在します。
+2025-07-27 00:04:39,836 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'student_file_path' がgui_settings.iniに存在します。
+2025-07-27 00:04:39,836 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_adaptive_iterations' がgui_settings.iniに存在します。
+2025-07-27 00:04:39,837 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'strategy_time_limit' がgui_settings.iniに存在します。
+2025-07-27 00:04:39,837 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_exploration_epsilon' がgui_settings.iniに存在します。
+2025-07-27 00:04:39,837 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_learning_rate' がgui_settings.iniに存在します。
+2025-07-27 00:04:39,838 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_score_weight' がgui_settings.iniに存在します。
+2025-07-27 00:04:39,838 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_unassigned_weight' がgui_settings.iniに存在します。
+2025-07-27 00:04:39,839 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_time_weight' がgui_settings.iniに存在します。
+2025-07-27 00:04:39,839 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_time_for_normalization' がgui_settings.iniに存在します。
+2025-07-27 00:04:39,840 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-27 00:04:39,841 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-27 00:04:39,841 - seminar_optimization.logger_config - INFO - MainApplication: アプリケーションの初期化を開始します。
+2025-07-27 00:04:39,842 - seminar_optimization.logger_config - INFO - MainApplication: 出力ディレクトリを確認/作成しました: results
+2025-07-27 00:06:07,180 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-27 00:06:07,180 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-27 00:06:07,182 - setting_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-27 00:06:07,182 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'seminars' がgui_settings.iniに存在します。
+2025-07-27 00:06:07,182 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'magnification' がgui_settings.iniに存在します。
+2025-07-27 00:06:07,183 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'min_size' がgui_settings.iniに存在します。
+2025-07-27 00:06:07,183 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_size' がgui_settings.iniに存在します。
+2025-07-27 00:06:07,183 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'num_patterns' がgui_settings.iniに存在します。
+2025-07-27 00:06:07,183 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_1st' がgui_settings.iniに存在します。
+2025-07-27 00:06:07,183 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_2nd' がgui_settings.iniに存在します。
+2025-07-27 00:06:07,183 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_3rd' がgui_settings.iniに存在します。
+2025-07-27 00:06:07,184 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_other' がgui_settings.iniに存在します。
+2025-07-27 00:06:07,184 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'no_improvement_limit' がgui_settings.iniに存在します。
+2025-07-27 00:06:07,184 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'data_source' がgui_settings.iniに存在します。
+2025-07-27 00:06:07,184 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'student_file_path' がgui_settings.iniに存在します。
+2025-07-27 00:06:07,184 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_adaptive_iterations' がgui_settings.iniに存在します。
+2025-07-27 00:06:07,184 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'strategy_time_limit' がgui_settings.iniに存在します。
+2025-07-27 00:06:07,184 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_exploration_epsilon' がgui_settings.iniに存在します。
+2025-07-27 00:06:07,184 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_learning_rate' がgui_settings.iniに存在します。
+2025-07-27 00:06:07,185 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_score_weight' がgui_settings.iniに存在します。
+2025-07-27 00:06:07,185 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_unassigned_weight' がgui_settings.iniに存在します。
+2025-07-27 00:06:07,185 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_time_weight' がgui_settings.iniに存在します。
+2025-07-27 00:06:07,185 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_time_for_normalization' がgui_settings.iniに存在します。
+2025-07-27 00:06:07,185 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-27 00:06:07,186 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-27 00:06:07,186 - seminar_optimization.logger_config - INFO - MainApplication: アプリケーションの初期化を開始します。
+2025-07-27 00:06:07,186 - seminar_optimization.logger_config - INFO - MainApplication: 出力ディレクトリを確認/作成しました: results
+2025-07-27 00:11:30,905 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-27 00:11:30,905 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-27 00:11:30,906 - setting_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-27 00:11:30,907 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'seminars' がgui_settings.iniに存在します。
+2025-07-27 00:11:30,907 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'magnification' がgui_settings.iniに存在します。
+2025-07-27 00:11:30,907 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'min_size' がgui_settings.iniに存在します。
+2025-07-27 00:11:30,907 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_size' がgui_settings.iniに存在します。
+2025-07-27 00:11:30,907 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'num_patterns' がgui_settings.iniに存在します。
+2025-07-27 00:11:30,907 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_1st' がgui_settings.iniに存在します。
+2025-07-27 00:11:30,908 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_2nd' がgui_settings.iniに存在します。
+2025-07-27 00:11:30,908 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_3rd' がgui_settings.iniに存在します。
+2025-07-27 00:11:30,908 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_other' がgui_settings.iniに存在します。
+2025-07-27 00:11:30,908 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'no_improvement_limit' がgui_settings.iniに存在します。
+2025-07-27 00:11:30,908 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'data_source' がgui_settings.iniに存在します。
+2025-07-27 00:11:30,909 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'student_file_path' がgui_settings.iniに存在します。
+2025-07-27 00:11:30,909 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_adaptive_iterations' がgui_settings.iniに存在します。
+2025-07-27 00:11:30,909 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'strategy_time_limit' がgui_settings.iniに存在します。
+2025-07-27 00:11:30,909 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_exploration_epsilon' がgui_settings.iniに存在します。
+2025-07-27 00:11:30,909 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_learning_rate' がgui_settings.iniに存在します。
+2025-07-27 00:11:30,909 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_score_weight' がgui_settings.iniに存在します。
+2025-07-27 00:11:30,910 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_unassigned_weight' がgui_settings.iniに存在します。
+2025-07-27 00:11:30,910 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_time_weight' がgui_settings.iniに存在します。
+2025-07-27 00:11:30,910 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_time_for_normalization' がgui_settings.iniに存在します。
+2025-07-27 00:11:30,910 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-27 00:11:30,911 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-27 00:11:30,911 - seminar_optimization.logger_config - INFO - MainApplication: アプリケーションの初期化を開始します。
+2025-07-27 00:11:30,911 - seminar_optimization.logger_config - INFO - MainApplication: 出力ディレクトリを確認/作成しました: results
+2025-07-27 00:12:33,627 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-27 00:12:33,627 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-27 00:12:33,629 - setting_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-27 00:12:33,629 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'seminars' がgui_settings.iniに存在します。
+2025-07-27 00:12:33,629 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'magnification' がgui_settings.iniに存在します。
+2025-07-27 00:12:33,629 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'min_size' がgui_settings.iniに存在します。
+2025-07-27 00:12:33,630 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_size' がgui_settings.iniに存在します。
+2025-07-27 00:12:33,630 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'num_patterns' がgui_settings.iniに存在します。
+2025-07-27 00:12:33,630 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_1st' がgui_settings.iniに存在します。
+2025-07-27 00:12:33,630 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_2nd' がgui_settings.iniに存在します。
+2025-07-27 00:12:33,630 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_3rd' がgui_settings.iniに存在します。
+2025-07-27 00:12:33,630 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_other' がgui_settings.iniに存在します。
+2025-07-27 00:12:33,630 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'no_improvement_limit' がgui_settings.iniに存在します。
+2025-07-27 00:12:33,631 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'data_source' がgui_settings.iniに存在します。
+2025-07-27 00:12:33,631 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'student_file_path' がgui_settings.iniに存在します。
+2025-07-27 00:12:33,631 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_adaptive_iterations' がgui_settings.iniに存在します。
+2025-07-27 00:12:33,631 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'strategy_time_limit' がgui_settings.iniに存在します。
+2025-07-27 00:12:33,631 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_exploration_epsilon' がgui_settings.iniに存在します。
+2025-07-27 00:12:33,632 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_learning_rate' がgui_settings.iniに存在します。
+2025-07-27 00:12:33,632 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_score_weight' がgui_settings.iniに存在します。
+2025-07-27 00:12:33,632 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_unassigned_weight' がgui_settings.iniに存在します。
+2025-07-27 00:12:33,632 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_time_weight' がgui_settings.iniに存在します。
+2025-07-27 00:12:33,632 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_time_for_normalization' がgui_settings.iniに存在します。
+2025-07-27 00:12:33,633 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-27 00:12:33,633 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-27 00:12:33,634 - seminar_optimization.logger_config - INFO - MainApplication: アプリケーションの初期化を開始します。
+2025-07-27 00:12:33,634 - seminar_optimization.logger_config - INFO - MainApplication: 出力ディレクトリを確認/作成しました: results
+2025-07-27 00:12:33,782 - seminar_optimization.logger_config - INFO - MainApplication: 初期化が完了しました。
+2025-07-27 00:12:57,598 - seminar_optimization.data_generator - INFO - DataGenerator: ランダムなセミナーと学生のデータを生成します。
+2025-07-27 00:12:57,610 - seminar_optimization.data_generator - INFO - DataGenerator: データ生成の論理的検証に成功しました。
+2025-07-27 00:12:57,610 - seminar_optimization.data_generator - INFO - DataGenerator: データ生成と検証が完了しました。
+2025-07-27 00:12:58,621 - seminar_optimization.logger_config - INFO - DataInputTab: データを自動生成しました。セミナー数: 10, 学生数: 112
+2025-07-27 00:12:59,486 - seminar_optimization.logger_config - INFO - MainApplication: 最適化処理を開始します。
+2025-07-27 00:12:59,487 - seminar_optimization.logger_config - INFO - MainApplication: 現在の設定の保存を開始します。
+2025-07-27 00:12:59,488 - seminar_optimization.logger_config - WARNING - MainApplication.save_current_settings: Unknown key for MainApplication attribute: initial_adaptive_history_size_var
+2025-07-27 00:12:59,488 - setting_manager - INFO - SettingsManager: GUI設定の保存を開始します。
+2025-07-27 00:12:59,489 - setting_manager - INFO - SettingsManager: GUI設定をgui_settings.iniに保存しました。
+2025-07-27 00:13:00,441 - seminar_optimization.logger_config - INFO - MainApplication: 設定の保存が完了しました。
+2025-07-27 00:13:00,446 - seminar_optimization.logger_config - INFO - MainApplication: 最適化処理スレッドが開始されました。
+2025-07-27 00:13:00,446 - seminar_optimization.logger_config - INFO - MainApplication: 最適化スレッドを開始しました。
+2025-07-27 00:13:00,447 - seminar_optimization.logger_config - INFO - OptimizerService: 最適化処理を開始します。
+2025-07-27 00:13:00,447 - seminar_optimization.logger_config - INFO - OptimizerService: 入力データのスキーマ検証を開始します。
+2025-07-27 00:13:00,471 - seminar_optimization.logger_config - ERROR - OptimizerService: データ検証エラー: 'adaptive_exploration_epsilon' is a required property (パス: )
+Traceback (most recent call last):
+  File "C:\Users\hiker\seminar_optimization\optimizers\optimizer_service.py", line 70, in _validate_data
+    jsonschema.validate(instance=config, schema=CONFIG_SCHEMA)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\AppData\Local\Programs\Python\Python313\Lib\site-packages\jsonschema\validators.py", line 1332, in validate
+    raise error
+jsonschema.exceptions.ValidationError: 'adaptive_exploration_epsilon' is a required property
+
+Failed validating 'required' in schema:
+    {'type': 'object',
+     'properties': {'num_seminars': {'type': 'integer', 'minimum': 1},
+                    'min_capacity': {'type': 'integer', 'minimum': 1},
+                    'max_capacity': {'type': 'integer', 'minimum': 1},
+                    'num_students': {'type': 'integer', 'minimum': 1},
+                    'min_preferences': {'type': 'integer', 'minimum': 1},
+                    'max_preferences': {'type': 'integer', 'minimum': 1},
+                    'preference_distribution': {'type': 'string',
+                                                'enum': ['random',
+                                                         'uniform',
+                                                         'biased']},
+                    'random_seed': {'type': ['integer', 'null']},
+                    'optimization_strategy': {'type': 'string',
+                                              'enum': ['Greedy_LS',
+                                                       'GA_LS',
+                                                       'ILP',
+                                                       'CP',
+                                                       'Multilevel',
+                                                       'Adaptive']},
+                    'ga_population_size': {'type': 'integer', 'minimum': 1},
+                    'ga_generations': {'type': 'integer', 'minimum': 1},
+                    'ga_mutation_rate': {'type': 'number',
+                                         'minimum': 0,
+                                         'maximum': 1},
+                    'ga_crossover_rate': {'type': 'number',
+                                          'minimum': 0,
+                                          'maximum': 1},
+                    'ga_no_improvement_limit': {'type': 'integer',
+                                                'minimum': 1},
+                    'ilp_time_limit': {'type': 'integer', 'minimum': 1},
+                    'cp_time_limit': {'type': 'integer', 'minimum': 1},
+                    'max_workers': {'type': 'integer', 'minimum': 1},
+                    'multilevel_clusters': {'type': 'integer',
+                                            'minimum': 1},
+                    'greedy_ls_iterations': {'type': 'integer',
+                                             'minimum': 1},
+                    'local_search_iterations': {'type': 'integer',
+                                                'minimum': 1},
+                    'early_stop_no_improvement_limit': {'type': 'integer',
+                                                        'minimum': 1},
+                    'initial_temperature': {'type': 'number', 'minimum': 0},
+                    'cooling_rate': {'type': 'number',
+                                     'minimum': 0,
+                                     'maximum': 1},
+                    'generate_pdf_report': {'type': 'boolean'},
+                    'generate_csv_report': {'type': 'boolean'},
+                    'debug_mode': {'type': 'boolean'},
+                    'log_enabled': {'type': 'boolean'},
+                    'output_directory': {'type': 'string'},
+                    'seminars_file': {'type': 'string'},
+                    'students_file': {'type': 'string'},
+                    'score_weights': {'type': 'object',
+                                      'properties': {'1st_choice': {'type': 'number',
+                                                                    'minimum': 0},
+                                                     '2nd_choice': {'type': 'number',
+                                                                    'minimum': 0},
+                                                     '3rd_choice': {'type': 'number',
+                                                                    'minimum': 0},
+                                                     'other_preference': {'type': 'number',
+                                                                          'minimum': 0}},
+                                      'required': ['1st_choice',
+                                                   '2nd_choice',
+                                                   '3rd_choice',
+                                                   'other_preference'],
+                                      'additionalProperties': False},
+                    'adaptive_history_size': {'type': 'integer',
+                                              'minimum': 1},
+                    'adaptive_exploration_epsilon': {'type': 'number',
+                                                     'minimum': 0,
+                                                     'maximum': 1},
+                    'adaptive_learning_rate': {'type': 'number',
+                                               'minimum': 0,
+                                               'maximum': 1},
+                    'adaptive_score_weight': {'type': 'number',
+                                              'minimum': 0,
+                                              'maximum': 1},
+                    'adaptive_unassigned_weight': {'type': 'number',
+                                                   'minimum': 0,
+                                                   'maximum': 1},
+                    'adaptive_time_weight': {'type': 'number',
+                                             'minimum': 0,
+                                             'maximum': 1},
+                    'max_time_for_normalization': {'type': 'number',
+                                                   'minimum': 1}},
+     'required': ['num_seminars',
+                  'min_capacity',
+                  'max_capacity',
+                  'num_students',
+                  'min_preferences',
+                  'max_preferences',
+                  'preference_distribution',
+                  'optimization_strategy',
+                  'ga_population_size',
+                  'ga_generations',
+                  'ilp_time_limit',
+                  'cp_time_limit',
+                  'multilevel_clusters',
+                  'greedy_ls_iterations',
+                  'local_search_iterations',
+                  'early_stop_no_improvement_limit',
+                  'initial_temperature',
+                  'cooling_rate',
+                  'generate_pdf_report',
+                  'generate_csv_report',
+                  'debug_mode',
+                  'log_enabled',
+                  'output_directory',
+                  'seminars_file',
+                  'students_file',
+                  'score_weights',
+                  'ga_mutation_rate',
+                  'ga_crossover_rate',
+                  'ga_no_improvement_limit',
+                  'max_workers',
+                  'adaptive_history_size',
+                  'adaptive_exploration_epsilon',
+                  'adaptive_learning_rate',
+                  'adaptive_score_weight',
+                  'adaptive_unassigned_weight',
+                  'adaptive_time_weight',
+                  'max_time_for_normalization'],
+     'additionalProperties': False}
+
+On instance:
+    {'num_seminars': 10,
+     'num_students': 112,
+     'min_capacity': 10,
+     'max_capacity': 15,
+     'preference_distribution': 'random',
+     'random_seed': 42,
+     'q_boost_probability': 0.2,
+     'min_preferences': 3,
+     'max_preferences': 5,
+     'seminars_file': 'c:\\Users\\hiker\\seminar_optimization\\seminar_optimization\\data\\seminars.json',
+     'students_file': 'c:\\Users\\hiker\\seminar_optimization\\seminar_optimization\\data\\students.json',
+     'optimization_strategy': 'Greedy_LS',
+     'max_workers': 8,
+     'ga_population_size': 100,
+     'ga_generations': 200,
+     'ga_mutation_rate': 0.05,
+     'ga_crossover_rate': 0.8,
+     'ga_no_improvement_limit': 10,
+     'ilp_time_limit': 300,
+     'cp_time_limit': 300,
+     'multilevel_clusters': 5,
+     'greedy_ls_iterations': 200000,
+     'local_search_iterations': 500,
+     'initial_temperature': 1.0,
+     'cooling_rate': 0.995,
+     'score_weights': {'1st_choice': 5.0,
+                       '2nd_choice': 2.0,
+                       '3rd_choice': 1.0,
+                       'other': 0.5},
+     'early_stop_threshold': 0.001,
+     'adaptive_history_size': '5',
+     'early_stop_no_improvement_limit': 1000,
+     'generate_pdf_report': True,
+     'generate_csv_report': True,
+     'output_directory': 'results',
+     'pdf_font_path': '',
+     'debug_mode': False,
+     'log_enabled': True,
+     'save_intermediate': True,
+     'data_directory': 'C:\\Users\\hiker\\seminar_optimization\\data'}
+2025-07-27 00:13:00,479 - seminar_optimization.logger_config - INFO - MainApplication: 最適化結果を処理します。ステータス: FAILED
+2025-07-27 00:13:00,479 - gui_tabs.results_tab - INFO - ResultsTab: 最適化結果をUIに表示します。
+2025-07-27 00:13:00,480 - gui_tabs.results_tab - INFO - ResultsTab: 最適化結果のUI表示が完了しました。
+2025-07-27 00:13:00,524 - seminar_optimization.logger_config - INFO - MainApplication: 最適化処理スレッドが終了しました。
+2025-07-27 00:13:06,222 - seminar_optimization.logger_config - WARNING - MainApplication: 最適化が完了しましたが、問題が発生しました: データ検証エラー: 入力データの形式が不正です: 'adaptive_exploration_epsilon' is a required property (パス: )
+2025-07-27 00:20:34,585 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-27 00:20:34,585 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-27 00:20:34,586 - setting_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-27 00:20:34,587 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'seminars' がgui_settings.iniに存在します。
+2025-07-27 00:20:34,587 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'magnification' がgui_settings.iniに存在します。
+2025-07-27 00:20:34,588 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'min_size' がgui_settings.iniに存在します。
+2025-07-27 00:20:34,588 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_size' がgui_settings.iniに存在します。
+2025-07-27 00:20:34,588 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'num_patterns' がgui_settings.iniに存在します。
+2025-07-27 00:20:34,588 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_1st' がgui_settings.iniに存在します。
+2025-07-27 00:20:34,589 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_2nd' がgui_settings.iniに存在します。
+2025-07-27 00:20:34,589 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_3rd' がgui_settings.iniに存在します。
+2025-07-27 00:20:34,589 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_other' がgui_settings.iniに存在します。
+2025-07-27 00:20:34,592 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'no_improvement_limit' がgui_settings.iniに存在します。
+2025-07-27 00:20:34,593 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'data_source' がgui_settings.iniに存在します。
+2025-07-27 00:20:34,593 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'student_file_path' がgui_settings.iniに存在します。
+2025-07-27 00:20:34,593 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_adaptive_iterations' がgui_settings.iniに存在します。
+2025-07-27 00:20:34,594 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'strategy_time_limit' がgui_settings.iniに存在します。
+2025-07-27 00:20:34,594 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_learning_rate' がgui_settings.iniに存在します。
+2025-07-27 00:20:34,594 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_score_weight' がgui_settings.iniに存在します。
+2025-07-27 00:20:34,595 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_unassigned_weight' がgui_settings.iniに存在します。
+2025-07-27 00:20:34,595 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_time_weight' がgui_settings.iniに存在します。
+2025-07-27 00:20:34,595 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_time_for_normalization' がgui_settings.iniに存在します。
+2025-07-27 00:20:34,595 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_history_size_var' がgui_settings.iniに存在します。
+2025-07-27 00:20:34,595 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-27 00:20:34,596 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-27 00:20:34,596 - seminar_optimization.logger_config - INFO - MainApplication: アプリケーションの初期化を開始します。
+2025-07-27 00:20:34,596 - seminar_optimization.logger_config - INFO - MainApplication: 出力ディレクトリを確認/作成しました: results
+2025-07-27 00:20:34,756 - seminar_optimization.logger_config - INFO - MainApplication: 初期化が完了しました。
+2025-07-27 00:20:36,974 - seminar_optimization.data_generator - INFO - DataGenerator: ランダムなセミナーと学生のデータを生成します。
+2025-07-27 00:20:36,985 - seminar_optimization.data_generator - INFO - DataGenerator: データ生成の論理的検証に成功しました。
+2025-07-27 00:20:36,986 - seminar_optimization.data_generator - INFO - DataGenerator: データ生成と検証が完了しました。
+2025-07-27 00:20:38,227 - seminar_optimization.logger_config - INFO - DataInputTab: データを自動生成しました。セミナー数: 10, 学生数: 112
+2025-07-27 00:20:52,735 - seminar_optimization.data_generator - INFO - DataGenerator: ランダムなセミナーと学生のデータを生成します。
+2025-07-27 00:20:52,745 - seminar_optimization.data_generator - INFO - DataGenerator: データ生成の論理的検証に成功しました。
+2025-07-27 00:20:52,746 - seminar_optimization.data_generator - INFO - DataGenerator: データ生成と検証が完了しました。
+2025-07-27 00:20:53,716 - seminar_optimization.logger_config - INFO - DataInputTab: データを自動生成しました。セミナー数: 10, 学生数: 112
+2025-07-27 00:21:01,534 - seminar_optimization.logger_config - INFO - MainApplication: 最適化処理を開始します。
+2025-07-27 00:21:01,535 - seminar_optimization.logger_config - INFO - MainApplication: 現在の設定の保存を開始します。
+2025-07-27 00:21:01,535 - seminar_optimization.logger_config - WARNING - MainApplication.save_current_settings: Unknown key for MainApplication attribute: initial_adaptive_history_size_var
+2025-07-27 00:21:01,535 - setting_manager - INFO - SettingsManager: GUI設定の保存を開始します。
+2025-07-27 00:21:01,536 - setting_manager - INFO - SettingsManager: GUI設定をgui_settings.iniに保存しました。
+2025-07-27 00:21:02,826 - seminar_optimization.logger_config - INFO - MainApplication: 設定の保存が完了しました。
+2025-07-27 00:21:02,837 - seminar_optimization.logger_config - INFO - MainApplication: 最適化処理スレッドが開始されました。
+2025-07-27 00:21:02,837 - seminar_optimization.logger_config - INFO - MainApplication: 最適化スレッドを開始しました。
+2025-07-27 00:21:02,837 - seminar_optimization.logger_config - INFO - OptimizerService: 最適化処理を開始します。
+2025-07-27 00:21:02,837 - seminar_optimization.logger_config - INFO - OptimizerService: 入力データのスキーマ検証を開始します。
+2025-07-27 00:21:02,862 - seminar_optimization.logger_config - ERROR - OptimizerService: データ検証エラー: 'adaptive_learning_rate' is a required property (パス: )
+Traceback (most recent call last):
+  File "C:\Users\hiker\seminar_optimization\optimizers\optimizer_service.py", line 70, in _validate_data
+    jsonschema.validate(instance=config, schema=CONFIG_SCHEMA)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\AppData\Local\Programs\Python\Python313\Lib\site-packages\jsonschema\validators.py", line 1332, in validate
+    raise error
+jsonschema.exceptions.ValidationError: 'adaptive_learning_rate' is a required property
+
+Failed validating 'required' in schema:
+    {'type': 'object',
+     'properties': {'num_seminars': {'type': 'integer', 'minimum': 1},
+                    'min_capacity': {'type': 'integer', 'minimum': 1},
+                    'max_capacity': {'type': 'integer', 'minimum': 1},
+                    'num_students': {'type': 'integer', 'minimum': 1},
+                    'min_preferences': {'type': 'integer', 'minimum': 1},
+                    'max_preferences': {'type': 'integer', 'minimum': 1},
+                    'preference_distribution': {'type': 'string',
+                                                'enum': ['random',
+                                                         'uniform',
+                                                         'biased']},
+                    'random_seed': {'type': ['integer', 'null']},
+                    'optimization_strategy': {'type': 'string',
+                                              'enum': ['Greedy_LS',
+                                                       'GA_LS',
+                                                       'ILP',
+                                                       'CP',
+                                                       'Multilevel',
+                                                       'Adaptive']},
+                    'ga_population_size': {'type': 'integer', 'minimum': 1},
+                    'ga_generations': {'type': 'integer', 'minimum': 1},
+                    'ga_mutation_rate': {'type': 'number',
+                                         'minimum': 0,
+                                         'maximum': 1},
+                    'ga_crossover_rate': {'type': 'number',
+                                          'minimum': 0,
+                                          'maximum': 1},
+                    'ga_no_improvement_limit': {'type': 'integer',
+                                                'minimum': 1},
+                    'ilp_time_limit': {'type': 'integer', 'minimum': 1},
+                    'cp_time_limit': {'type': 'integer', 'minimum': 1},
+                    'max_workers': {'type': 'integer', 'minimum': 1},
+                    'multilevel_clusters': {'type': 'integer',
+                                            'minimum': 1},
+                    'greedy_ls_iterations': {'type': 'integer',
+                                             'minimum': 1},
+                    'local_search_iterations': {'type': 'integer',
+                                                'minimum': 1},
+                    'early_stop_no_improvement_limit': {'type': 'integer',
+                                                        'minimum': 1},
+                    'initial_temperature': {'type': 'number', 'minimum': 0},
+                    'cooling_rate': {'type': 'number',
+                                     'minimum': 0,
+                                     'maximum': 1},
+                    'generate_pdf_report': {'type': 'boolean'},
+                    'generate_csv_report': {'type': 'boolean'},
+                    'debug_mode': {'type': 'boolean'},
+                    'log_enabled': {'type': 'boolean'},
+                    'output_directory': {'type': 'string'},
+                    'seminars_file': {'type': 'string'},
+                    'students_file': {'type': 'string'},
+                    'score_weights': {'type': 'object',
+                                      'properties': {'1st_choice': {'type': 'number',
+                                                                    'minimum': 0},
+                                                     '2nd_choice': {'type': 'number',
+                                                                    'minimum': 0},
+                                                     '3rd_choice': {'type': 'number',
+                                                                    'minimum': 0},
+                                                     'other_preference': {'type': 'number',
+                                                                          'minimum': 0}},
+                                      'required': ['1st_choice',
+                                                   '2nd_choice',
+                                                   '3rd_choice',
+                                                   'other_preference'],
+                                      'additionalProperties': False},
+                    'adaptive_history_size': {'type': 'integer',
+                                              'minimum': 1},
+                    'adaptive_exploration_epsilon': {'type': 'number',
+                                                     'minimum': 0,
+                                                     'maximum': 1},
+                    'adaptive_learning_rate': {'type': 'number',
+                                               'minimum': 0,
+                                               'maximum': 1},
+                    'adaptive_score_weight': {'type': 'number',
+                                              'minimum': 0,
+                                              'maximum': 1},
+                    'adaptive_unassigned_weight': {'type': 'number',
+                                                   'minimum': 0,
+                                                   'maximum': 1},
+                    'adaptive_time_weight': {'type': 'number',
+                                             'minimum': 0,
+                                             'maximum': 1},
+                    'max_time_for_normalization': {'type': 'number',
+                                                   'minimum': 1}},
+     'required': ['num_seminars',
+                  'min_capacity',
+                  'max_capacity',
+                  'num_students',
+                  'min_preferences',
+                  'max_preferences',
+                  'preference_distribution',
+                  'optimization_strategy',
+                  'ga_population_size',
+                  'ga_generations',
+                  'ilp_time_limit',
+                  'cp_time_limit',
+                  'multilevel_clusters',
+                  'greedy_ls_iterations',
+                  'local_search_iterations',
+                  'early_stop_no_improvement_limit',
+                  'initial_temperature',
+                  'cooling_rate',
+                  'generate_pdf_report',
+                  'generate_csv_report',
+                  'debug_mode',
+                  'log_enabled',
+                  'output_directory',
+                  'seminars_file',
+                  'students_file',
+                  'score_weights',
+                  'ga_mutation_rate',
+                  'ga_crossover_rate',
+                  'ga_no_improvement_limit',
+                  'max_workers',
+                  'adaptive_history_size',
+                  'adaptive_exploration_epsilon',
+                  'adaptive_learning_rate',
+                  'adaptive_score_weight',
+                  'adaptive_unassigned_weight',
+                  'adaptive_time_weight',
+                  'max_time_for_normalization'],
+     'additionalProperties': False}
+
+On instance:
+    {'num_seminars': 10,
+     'num_students': 112,
+     'min_capacity': 10,
+     'max_capacity': 15,
+     'preference_distribution': 'random',
+     'random_seed': 42,
+     'q_boost_probability': 0.2,
+     'min_preferences': 3,
+     'max_preferences': 5,
+     'seminars_file': 'c:\\Users\\hiker\\seminar_optimization\\seminar_optimization\\data\\seminars.json',
+     'students_file': 'c:\\Users\\hiker\\seminar_optimization\\seminar_optimization\\data\\students.json',
+     'optimization_strategy': 'Greedy_LS',
+     'max_workers': 8,
+     'ga_population_size': 100,
+     'ga_generations': 200,
+     'ga_mutation_rate': 0.05,
+     'ga_crossover_rate': 0.8,
+     'ga_no_improvement_limit': 10,
+     'ilp_time_limit': 300,
+     'cp_time_limit': 300,
+     'multilevel_clusters': 5,
+     'greedy_ls_iterations': 200000,
+     'local_search_iterations': 500,
+     'initial_temperature': 1.0,
+     'cooling_rate': 0.995,
+     'score_weights': {'1st_choice': 5.0,
+                       '2nd_choice': 2.0,
+                       '3rd_choice': 1.0,
+                       'other': 0.5},
+     'early_stop_threshold': 0.001,
+     'adaptive_history_size': '5',
+     'adaptive_exploration_epsilon': 0.1,
+     'early_stop_no_improvement_limit': 1000,
+     'generate_pdf_report': True,
+     'generate_csv_report': True,
+     'output_directory': 'results',
+     'pdf_font_path': '',
+     'debug_mode': False,
+     'log_enabled': True,
+     'save_intermediate': True,
+     'data_directory': 'C:\\Users\\hiker\\seminar_optimization\\data'}
+2025-07-27 00:21:02,869 - seminar_optimization.logger_config - INFO - MainApplication: 最適化結果を処理します。ステータス: FAILED
+2025-07-27 00:21:02,869 - gui_tabs.results_tab - INFO - ResultsTab: 最適化結果をUIに表示します。
+2025-07-27 00:21:02,870 - gui_tabs.results_tab - INFO - ResultsTab: 最適化結果のUI表示が完了しました。
+2025-07-27 00:21:02,873 - seminar_optimization.logger_config - INFO - MainApplication: 最適化処理スレッドが終了しました。
+2025-07-27 00:21:04,075 - seminar_optimization.logger_config - WARNING - MainApplication: 最適化が完了しましたが、問題が発生しました: データ検証エラー: 入力データの形式が不正です: 'adaptive_learning_rate' is a required property (パス: )
+2025-07-27 00:48:35,878 - seminar_optimization.logger_config - INFO - MainApplication: アプリケーションを終了します。
+2025-07-27 01:11:45,586 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-27 01:11:45,587 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-27 01:11:45,590 - setting_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-27 01:11:45,591 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'seminars' がgui_settings.iniに存在します。
+2025-07-27 01:11:45,592 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'magnification' がgui_settings.iniに存在します。
+2025-07-27 01:11:45,592 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'min_size' がgui_settings.iniに存在します。
+2025-07-27 01:11:45,593 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_size' がgui_settings.iniに存在します。
+2025-07-27 01:11:45,593 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'num_patterns' がgui_settings.iniに存在します。
+2025-07-27 01:11:45,594 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_1st' がgui_settings.iniに存在します。
+2025-07-27 01:11:45,595 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_2nd' がgui_settings.iniに存在します。
+2025-07-27 01:11:45,596 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_3rd' がgui_settings.iniに存在します。
+2025-07-27 01:11:45,596 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_other' がgui_settings.iniに存在します。
+2025-07-27 01:11:45,597 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'no_improvement_limit' がgui_settings.iniに存在します。
+2025-07-27 01:11:45,597 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'data_source' がgui_settings.iniに存在します。
+2025-07-27 01:11:45,597 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'student_file_path' がgui_settings.iniに存在します。
+2025-07-27 01:11:45,597 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_adaptive_iterations' がgui_settings.iniに存在します。
+2025-07-27 01:11:45,598 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'strategy_time_limit' がgui_settings.iniに存在します。
+2025-07-27 01:11:45,598 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_learning_rate' がgui_settings.iniに存在します。
+2025-07-27 01:11:45,599 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_score_weight' がgui_settings.iniに存在します。
+2025-07-27 01:11:45,600 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_unassigned_weight' がgui_settings.iniに存在します。
+2025-07-27 01:11:45,601 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_time_weight' がgui_settings.iniに存在します。
+2025-07-27 01:11:45,602 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_time_for_normalization' がgui_settings.iniに存在します。
+2025-07-27 01:11:45,603 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_history_size_var' がgui_settings.iniに存在します。
+2025-07-27 01:11:45,606 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-27 01:11:45,607 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-27 01:11:45,609 - seminar_optimization.logger_config - INFO - MainApplication: アプリケーションの初期化を開始します。
+2025-07-27 01:11:45,611 - seminar_optimization.logger_config - INFO - MainApplication: 出力ディレクトリを確認/作成しました: results
+2025-07-27 01:18:54,082 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-27 01:18:54,082 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-27 01:18:54,084 - setting_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-27 01:18:54,085 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'seminars' がgui_settings.iniに存在します。
+2025-07-27 01:18:54,085 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'magnification' がgui_settings.iniに存在します。
+2025-07-27 01:18:54,085 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'min_size' がgui_settings.iniに存在します。
+2025-07-27 01:18:54,086 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_size' がgui_settings.iniに存在します。
+2025-07-27 01:18:54,086 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'num_patterns' がgui_settings.iniに存在します。
+2025-07-27 01:18:54,086 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_1st' がgui_settings.iniに存在します。
+2025-07-27 01:18:54,087 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_2nd' がgui_settings.iniに存在します。
+2025-07-27 01:18:54,087 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_3rd' がgui_settings.iniに存在します。
+2025-07-27 01:18:54,087 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_other' がgui_settings.iniに存在します。
+2025-07-27 01:18:54,088 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'no_improvement_limit' がgui_settings.iniに存在します。
+2025-07-27 01:18:54,088 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'data_source' がgui_settings.iniに存在します。
+2025-07-27 01:18:54,088 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'student_file_path' がgui_settings.iniに存在します。
+2025-07-27 01:18:54,088 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_adaptive_iterations' がgui_settings.iniに存在します。
+2025-07-27 01:18:54,088 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'strategy_time_limit' がgui_settings.iniに存在します。
+2025-07-27 01:18:54,088 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_learning_rate' がgui_settings.iniに存在します。
+2025-07-27 01:18:54,089 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_score_weight' がgui_settings.iniに存在します。
+2025-07-27 01:18:54,089 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_unassigned_weight' がgui_settings.iniに存在します。
+2025-07-27 01:18:54,089 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_time_weight' がgui_settings.iniに存在します。
+2025-07-27 01:18:54,089 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_time_for_normalization' がgui_settings.iniに存在します。
+2025-07-27 01:18:54,090 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_history_size_var' がgui_settings.iniに存在します。
+2025-07-27 01:18:54,090 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-27 01:18:54,091 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-27 01:18:54,091 - seminar_optimization.logger_config - INFO - MainApplication: アプリケーションの初期化を開始します。
+2025-07-27 01:18:54,091 - seminar_optimization.logger_config - INFO - MainApplication: 出力ディレクトリを確認/作成しました: results
+2025-07-27 01:18:54,192 - seminar_optimization.logger_config - INFO - MainApplication: 初期化が完了しました。
+2025-07-27 01:26:21,476 - gui_tabs.setting_tab - INFO - SettingTab: 目的プリセット '未割当回避' を適用しました。
+2025-07-27 01:26:21,476 - gui_tabs.setting_tab - WARNING - SettingTab._update_main_app_settings_from_ui: MainApplication属性の不明なキー: initial_adaptive_score_weight
+2025-07-27 01:26:21,476 - gui_tabs.setting_tab - WARNING - SettingTab._update_main_app_settings_from_ui: MainApplication属性の不明なキー: initial_adaptive_unassigned_weight
+2025-07-27 01:26:21,477 - gui_tabs.setting_tab - WARNING - SettingTab._update_main_app_settings_from_ui: MainApplication属性の不明なキー: initial_adaptive_time_weight
+2025-07-27 01:26:21,477 - gui_tabs.setting_tab - INFO - SettingTab: GUIテーマを 'xpnative' に変更しました。
+2025-07-27 01:26:21,478 - INFO - SettingTab: ���M���O�ݒ���X�V���܂����B
+2025-07-27 01:26:21,478 - gui_tabs.setting_tab - INFO - SettingTab: ロギング設定を更新しました。
+2025-07-27 01:26:23,090 - INFO - SettingTab: �ړI�v���Z�b�g '�X�s�[�h�D��' ��K�p���܂����B
+2025-07-27 01:26:23,090 - gui_tabs.setting_tab - INFO - SettingTab: 目的プリセット 'スピード優先' を適用しました。
+2025-07-27 01:26:23,094 - WARNING - SettingTab._update_main_app_settings_from_ui: MainApplication�����̕s���ȃL�[: initial_adaptive_score_weight
+2025-07-27 01:26:23,094 - gui_tabs.setting_tab - WARNING - SettingTab._update_main_app_settings_from_ui: MainApplication属性の不明なキー: initial_adaptive_score_weight
+2025-07-27 01:26:23,094 - WARNING - SettingTab._update_main_app_settings_from_ui: MainApplication�����̕s���ȃL�[: initial_adaptive_unassigned_weight
+2025-07-27 01:26:23,094 - gui_tabs.setting_tab - WARNING - SettingTab._update_main_app_settings_from_ui: MainApplication属性の不明なキー: initial_adaptive_unassigned_weight
+2025-07-27 01:26:23,094 - WARNING - SettingTab._update_main_app_settings_from_ui: MainApplication�����̕s���ȃL�[: initial_adaptive_time_weight
+2025-07-27 01:26:23,094 - gui_tabs.setting_tab - WARNING - SettingTab._update_main_app_settings_from_ui: MainApplication属性の不明なキー: initial_adaptive_time_weight
+2025-07-27 01:26:23,095 - INFO - SettingTab: GUI�e�[�}�� 'xpnative' �ɕύX���܂����B
+2025-07-27 01:26:23,095 - gui_tabs.setting_tab - INFO - SettingTab: GUIテーマを 'xpnative' に変更しました。
+2025-07-27 01:26:23,096 - INFO - SettingTab: ���M���O�ݒ���X�V���܂����B
+2025-07-27 01:26:23,096 - gui_tabs.setting_tab - INFO - SettingTab: ロギング設定を更新しました。
+2025-07-27 01:26:34,063 - seminar_optimization.data_generator - INFO - DataGenerator: ランダムなセミナーと学生のデータを生成します。
+2025-07-27 01:26:34,074 - seminar_optimization.data_generator - INFO - DataGenerator: データ生成の論理的検証に成功しました。
+2025-07-27 01:26:34,075 - seminar_optimization.data_generator - INFO - DataGenerator: データ生成と検証が完了しました。
+2025-07-27 01:26:35,114 - seminar_optimization.logger_config - INFO - DataInputTab: データを自動生成しました。セミナー数: 10, 学生数: 112
+2025-07-27 01:49:48,345 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-27 01:49:48,346 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-27 01:49:48,347 - setting_manager - INFO - SettingsManager: gui_settings.iniをロードしました: C:\Users\hiker\seminar_optimization\gui_settings.ini
+2025-07-27 01:49:48,348 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'seminars' がgui_settings.iniに存在します。
+2025-07-27 01:49:48,348 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'magnification' がgui_settings.iniに存在します。
+2025-07-27 01:49:48,348 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'min_size' がgui_settings.iniに存在します。
+2025-07-27 01:49:48,348 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_size' がgui_settings.iniに存在します。
+2025-07-27 01:49:48,349 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'num_patterns' がgui_settings.iniに存在します。
+2025-07-27 01:49:48,349 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_1st' がgui_settings.iniに存在します。
+2025-07-27 01:49:48,349 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_2nd' がgui_settings.iniに存在します。
+2025-07-27 01:49:48,349 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_3rd' がgui_settings.iniに存在します。
+2025-07-27 01:49:48,350 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'preference_weights_other' がgui_settings.iniに存在します。
+2025-07-27 01:49:48,350 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'no_improvement_limit' がgui_settings.iniに存在します。
+2025-07-27 01:49:48,350 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'data_source' がgui_settings.iniに存在します。
+2025-07-27 01:49:48,350 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'student_file_path' がgui_settings.iniに存在します。
+2025-07-27 01:49:48,351 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'max_adaptive_iterations' がgui_settings.iniに存在します。
+2025-07-27 01:49:48,351 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'strategy_time_limit' がgui_settings.iniに存在します。
+2025-07-27 01:49:48,351 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_learning_rate' がgui_settings.iniに存在します。
+2025-07-27 01:49:48,351 - seminar_optimization.logger_config - WARNING - MainApplication: 未知の初期設定 'adaptive_history_size_var' がgui_settings.iniに存在します。
+2025-07-27 01:49:48,352 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-27 01:49:48,353 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-27 01:49:48,353 - seminar_optimization.logger_config - INFO - MainApplication: アプリケーションの初期化を開始します。
+2025-07-27 01:49:48,354 - seminar_optimization.logger_config - INFO - MainApplication: 出力ディレクトリを確認/作成しました: results
+2025-07-27 01:49:48,456 - seminar_optimization.logger_config - INFO - MainApplication: 初期化が完了しました。
+2025-07-27 01:55:15,191 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-27 01:55:15,192 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-27 01:55:15,195 - __main__ - ERROR - タブ作成中にエラー: '_tkinter.tkapp' object has no attribute 'initial_data_input_method'
+2025-07-27 01:55:15,195 - __main__ - ERROR - メインウィジェット作成中にエラー: '_tkinter.tkapp' object has no attribute 'initial_data_input_method'
+2025-07-27 01:55:15,196 - __main__ - ERROR - UI設定中にエラーが発生しました: '_tkinter.tkapp' object has no attribute 'initial_data_input_method'
+2025-07-27 01:55:15,196 - root - ERROR - アプリケーション起動エラー
+Traceback (most recent call last):
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 662, in main
+    app = MainApplication(project_root)
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 152, in __init__
+    self._setup_ui()
+    ~~~~~~~~~~~~~~^^
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 250, in _setup_ui
+    self._create_widgets()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 297, in _create_widgets
+    self._create_tabs()
+    ~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 329, in _create_tabs
+    self.data_input_tab = self.DataInputTab(self.notebook, self)
+                          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\seminar_optimization\gui_tabs\data_input_tab.py", line 63, in __init__
+    self.data_input_method_var = tk.StringVar(value=self.parent_app.initial_data_input_method)
+                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 2546, in __getattr__
+    return getattr(self.tk, attr)
+AttributeError: '_tkinter.tkapp' object has no attribute 'initial_data_input_method'
+2025-07-27 01:55:26,706 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-27 01:55:26,707 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-27 01:55:26,714 - __main__ - ERROR - タブ作成中にエラー: '_tkinter.tkapp' object has no attribute 'initial_data_input_method'
+2025-07-27 01:55:26,714 - __main__ - ERROR - メインウィジェット作成中にエラー: '_tkinter.tkapp' object has no attribute 'initial_data_input_method'
+2025-07-27 01:55:26,714 - __main__ - ERROR - UI設定中にエラーが発生しました: '_tkinter.tkapp' object has no attribute 'initial_data_input_method'
+2025-07-27 01:55:26,714 - root - ERROR - アプリケーション起動エラー
+Traceback (most recent call last):
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 662, in main
+    app = MainApplication(project_root)
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 152, in __init__
+    self._setup_ui()
+    ~~~~~~~~~~~~~~^^
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 250, in _setup_ui
+    self._create_widgets()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 297, in _create_widgets
+    self._create_tabs()
+    ~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 329, in _create_tabs
+    self.data_input_tab = self.DataInputTab(self.notebook, self)
+                          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\seminar_optimization\gui_tabs\data_input_tab.py", line 63, in __init__
+    self.data_input_method_var = tk.StringVar(value=self.parent_app.initial_data_input_method)
+                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 2546, in __getattr__
+    return getattr(self.tk, attr)
+AttributeError: '_tkinter.tkapp' object has no attribute 'initial_data_input_method'
+2025-07-27 01:59:04,816 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-27 01:59:04,819 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-27 01:59:04,854 - __main__ - ERROR - タブ作成中にエラー: '_tkinter.tkapp' object has no attribute 'initial_data_input_method'
+2025-07-27 01:59:04,854 - __main__ - ERROR - メインウィジェット作成中にエラー: '_tkinter.tkapp' object has no attribute 'initial_data_input_method'
+2025-07-27 01:59:04,855 - __main__ - ERROR - UI設定中にエラーが発生しました: '_tkinter.tkapp' object has no attribute 'initial_data_input_method'
+2025-07-27 01:59:04,857 - root - ERROR - アプリケーション起動エラー
+Traceback (most recent call last):
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 662, in main
+    app = MainApplication(project_root)
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 152, in __init__
+    self._setup_ui()
+    ~~~~~~~~~~~~~~^^
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 250, in _setup_ui
+    self._create_widgets()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 297, in _create_widgets
+    self._create_tabs()
+    ~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 329, in _create_tabs
+    self.data_input_tab = self.DataInputTab(self.notebook, self)
+                          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\seminar_optimization\gui_tabs\data_input_tab.py", line 63, in __init__
+    self.data_input_method_var = tk.StringVar(value=self.parent_app.initial_data_input_method)
+                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 2546, in __getattr__
+    return getattr(self.tk, attr)
+AttributeError: '_tkinter.tkapp' object has no attribute 'initial_data_input_method'
+2025-07-27 01:59:20,745 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-27 01:59:20,746 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-27 01:59:20,752 - __main__ - ERROR - タブ作成中にエラー: '_tkinter.tkapp' object has no attribute 'initial_data_input_method'
+2025-07-27 01:59:20,752 - __main__ - ERROR - メインウィジェット作成中にエラー: '_tkinter.tkapp' object has no attribute 'initial_data_input_method'
+2025-07-27 01:59:20,753 - __main__ - ERROR - UI設定中にエラーが発生しました: '_tkinter.tkapp' object has no attribute 'initial_data_input_method'
+2025-07-27 01:59:20,753 - root - ERROR - アプリケーション起動エラー
+Traceback (most recent call last):
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 662, in main
+    app = MainApplication(project_root)
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 152, in __init__
+    self._setup_ui()
+    ~~~~~~~~~~~~~~^^
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 250, in _setup_ui
+    self._create_widgets()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 297, in _create_widgets
+    self._create_tabs()
+    ~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 329, in _create_tabs
+    self.data_input_tab = self.DataInputTab(self.notebook, self)
+                          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\seminar_optimization\gui_tabs\data_input_tab.py", line 63, in __init__
+    self.data_input_method_var = tk.StringVar(value=self.parent_app.initial_data_input_method)
+                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 2546, in __getattr__
+    return getattr(self.tk, attr)
+AttributeError: '_tkinter.tkapp' object has no attribute 'initial_data_input_method'
+2025-07-27 02:01:54,056 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-27 02:01:54,058 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-27 02:01:54,058 - __main__ - INFO - MainApplication: ロギングが設定されました。
+2025-07-27 02:01:54,086 - __main__ - ERROR - タブ作成中にエラー: '_tkinter.tkapp' object has no attribute 'initial_config_file_path'
+2025-07-27 02:01:54,086 - __main__ - ERROR - メインウィジェット作成中にエラー: '_tkinter.tkapp' object has no attribute 'initial_config_file_path'
+2025-07-27 02:01:54,087 - __main__ - ERROR - UI設定中にエラーが発生しました: '_tkinter.tkapp' object has no attribute 'initial_config_file_path'
+2025-07-27 02:01:54,088 - root - ERROR - アプリケーション起動エラー
+Traceback (most recent call last):
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 728, in main
+    app = MainApplication(project_root)
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 155, in __init__
+    self._setup_ui()
+    ~~~~~~~~~~~~~~^^
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 312, in _setup_ui
+    self._create_widgets()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 359, in _create_widgets
+    self._create_tabs()
+    ~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\hiker\seminar_optimization\main_app.py", line 391, in _create_tabs
+    self.data_input_tab = self.DataInputTab(self.notebook, self)
+                          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\seminar_optimization\gui_tabs\data_input_tab.py", line 76, in __init__
+    self.config_file_path_var = tk.StringVar(value=self.parent_app.initial_config_file_path) # config.jsonのパス
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 2546, in __getattr__
+    return getattr(self.tk, attr)
+AttributeError: '_tkinter.tkapp' object has no attribute 'initial_config_file_path'
+2025-07-27 02:02:34,813 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-27 02:02:34,813 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-27 02:02:34,813 - __main__ - INFO - MainApplication: ロギングが設定されました。
+2025-07-27 02:02:35,121 - __main__ - INFO - MainApplication: 初期化が完了しました。
+2025-07-27 02:02:39,871 - seminar_optimization.data_generator - INFO - DataGenerator: ランダムなセミナーと学生のデータを生成します。
+2025-07-27 02:02:39,882 - seminar_optimization.data_generator - INFO - DataGenerator: データ生成の論理的検証に成功しました。
+2025-07-27 02:02:39,882 - seminar_optimization.data_generator - INFO - DataGenerator: データ生成と検証が完了しました。
+2025-07-27 02:02:41,105 - seminar_optimization.logger_config - INFO - DataInputTab: データを自動生成しました。セミナー数: 10, 学生数: 112
+2025-07-27 02:02:50,594 - __main__ - INFO - MainApplication: 最適化処理を開始します。
+2025-07-27 02:02:50,595 - __main__ - INFO - MainApplication: 設定の保存を開始します。
+2025-07-27 02:02:50,595 - setting_manager - INFO - SettingsManager: GUI設定の保存を開始します。
+2025-07-27 02:02:50,596 - setting_manager - INFO - SettingsManager: GUI設定をgui_settings.iniに保存しました。
+2025-07-27 02:02:51,952 - __main__ - INFO - MainApplication: 設定の保存が完了しました。
+2025-07-27 02:02:51,965 - __main__ - INFO - MainApplication: 最適化処理スレッドが開始されました。
+2025-07-27 02:02:51,965 - __main__ - INFO - MainApplication: 最適化スレッドを開始しました。
+2025-07-27 02:02:51,965 - __main__ - INFO - OptimizerService: 最適化処理を開始します。
+2025-07-27 02:02:51,965 - __main__ - INFO - OptimizerService: 入力データのスキーマ検証を開始します。
+2025-07-27 02:02:52,061 - __main__ - ERROR - OptimizerService: データ検証エラー: 'seminars_file' is a required property (パス: )
+Traceback (most recent call last):
+  File "C:\Users\hiker\seminar_optimization\optimizers\optimizer_service.py", line 70, in _validate_data
+    jsonschema.validate(instance=config, schema=CONFIG_SCHEMA)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\AppData\Local\Programs\Python\Python313\Lib\site-packages\jsonschema\validators.py", line 1332, in validate
+    raise error
+jsonschema.exceptions.ValidationError: 'seminars_file' is a required property
+
+Failed validating 'required' in schema:
+    {'type': 'object',
+     'properties': {'num_seminars': {'type': 'integer', 'minimum': 1},
+                    'min_capacity': {'type': 'integer', 'minimum': 1},
+                    'max_capacity': {'type': 'integer', 'minimum': 1},
+                    'num_students': {'type': 'integer', 'minimum': 1},
+                    'min_preferences': {'type': 'integer', 'minimum': 1},
+                    'max_preferences': {'type': 'integer', 'minimum': 1},
+                    'preference_distribution': {'type': 'string',
+                                                'enum': ['random',
+                                                         'uniform',
+                                                         'biased']},
+                    'random_seed': {'type': ['integer', 'null']},
+                    'optimization_strategy': {'type': 'string',
+                                              'enum': ['Greedy_LS',
+                                                       'GA_LS',
+                                                       'ILP',
+                                                       'CP',
+                                                       'Multilevel',
+                                                       'Adaptive']},
+                    'ga_population_size': {'type': 'integer', 'minimum': 1},
+                    'ga_generations': {'type': 'integer', 'minimum': 1},
+                    'ga_mutation_rate': {'type': 'number',
+                                         'minimum': 0,
+                                         'maximum': 1},
+                    'ga_crossover_rate': {'type': 'number',
+                                          'minimum': 0,
+                                          'maximum': 1},
+                    'ga_no_improvement_limit': {'type': 'integer',
+                                                'minimum': 1},
+                    'ilp_time_limit': {'type': 'integer', 'minimum': 1},
+                    'cp_time_limit': {'type': 'integer', 'minimum': 1},
+                    'max_workers': {'type': 'integer', 'minimum': 1},
+                    'multilevel_clusters': {'type': 'integer',
+                                            'minimum': 1},
+                    'greedy_ls_iterations': {'type': 'integer',
+                                             'minimum': 1},
+                    'local_search_iterations': {'type': 'integer',
+                                                'minimum': 1},
+                    'early_stop_no_improvement_limit': {'type': 'integer',
+                                                        'minimum': 1},
+                    'initial_temperature': {'type': 'number', 'minimum': 0},
+                    'cooling_rate': {'type': 'number',
+                                     'minimum': 0,
+                                     'maximum': 1},
+                    'generate_pdf_report': {'type': 'boolean'},
+                    'generate_csv_report': {'type': 'boolean'},
+                    'debug_mode': {'type': 'boolean'},
+                    'log_enabled': {'type': 'boolean'},
+                    'output_directory': {'type': 'string'},
+                    'seminars_file': {'type': 'string'},
+                    'students_file': {'type': 'string'},
+                    'score_weights': {'type': 'object',
+                                      'properties': {'1st_choice': {'type': 'number',
+                                                                    'minimum': 0},
+                                                     '2nd_choice': {'type': 'number',
+                                                                    'minimum': 0},
+                                                     '3rd_choice': {'type': 'number',
+                                                                    'minimum': 0},
+                                                     'other_preference': {'type': 'number',
+                                                                          'minimum': 0}},
+                                      'required': ['1st_choice',
+                                                   '2nd_choice',
+                                                   '3rd_choice',
+                                                   'other_preference'],
+                                      'additionalProperties': False},
+                    'adaptive_history_size': {'type': 'integer',
+                                              'minimum': 1},
+                    'adaptive_exploration_epsilon': {'type': 'number',
+                                                     'minimum': 0,
+                                                     'maximum': 1},
+                    'adaptive_learning_rate': {'type': 'number',
+                                               'minimum': 0,
+                                               'maximum': 1},
+                    'adaptive_score_weight': {'type': 'number',
+                                              'minimum': 0,
+                                              'maximum': 1},
+                    'adaptive_unassigned_weight': {'type': 'number',
+                                                   'minimum': 0,
+                                                   'maximum': 1},
+                    'adaptive_time_weight': {'type': 'number',
+                                             'minimum': 0,
+                                             'maximum': 1},
+                    'max_time_for_normalization': {'type': 'number',
+                                                   'minimum': 1}},
+     'required': ['num_seminars',
+                  'min_capacity',
+                  'max_capacity',
+                  'num_students',
+                  'min_preferences',
+                  'max_preferences',
+                  'preference_distribution',
+                  'optimization_strategy',
+                  'ga_population_size',
+                  'ga_generations',
+                  'ilp_time_limit',
+                  'cp_time_limit',
+                  'multilevel_clusters',
+                  'greedy_ls_iterations',
+                  'local_search_iterations',
+                  'early_stop_no_improvement_limit',
+                  'initial_temperature',
+                  'cooling_rate',
+                  'generate_pdf_report',
+                  'generate_csv_report',
+                  'debug_mode',
+                  'log_enabled',
+                  'output_directory',
+                  'seminars_file',
+                  'students_file',
+                  'score_weights',
+                  'ga_mutation_rate',
+                  'ga_crossover_rate',
+                  'ga_no_improvement_limit',
+                  'max_workers',
+                  'adaptive_history_size',
+                  'adaptive_exploration_epsilon',
+                  'adaptive_learning_rate',
+                  'adaptive_score_weight',
+                  'adaptive_unassigned_weight',
+                  'adaptive_time_weight',
+                  'max_time_for_normalization'],
+     'additionalProperties': False}
+
+On instance:
+    {'seminars_file_path': 'c:\\Users\\hiker\\seminar_optimization\\seminar_optimization\\data\\seminars.json',
+     'students_file_path': 'c:\\Users\\hiker\\seminar_optimization\\seminar_optimization\\data\\students.json',
+     'data_input_method': 'auto_generate',
+     'num_seminars': 10,
+     'num_students': 112,
+     'min_capacity': 10,
+     'max_capacity': 15,
+     'preference_distribution': 'random',
+     'random_seed': 42,
+     'q_boost_probability': 0.2,
+     'num_preferences_to_consider': 5,
+     'min_preferences': 3,
+     'max_preferences': 5,
+     'optimization_strategy': 'Greedy_LS',
+     'ga_population_size': 100,
+     'ga_generations': 200,
+     'ga_mutation_rate': 0.05,
+     'ga_crossover_rate': 0.8,
+     'ga_no_improvement_limit': 10,
+     'max_workers': 8,
+     'ilp_time_limit': 300,
+     'cp_time_limit': 300,
+     'multilevel_clusters': 5,
+     'greedy_ls_iterations': 200000,
+     'local_search_iterations': 500,
+     'initial_temperature': 100.0,
+     'cooling_rate': 0.995,
+     'score_weights': {'1st_choice': 5.0,
+                       '2nd_choice': 2.0,
+                       '3rd_choice': 1.0,
+                       'other': 0.5},
+     'early_stop_threshold': 0.001,
+     'early_stop_no_improvement_limit': 1000,
+     'adaptive_history_size': 5,
+     'adaptive_exploration_epsilon': 0.1,
+     'adaptive_score_weight': 5.0,
+     'adaptive_unassigned_weight': 10.0,
+     'adaptive_time_weight': 5.0,
+     'max_time_for_normalization': 60.0,
+     'generate_pdf_report': True,
+     'generate_csv_report': True,
+     'output_directory': 'results',
+     'pdf_font_path': '',
+     'debug_mode': False,
+     'log_enabled': True,
+     'save_intermediate': True,
+     'theme': 'xpnative',
+     'config_file_path': '',
+     'data_directory': 'C:\\Users\\hiker\\seminar_optimization\\data'}
+2025-07-27 02:02:52,083 - __main__ - INFO - MainApplication: 最適化結果を処理します。ステータス: FAILED
+2025-07-27 02:02:52,085 - gui_tabs.results_tab - INFO - ResultsTab: 最適化結果をUIに表示します。
+2025-07-27 02:02:52,093 - gui_tabs.results_tab - INFO - ResultsTab: 最適化結果のUI表示が完了しました。
+2025-07-27 02:04:24,771 - __main__ - INFO - MainApplication: アプリケーションを終了します。
+2025-07-27 02:04:24,771 - __main__ - INFO - MainApplication: 設定の保存を開始します。
+2025-07-27 02:04:24,772 - setting_manager - INFO - SettingsManager: GUI設定の保存を開始します。
+2025-07-27 02:04:24,773 - setting_manager - INFO - SettingsManager: GUI設定をgui_settings.iniに保存しました。
+2025-07-27 02:04:26,017 - __main__ - INFO - MainApplication: 設定の保存が完了しました。
+2025-07-27 02:04:32,069 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-27 02:04:32,070 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-27 02:04:32,070 - __main__ - INFO - MainApplication: ロギングが設定されました。
+2025-07-27 02:04:32,170 - __main__ - INFO - MainApplication: 初期化が完了しました。
+2025-07-27 02:04:36,151 - seminar_optimization.data_generator - INFO - DataGenerator: ランダムなセミナーと学生のデータを生成します。
+2025-07-27 02:04:36,159 - seminar_optimization.data_generator - INFO - DataGenerator: データ生成の論理的検証に成功しました。
+2025-07-27 02:04:36,159 - seminar_optimization.data_generator - INFO - DataGenerator: データ生成と検証が完了しました。
+2025-07-27 02:04:37,081 - seminar_optimization.logger_config - INFO - DataInputTab: データを自動生成しました。セミナー数: 10, 学生数: 112
+2025-07-27 02:04:48,175 - __main__ - INFO - MainApplication: 最適化処理を開始します。
+2025-07-27 02:04:48,176 - __main__ - INFO - MainApplication: 設定の保存を開始します。
+2025-07-27 02:04:48,176 - setting_manager - INFO - SettingsManager: GUI設定の保存を開始します。
+2025-07-27 02:04:48,177 - setting_manager - INFO - SettingsManager: GUI設定をgui_settings.iniに保存しました。
+2025-07-27 02:04:49,481 - __main__ - INFO - MainApplication: 設定の保存が完了しました。
+2025-07-27 02:04:49,492 - __main__ - INFO - MainApplication: 最適化処理スレッドが開始されました。
+2025-07-27 02:04:49,493 - __main__ - INFO - MainApplication: 最適化スレッドを開始しました。
+2025-07-27 02:04:49,493 - __main__ - INFO - OptimizerService: 最適化処理を開始します。
+2025-07-27 02:04:49,493 - __main__ - INFO - OptimizerService: 入力データのスキーマ検証を開始します。
+2025-07-27 02:04:49,521 - __main__ - ERROR - OptimizerService: データ検証エラー: 'adaptive_learning_rate' is a required property (パス: )
+Traceback (most recent call last):
+  File "C:\Users\hiker\seminar_optimization\optimizers\optimizer_service.py", line 70, in _validate_data
+    jsonschema.validate(instance=config, schema=CONFIG_SCHEMA)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\AppData\Local\Programs\Python\Python313\Lib\site-packages\jsonschema\validators.py", line 1332, in validate
+    raise error
+jsonschema.exceptions.ValidationError: 'adaptive_learning_rate' is a required property
+
+Failed validating 'required' in schema:
+    {'type': 'object',
+     'properties': {'num_seminars': {'type': 'integer', 'minimum': 1},
+                    'min_capacity': {'type': 'integer', 'minimum': 1},
+                    'max_capacity': {'type': 'integer', 'minimum': 1},
+                    'num_students': {'type': 'integer', 'minimum': 1},
+                    'min_preferences': {'type': 'integer', 'minimum': 1},
+                    'max_preferences': {'type': 'integer', 'minimum': 1},
+                    'preference_distribution': {'type': 'string',
+                                                'enum': ['random',
+                                                         'uniform',
+                                                         'biased']},
+                    'random_seed': {'type': ['integer', 'null']},
+                    'optimization_strategy': {'type': 'string',
+                                              'enum': ['Greedy_LS',
+                                                       'GA_LS',
+                                                       'ILP',
+                                                       'CP',
+                                                       'Multilevel',
+                                                       'Adaptive']},
+                    'ga_population_size': {'type': 'integer', 'minimum': 1},
+                    'ga_generations': {'type': 'integer', 'minimum': 1},
+                    'ga_mutation_rate': {'type': 'number',
+                                         'minimum': 0,
+                                         'maximum': 1},
+                    'ga_crossover_rate': {'type': 'number',
+                                          'minimum': 0,
+                                          'maximum': 1},
+                    'ga_no_improvement_limit': {'type': 'integer',
+                                                'minimum': 1},
+                    'ilp_time_limit': {'type': 'integer', 'minimum': 1},
+                    'cp_time_limit': {'type': 'integer', 'minimum': 1},
+                    'max_workers': {'type': 'integer', 'minimum': 1},
+                    'multilevel_clusters': {'type': 'integer',
+                                            'minimum': 1},
+                    'greedy_ls_iterations': {'type': 'integer',
+                                             'minimum': 1},
+                    'local_search_iterations': {'type': 'integer',
+                                                'minimum': 1},
+                    'early_stop_no_improvement_limit': {'type': 'integer',
+                                                        'minimum': 1},
+                    'initial_temperature': {'type': 'number', 'minimum': 0},
+                    'cooling_rate': {'type': 'number',
+                                     'minimum': 0,
+                                     'maximum': 1},
+                    'generate_pdf_report': {'type': 'boolean'},
+                    'generate_csv_report': {'type': 'boolean'},
+                    'debug_mode': {'type': 'boolean'},
+                    'log_enabled': {'type': 'boolean'},
+                    'output_directory': {'type': 'string'},
+                    'seminars_file': {'type': 'string'},
+                    'students_file': {'type': 'string'},
+                    'score_weights': {'type': 'object',
+                                      'properties': {'1st_choice': {'type': 'number',
+                                                                    'minimum': 0},
+                                                     '2nd_choice': {'type': 'number',
+                                                                    'minimum': 0},
+                                                     '3rd_choice': {'type': 'number',
+                                                                    'minimum': 0},
+                                                     'other_preference': {'type': 'number',
+                                                                          'minimum': 0}},
+                                      'required': ['1st_choice',
+                                                   '2nd_choice',
+                                                   '3rd_choice',
+                                                   'other_preference'],
+                                      'additionalProperties': False},
+                    'adaptive_history_size': {'type': 'integer',
+                                              'minimum': 1},
+                    'adaptive_exploration_epsilon': {'type': 'number',
+                                                     'minimum': 0,
+                                                     'maximum': 1},
+                    'adaptive_learning_rate': {'type': 'number',
+                                               'minimum': 0,
+                                               'maximum': 1},
+                    'adaptive_score_weight': {'type': 'number',
+                                              'minimum': 0,
+                                              'maximum': 1},
+                    'adaptive_unassigned_weight': {'type': 'number',
+                                                   'minimum': 0,
+                                                   'maximum': 1},
+                    'adaptive_time_weight': {'type': 'number',
+                                             'minimum': 0,
+                                             'maximum': 1},
+                    'max_time_for_normalization': {'type': 'number',
+                                                   'minimum': 1}},
+     'required': ['num_seminars',
+                  'min_capacity',
+                  'max_capacity',
+                  'num_students',
+                  'min_preferences',
+                  'max_preferences',
+                  'preference_distribution',
+                  'optimization_strategy',
+                  'ga_population_size',
+                  'ga_generations',
+                  'ilp_time_limit',
+                  'cp_time_limit',
+                  'multilevel_clusters',
+                  'greedy_ls_iterations',
+                  'local_search_iterations',
+                  'early_stop_no_improvement_limit',
+                  'initial_temperature',
+                  'cooling_rate',
+                  'generate_pdf_report',
+                  'generate_csv_report',
+                  'debug_mode',
+                  'log_enabled',
+                  'output_directory',
+                  'score_weights',
+                  'ga_mutation_rate',
+                  'ga_crossover_rate',
+                  'ga_no_improvement_limit',
+                  'max_workers',
+                  'adaptive_history_size',
+                  'adaptive_exploration_epsilon',
+                  'adaptive_learning_rate',
+                  'adaptive_score_weight',
+                  'adaptive_unassigned_weight',
+                  'adaptive_time_weight',
+                  'max_time_for_normalization'],
+     'additionalProperties': False}
+
+On instance:
+    {'seminars_file_path': 'c:\\Users\\hiker\\seminar_optimization\\seminar_optimization\\data\\seminars.json',
+     'students_file_path': 'c:\\Users\\hiker\\seminar_optimization\\seminar_optimization\\data\\students.json',
+     'data_input_method': 'auto_generate',
+     'num_seminars': 10,
+     'num_students': 112,
+     'min_capacity': 10,
+     'max_capacity': 15,
+     'preference_distribution': 'random',
+     'random_seed': 42,
+     'q_boost_probability': 0.2,
+     'num_preferences_to_consider': 5,
+     'min_preferences': 3,
+     'max_preferences': 5,
+     'optimization_strategy': 'Greedy_LS',
+     'ga_population_size': 100,
+     'ga_generations': 200,
+     'ga_mutation_rate': 0.05,
+     'ga_crossover_rate': 0.8,
+     'ga_no_improvement_limit': 10,
+     'max_workers': 8,
+     'ilp_time_limit': 300,
+     'cp_time_limit': 300,
+     'multilevel_clusters': 5,
+     'greedy_ls_iterations': 200000,
+     'local_search_iterations': 500,
+     'initial_temperature': 100.0,
+     'cooling_rate': 0.995,
+     'score_weights': {'1st_choice': 5.0,
+                       '2nd_choice': 2.0,
+                       '3rd_choice': 1.0,
+                       'other': 0.5},
+     'early_stop_threshold': 0.001,
+     'early_stop_no_improvement_limit': 1000,
+     'adaptive_history_size': 5,
+     'adaptive_exploration_epsilon': 0.1,
+     'adaptive_score_weight': 5.0,
+     'adaptive_unassigned_weight': 10.0,
+     'adaptive_time_weight': 5.0,
+     'max_time_for_normalization': 60.0,
+     'generate_pdf_report': True,
+     'generate_csv_report': True,
+     'output_directory': 'results',
+     'pdf_font_path': '',
+     'debug_mode': False,
+     'log_enabled': True,
+     'save_intermediate': True,
+     'theme': 'xpnative',
+     'config_file_path': '',
+     'data_directory': 'C:\\Users\\hiker\\seminar_optimization\\data'}
+2025-07-27 02:04:49,536 - __main__ - INFO - MainApplication: 最適化結果を処理します。ステータス: FAILED
+2025-07-27 02:04:49,536 - gui_tabs.results_tab - INFO - ResultsTab: 最適化結果をUIに表示します。
+2025-07-27 02:04:49,539 - gui_tabs.results_tab - INFO - ResultsTab: 最適化結果のUI表示が完了しました。
+2025-07-27 02:09:10,855 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-27 02:09:10,855 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-27 02:09:10,855 - __main__ - INFO - MainApplication: ロギングが設定されました。
+2025-07-27 02:09:10,949 - __main__ - INFO - MainApplication: 初期化が完了しました。
+2025-07-27 02:09:16,811 - __main__ - INFO - MainApplication: 最適化処理を開始します。
+2025-07-27 02:09:16,812 - __main__ - INFO - MainApplication: 設定の保存を開始します。
+2025-07-27 02:09:16,812 - setting_manager - INFO - SettingsManager: GUI設定の保存を開始します。
+2025-07-27 02:09:16,813 - setting_manager - INFO - SettingsManager: GUI設定をgui_settings.iniに保存しました。
+2025-07-27 02:09:18,004 - __main__ - INFO - MainApplication: 設定の保存が完了しました。
+2025-07-27 02:09:19,908 - seminar_optimization.data_generator - INFO - DataGenerator: ランダムなセミナーと学生のデータを生成します。
+2025-07-27 02:09:19,919 - seminar_optimization.data_generator - INFO - DataGenerator: データ生成の論理的検証に成功しました。
+2025-07-27 02:09:19,919 - seminar_optimization.data_generator - INFO - DataGenerator: データ生成と検証が完了しました。
+2025-07-27 02:09:20,784 - seminar_optimization.logger_config - INFO - DataInputTab: データを自動生成しました。セミナー数: 10, 学生数: 112
+2025-07-27 02:09:22,149 - __main__ - INFO - MainApplication: 最適化処理を開始します。
+2025-07-27 02:09:22,150 - __main__ - INFO - MainApplication: 設定の保存を開始します。
+2025-07-27 02:09:22,150 - setting_manager - INFO - SettingsManager: GUI設定の保存を開始します。
+2025-07-27 02:09:22,151 - setting_manager - INFO - SettingsManager: GUI設定をgui_settings.iniに保存しました。
+2025-07-27 02:09:23,148 - __main__ - INFO - MainApplication: 設定の保存が完了しました。
+2025-07-27 02:09:23,155 - __main__ - INFO - MainApplication: 最適化処理スレッドが開始されました。
+2025-07-27 02:09:23,155 - __main__ - INFO - MainApplication: 最適化スレッドを開始しました。
+2025-07-27 02:09:23,155 - __main__ - INFO - OptimizerService: 最適化処理を開始します。
+2025-07-27 02:09:23,155 - __main__ - INFO - OptimizerService: 入力データのスキーマ検証を開始します。
+2025-07-27 02:09:23,196 - __main__ - ERROR - OptimizerService: データ検証エラー: Additional properties are not allowed ('config_file_path', 'data_directory', 'data_input_method', 'early_stop_threshold', 'num_preferences_to_consider', 'pdf_font_path', 'q_boost_probability', 'save_intermediate', 'seminars_file_path', 'students_file_path', 'theme' were unexpected) (パス: )
+Traceback (most recent call last):
+  File "C:\Users\hiker\seminar_optimization\optimizers\optimizer_service.py", line 70, in _validate_data
+    jsonschema.validate(instance=config, schema=CONFIG_SCHEMA)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\AppData\Local\Programs\Python\Python313\Lib\site-packages\jsonschema\validators.py", line 1332, in validate
+    raise error
+jsonschema.exceptions.ValidationError: Additional properties are not allowed ('config_file_path', 'data_directory', 'data_input_method', 'early_stop_threshold', 'num_preferences_to_consider', 'pdf_font_path', 'q_boost_probability', 'save_intermediate', 'seminars_file_path', 'students_file_path', 'theme' were unexpected)
+
+Failed validating 'additionalProperties' in schema:
+    {'type': 'object',
+     'properties': {'num_seminars': {'type': 'integer', 'minimum': 1},
+                    'min_capacity': {'type': 'integer', 'minimum': 1},
+                    'max_capacity': {'type': 'integer', 'minimum': 1},
+                    'num_students': {'type': 'integer', 'minimum': 1},
+                    'min_preferences': {'type': 'integer', 'minimum': 1},
+                    'max_preferences': {'type': 'integer', 'minimum': 1},
+                    'preference_distribution': {'type': 'string',
+                                                'enum': ['random',
+                                                         'uniform',
+                                                         'biased']},
+                    'random_seed': {'type': ['integer', 'null']},
+                    'optimization_strategy': {'type': 'string',
+                                              'enum': ['Greedy_LS',
+                                                       'GA_LS',
+                                                       'ILP',
+                                                       'CP',
+                                                       'Multilevel',
+                                                       'Adaptive']},
+                    'ga_population_size': {'type': 'integer', 'minimum': 1},
+                    'ga_generations': {'type': 'integer', 'minimum': 1},
+                    'ga_mutation_rate': {'type': 'number',
+                                         'minimum': 0,
+                                         'maximum': 1},
+                    'ga_crossover_rate': {'type': 'number',
+                                          'minimum': 0,
+                                          'maximum': 1},
+                    'ga_no_improvement_limit': {'type': 'integer',
+                                                'minimum': 1},
+                    'ilp_time_limit': {'type': 'integer', 'minimum': 1},
+                    'cp_time_limit': {'type': 'integer', 'minimum': 1},
+                    'max_workers': {'type': 'integer', 'minimum': 1},
+                    'multilevel_clusters': {'type': 'integer',
+                                            'minimum': 1},
+                    'greedy_ls_iterations': {'type': 'integer',
+                                             'minimum': 1},
+                    'local_search_iterations': {'type': 'integer',
+                                                'minimum': 1},
+                    'early_stop_no_improvement_limit': {'type': 'integer',
+                                                        'minimum': 1},
+                    'initial_temperature': {'type': 'number', 'minimum': 0},
+                    'cooling_rate': {'type': 'number',
+                                     'minimum': 0,
+                                     'maximum': 1},
+                    'generate_pdf_report': {'type': 'boolean'},
+                    'generate_csv_report': {'type': 'boolean'},
+                    'debug_mode': {'type': 'boolean'},
+                    'log_enabled': {'type': 'boolean'},
+                    'output_directory': {'type': 'string'},
+                    'seminars_file': {'type': 'string'},
+                    'students_file': {'type': 'string'},
+                    'score_weights': {'type': 'object',
+                                      'properties': {'1st_choice': {'type': 'number',
+                                                                    'minimum': 0},
+                                                     '2nd_choice': {'type': 'number',
+                                                                    'minimum': 0},
+                                                     '3rd_choice': {'type': 'number',
+                                                                    'minimum': 0},
+                                                     'other_preference': {'type': 'number',
+                                                                          'minimum': 0}},
+                                      'required': ['1st_choice',
+                                                   '2nd_choice',
+                                                   '3rd_choice',
+                                                   'other_preference'],
+                                      'additionalProperties': False},
+                    'adaptive_history_size': {'type': 'integer',
+                                              'minimum': 1},
+                    'adaptive_exploration_epsilon': {'type': 'number',
+                                                     'minimum': 0,
+                                                     'maximum': 1},
+                    'adaptive_learning_rate': {'type': 'number',
+                                               'minimum': 0,
+                                               'maximum': 1},
+                    'adaptive_score_weight': {'type': 'number',
+                                              'minimum': 0,
+                                              'maximum': 1},
+                    'adaptive_unassigned_weight': {'type': 'number',
+                                                   'minimum': 0,
+                                                   'maximum': 1},
+                    'adaptive_time_weight': {'type': 'number',
+                                             'minimum': 0,
+                                             'maximum': 1},
+                    'max_time_for_normalization': {'type': 'number',
+                                                   'minimum': 1}},
+     'required': ['num_seminars',
+                  'min_capacity',
+                  'max_capacity',
+                  'num_students',
+                  'min_preferences',
+                  'max_preferences',
+                  'preference_distribution',
+                  'optimization_strategy',
+                  'ga_population_size',
+                  'ga_generations',
+                  'ilp_time_limit',
+                  'cp_time_limit',
+                  'multilevel_clusters',
+                  'greedy_ls_iterations',
+                  'local_search_iterations',
+                  'early_stop_no_improvement_limit',
+                  'initial_temperature',
+                  'cooling_rate',
+                  'generate_pdf_report',
+                  'generate_csv_report',
+                  'debug_mode',
+                  'log_enabled',
+                  'output_directory',
+                  'score_weights',
+                  'ga_mutation_rate',
+                  'ga_crossover_rate',
+                  'ga_no_improvement_limit',
+                  'max_workers',
+                  'adaptive_history_size',
+                  'adaptive_exploration_epsilon',
+                  'adaptive_learning_rate',
+                  'adaptive_score_weight',
+                  'adaptive_unassigned_weight',
+                  'adaptive_time_weight',
+                  'max_time_for_normalization'],
+     'additionalProperties': False}
+
+On instance:
+    {'seminars_file_path': 'c:\\Users\\hiker\\seminar_optimization\\seminar_optimization\\data\\seminars.json',
+     'students_file_path': 'c:\\Users\\hiker\\seminar_optimization\\seminar_optimization\\data\\students.json',
+     'data_input_method': 'auto_generate',
+     'num_seminars': 10,
+     'num_students': 112,
+     'min_capacity': 10,
+     'max_capacity': 15,
+     'preference_distribution': 'random',
+     'random_seed': 42,
+     'q_boost_probability': 0.2,
+     'num_preferences_to_consider': 5,
+     'min_preferences': 3,
+     'max_preferences': 5,
+     'optimization_strategy': 'Greedy_LS',
+     'ga_population_size': 100,
+     'ga_generations': 200,
+     'ga_mutation_rate': 0.05,
+     'ga_crossover_rate': 0.8,
+     'ga_no_improvement_limit': 10,
+     'max_workers': 8,
+     'ilp_time_limit': 300,
+     'cp_time_limit': 300,
+     'multilevel_clusters': 5,
+     'greedy_ls_iterations': 200000,
+     'local_search_iterations': 500,
+     'initial_temperature': 100.0,
+     'cooling_rate': 0.995,
+     'score_weights': {'1st_choice': 5.0,
+                       '2nd_choice': 2.0,
+                       '3rd_choice': 1.0,
+                       'other': 0.5},
+     'early_stop_threshold': 0.001,
+     'early_stop_no_improvement_limit': 1000,
+     'adaptive_history_size': 5,
+     'adaptive_exploration_epsilon': 0.1,
+     'adaptive_score_weight': 5.0,
+     'adaptive_unassigned_weight': 10.0,
+     'adaptive_time_weight': 5.0,
+     'max_time_for_normalization': 60.0,
+     'adaptive_learning_rate': 0.01,
+     'generate_pdf_report': True,
+     'generate_csv_report': True,
+     'output_directory': 'results',
+     'pdf_font_path': '',
+     'debug_mode': False,
+     'log_enabled': True,
+     'save_intermediate': True,
+     'theme': 'xpnative',
+     'config_file_path': '',
+     'data_directory': 'C:\\Users\\hiker\\seminar_optimization\\data'}
+2025-07-27 02:09:23,207 - __main__ - INFO - MainApplication: 最適化結果を処理します。ステータス: FAILED
+2025-07-27 02:09:23,208 - gui_tabs.results_tab - INFO - ResultsTab: 最適化結果をUIに表示します。
+2025-07-27 02:09:23,219 - gui_tabs.results_tab - INFO - ResultsTab: 最適化結果のUI表示が完了しました。
+2025-07-27 02:23:18,511 - __main__ - INFO - MainApplication: アプリケーションを終了します。
+2025-07-27 02:23:18,512 - __main__ - INFO - MainApplication: 設定の保存を開始します。
+2025-07-27 02:23:18,513 - setting_manager - INFO - SettingsManager: GUI設定の保存を開始します。
+2025-07-27 02:23:18,514 - setting_manager - INFO - SettingsManager: GUI設定をgui_settings.iniに保存しました。
+2025-07-27 02:23:19,725 - __main__ - INFO - MainApplication: 設定の保存が完了しました。
+2025-07-27 02:33:03,762 - seminar_optimization.logger_config - INFO - ログファイル 'C:\Users\hiker\seminar_optimization\logs\seminar_optimization.log' に出力します。
+2025-07-27 02:33:03,763 - seminar_optimization.logger_config - INFO - ロギングがレベル 'INFO' で設定されました。
+2025-07-27 02:33:03,763 - __main__ - INFO - MainApplication: ロギングが設定されました。
+2025-07-27 02:33:03,857 - __main__ - INFO - MainApplication: 初期化が完了しました。
+2025-07-27 02:33:08,816 - seminar_optimization.data_generator - INFO - DataGenerator: ランダムなセミナーと学生のデータを生成します。
+2025-07-27 02:33:08,827 - seminar_optimization.data_generator - INFO - DataGenerator: データ生成の論理的検証に成功しました。
+2025-07-27 02:33:08,827 - seminar_optimization.data_generator - INFO - DataGenerator: データ生成と検証が完了しました。
+2025-07-27 02:33:09,755 - seminar_optimization.logger_config - INFO - DataInputTab: データを自動生成しました。セミナー数: 10, 学生数: 112
+2025-07-27 02:33:13,664 - __main__ - INFO - MainApplication: 最適化処理を開始します。
+2025-07-27 02:33:13,665 - __main__ - INFO - MainApplication: 設定の保存を開始します。
+2025-07-27 02:33:13,666 - setting_manager - INFO - SettingsManager: GUI設定の保存を開始します。
+2025-07-27 02:33:13,667 - setting_manager - INFO - SettingsManager: GUI設定をgui_settings.iniに保存しました。
+2025-07-27 02:33:14,747 - __main__ - INFO - MainApplication: 設定の保存が完了しました。
+2025-07-27 02:33:14,758 - __main__ - INFO - MainApplication: 最適化処理スレッドが開始されました。
+2025-07-27 02:33:14,758 - __main__ - INFO - MainApplication: 最適化スレッドを開始しました。
+2025-07-27 02:33:14,758 - __main__ - INFO - OptimizerService: 最適化処理を開始します。
+2025-07-27 02:33:14,759 - __main__ - INFO - OptimizerService: 入力データのスキーマ検証を開始します。
+2025-07-27 02:33:14,795 - __main__ - ERROR - OptimizerService: データ検証エラー: 'other_preference' is a required property (パス: score_weights)
+Traceback (most recent call last):
+  File "C:\Users\hiker\seminar_optimization\optimizers\optimizer_service.py", line 70, in _validate_data
+    jsonschema.validate(instance=config, schema=CONFIG_SCHEMA)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hiker\AppData\Local\Programs\Python\Python313\Lib\site-packages\jsonschema\validators.py", line 1332, in validate
+    raise error
+jsonschema.exceptions.ValidationError: 'other_preference' is a required property
+
+Failed validating 'required' in schema['properties']['score_weights']:
+    {'type': 'object',
+     'properties': {'1st_choice': {'type': 'number', 'minimum': 0},
+                    '2nd_choice': {'type': 'number', 'minimum': 0},
+                    '3rd_choice': {'type': 'number', 'minimum': 0},
+                    'other_preference': {'type': 'number', 'minimum': 0}},
+     'required': ['1st_choice',
+                  '2nd_choice',
+                  '3rd_choice',
+                  'other_preference'],
+     'additionalProperties': False}
+
+On instance['score_weights']:
+    {'1st_choice': 5.0, '2nd_choice': 2.0, '3rd_choice': 1.0, 'other': 0.5}
+2025-07-27 02:33:14,810 - __main__ - INFO - MainApplication: 最適化結果を処理します。ステータス: FAILED
+2025-07-27 02:33:14,810 - gui_tabs.results_tab - INFO - ResultsTab: 最適化結果をUIに表示します。
+2025-07-27 02:33:14,814 - gui_tabs.results_tab - INFO - ResultsTab: 最適化結果のUI表示が完了しました。
